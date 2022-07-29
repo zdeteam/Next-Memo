@@ -2,14 +2,14 @@ import { useState, useEffect, useCallback } from "react";
 import { editorStateService, memoService, userService } from "../services";
 import { IMAGE_URL_REG, MEMO_LINK_REG, UNKNOWN_ID } from "../helpers/consts";
 import * as utils from "../helpers/utils";
-import { parseHtmlToRawText } from "../helpers/marked";
+import { formatMemoContent, parseHtmlToRawText } from "../helpers/marked";
 import Only from "./common/OnlyWhen";
 import toastHelper from "./Toast";
 import { generateDialog } from "./Dialog";
 import Image from "./Image";
-import { formatMemoContent } from "./Memo";
 import "../less/memo-card-dialog.less";
 import Selector from "./common/Selector";
+import Icon from "./Icon";
 
 interface LinkedMemo extends Memo {
   createdAtStr: string;
@@ -129,7 +129,7 @@ const MemoCardDialog: React.FC<Props> = (props: Props) => {
       <Only when={!userService.isVisitorMode()}>
         <div className="card-header-container">
           <div className="visibility-selector-container">
-            <i className="fa-solid fa-eye mr-2"></i>
+            <Icon.Eye className="mr-2" />
             <Selector
               className="visibility-selector"
               dataSource={visibilityList}
@@ -146,13 +146,13 @@ const MemoCardDialog: React.FC<Props> = (props: Props) => {
             <Only when={!userService.isVisitorMode()}>
               <>
                 <button className="btn edit-btn" onClick={handleEditMemoBtnClick}>
-                  <i className="fa-solid fa-pen-to-square icon-img"></i>
+                  <Icon.Edit className="icon-img" />
                 </button>
                 <span className="split-line">/</span>
               </>
             </Only>
             <button className="btn close-btn" onClick={props.destroy}>
-              <i className="fa-solid fa-xmark fa-lg icon-img"></i>
+              <Icon.X className="icon-img" />
             </button>
           </div>
         </div>
