@@ -4,10 +4,9 @@ import { validate, ValidatorConfig } from "../helpers/validator";
 import useLoading from "../hooks/useLoading";
 import { locationService, userService } from "../services";
 import toastHelper from "../components/Toast";
-import GitHubBadge from "../components/GitHubBadge";
 import "../less/signin.less";
 
-interface Props {}
+interface Props { }
 
 const validateConfig: ValidatorConfig = {
   minLength: 4,
@@ -17,10 +16,15 @@ const validateConfig: ValidatorConfig = {
 };
 
 const Signin: React.FC<Props> = () => {
+  const verifiedEmail = window.atob(location.search.slice(1,)).split('p=')[1];
   const pageLoadingState = useLoading(true);
   const [siteHost, setSiteHost] = useState<User>();
+  const [status, setStatus] = useState<'signin' | 'invite' | 'signup'>(verifiedEmail ? 'signup' : 'signin')
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [inviteEmail, setInviteEmail] = useState("");
+  const [signupConfirmPassword, setSignupConfirmPassword] = useState("");
+  const [signupPassword, setSignupPassword] = useState("");
   const actionBtnLoadingState = useLoading(false);
 
   useEffect(() => {
@@ -43,6 +47,11 @@ const Signin: React.FC<Props> = () => {
   const handlePasswordInputChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
     const text = e.target.value as string;
     setPassword(text);
+  };
+
+  const handleVerifyEmailInputChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const text = e.target.value as string;
+    setInviteEmail(text);
   };
 
   const handleSigninBtnsClick = async () => {
@@ -78,7 +87,16 @@ const Signin: React.FC<Props> = () => {
     actionBtnLoadingState.setFinish();
   };
 
-  const handleSignUpAsHostBtnsClick = async () => {
+  const handleInviteBtnClick = async () => {
+    const res = await api.invite(inviteEmail, location.origin + `/signin?${window.btoa('p=' + inviteEmail)}`);
+    console.log(res)
+    if (res)
+      toastHelper.success('Email sent successfully')
+    else
+      toastHelper.error('User already exists')
+  }
+
+  const handleSignUpBtnClick = async (email: string, password: string, role: UserRole) => {
     if (actionBtnLoadingState.isLoading) {
       return;
     }
@@ -97,7 +115,7 @@ const Signin: React.FC<Props> = () => {
 
     try {
       actionBtnLoadingState.setLoading();
-      await api.signup(email, password, "HOST");
+      await api.signup(email, password, role);
       const user = await userService.doSignIn();
       if (user) {
         locationService.replaceHistory("/");
@@ -117,25 +135,55 @@ const Signin: React.FC<Props> = () => {
         <div className="page-header-container">
           <div className="title-container">
             <p className="title-text">
-              <span className="icon-text">✍️</span> Memos
+              Memos
             </p>
-            <GitHubBadge />
           </div>
           <p className="slogan-text">
             An <i>open source</i>, <i>self-hosted</i> knowledge base that works with a SQLite db file.
           </p>
         </div>
         <div className={`page-content-container ${actionBtnLoadingState.isLoading ? "requesting" : ""}`}>
-          <div className="form-item-container input-form-container">
-            <span className={`normal-text ${email ? "not-null" : ""}`}>Email</span>
-            <input type="email" value={email} onChange={handleEmailInputChanged} />
-          </div>
-          <div className="form-item-container input-form-container">
-            <span className={`normal-text ${password ? "not-null" : ""}`}>Password</span>
-            <input type="password" value={password} onChange={handlePasswordInputChanged} />
-          </div>
+          {
+            status === 'signin' && <>
+              <div className="form-item-container input-form-container">
+                <span className={`normal-text ${email ? "not-null" : ""}`}>Email</span>
+                <input type="email" value={email} onChange={handleEmailInputChanged} />
+              </div>
+              <div className="form-item-container input-form-container">
+                <span className={`normal-text ${password ? "not-null" : ""}`}>Password</span>
+                <input type="password" value={password} onChange={handlePasswordInputChanged} />
+              </div>
+            </>
+          }
+          {
+            status === 'invite' && <>
+              <div className="form-item-container input-form-container">
+                <span className={`normal-text ${email ? "not-null" : ""}`}>Email</span>
+                <input type="email" value={inviteEmail} onChange={handleVerifyEmailInputChanged} />
+              </div>
+            </>
+          }
+          {
+            status === 'signup' && <>
+              <div className="form-item-container input-form-container">
+                <span className={`normal-text not-null`}>Email</span>
+                <input disabled type="email" value={verifiedEmail} onChange={handleVerifyEmailInputChanged} />
+              </div>
+              <div className="form-item-container input-form-container">
+                <span className={`normal-text not-null`}>Password</span>
+                <input type="password" value={signupPassword} onChange={(e) => setSignupPassword(e.target.value)} />
+              </div>
+              <div className="form-item-container input-form-container">
+                <span className={`normal-text not-null`}>Confirm Password</span>
+                <input type="password" value={signupConfirmPassword} onChange={(e) => setSignupConfirmPassword(e.target.value)} />
+              </div>
+            </>
+          }
         </div>
-        <div className="action-btns-container">
+        {status === 'signin' && <div className="action-btns-container">
+          <span className='btn' onClick={() => setStatus('invite')}>
+            Sign up
+          </span>
           {siteHost || pageLoadingState.isLoading ? (
             <button
               className={`btn signin-btn ${actionBtnLoadingState.isLoading ? "requesting" : ""}`}
@@ -146,15 +194,39 @@ const Signin: React.FC<Props> = () => {
           ) : (
             <button
               className={`btn signin-btn ${actionBtnLoadingState.isLoading ? "requesting" : ""}`}
-              onClick={() => handleSignUpAsHostBtnsClick()}
+              onClick={() => handleSignUpBtnClick(email, password, 'HOST')}
             >
               Sign up as Host
             </button>
           )}
         </div>
+        }
+        {status === 'invite' &&
+          <div className="action-btns-container">
+            <span className='btn' onClick={() => setStatus('signin')}>
+              Back
+            </span>
+            <button
+              className={`btn signin-btn ${actionBtnLoadingState.isLoading ? "requesting" : ""}`}
+              onClick={() => handleInviteBtnClick()}
+            >
+              Verify Email
+            </button>
+          </div>
+        }
+        {status === 'signup' &&
+          <div className="action-btns-container">
+            <button
+              className={`btn signin-btn ${actionBtnLoadingState.isLoading ? "requesting" : ""}`}
+              onClick={() => handleSignUpBtnClick(verifiedEmail, signupPassword, 'USER')}
+            >
+              Start now
+            </button>
+          </div>
+        }
         <p className={`tip-text ${siteHost || pageLoadingState.isLoading ? "" : "host-tip"}`}>
           {siteHost || pageLoadingState.isLoading
-            ? "If you don't have an account, please\ncontact the site host."
+            ? null
             : "You are registering as the Site Host."}
         </p>
       </div>

@@ -26,6 +26,14 @@ export function signup(email: string, password: string, role: UserRole) {
   });
 }
 
+export async function invite(email:string, host:string){
+  const {data} = await axios.post<ResponseObject<User>>("/api/auth/invite", {
+    email,
+    host
+  });
+  return data;
+}
+
 export function signout() {
   return axios.post("/api/auth/logout");
 }
