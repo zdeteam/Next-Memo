@@ -36,8 +36,8 @@ func (s *Server) registerSystemRoutes(g *echo.Group) {
 		}
 
 		systemStatus := api.SystemStatus{
-			Host:   hostUser,
-			Profile: s.Profile,
+			Host:    hostUser != nil,
+			Version: s.Profile.Version,
 		}
 
 		c.Response().Header().Set(echo.HeaderContentType, echo.MIMEApplicationJSONCharsetUTF8)
