@@ -7,7 +7,7 @@ import toastHelper from "./Toast";
 import Editor, { EditorRefActions } from "./Editor/Editor";
 import "../less/memo-editor.less";
 
-interface Props {}
+interface Props { }
 
 interface State {
   isUploadingResource: boolean;
@@ -230,14 +230,14 @@ const MemoEditor: React.FC<Props> = () => {
         {...editorConfig}
         tools={
           <>
-            <div className="action-btn tag-action">
+            {tags.length !== 0 && <div className="action-btn tag-action">
               <i className="fa-solid fa-hashtag icon-img"></i>
               <div ref={tagSeletorRef} className="tag-list" onClick={handleTagSeletorClick}>
                 {tags.map((t) => {
                   return <span key={t}>{t}</span>;
                 })}
               </div>
-            </div>
+            </div>}
             <button className="action-btn">
               <i className="fa-solid fa-image icon-img" onClick={handleUploadFileBtnClick}></i>
               <span className={`tip-text ${state.isUploadingResource ? "!block" : ""}`}>Uploading</span>
