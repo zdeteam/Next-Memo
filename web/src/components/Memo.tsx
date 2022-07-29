@@ -1,10 +1,11 @@
 import { memo, useEffect, useRef, useState } from "react";
-import { escape, indexOf } from "lodash-es";
+import { indexOf } from "lodash-es";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { IMAGE_URL_REG, LINK_URL_REG, MEMO_LINK_REG, TAG_REG, UNKNOWN_ID } from "../helpers/consts";
-import { DONE_BLOCK_REG, parseMarkedToHtml, TODO_BLOCK_REG } from "../helpers/marked";
+import { IMAGE_URL_REG, UNKNOWN_ID } from "../helpers/consts";
+import { DONE_BLOCK_REG, formatMemoContent, TODO_BLOCK_REG } from "../helpers/marked";
 import { editorStateService, locationService, memoService, userService } from "../services";
+import Icon from "./Icon";
 import Only from "./common/OnlyWhen";
 import toastHelper from "./Toast";
 import Image from "./Image";
@@ -178,21 +179,21 @@ const Memo: React.FC<Props> = (props: Props) => {
         </div>
         <div className={`btns-container ${userService.isVisitorMode() ? "!hidden" : ""}`}>
           <span className="btn more-action-btn">
-            <i className="fa-solid fa-ellipsis icon-img"></i>
+            <Icon.MoreHorizontal className="icon-img" />
           </span>
           <div className="more-action-btns-wrapper">
             <div className="more-action-btns-container">
               <div className="btns-container">
                 <div className="btn" onClick={handleTogglePinMemoBtnClick}>
-                  <i className={`fa-solid fa-thumbtack icon-img ${memo.pinned ? "" : "opacity-20"}`}></i>
+                  <Icon.MapPin className={`icon-img ${memo.pinned ? "" : "opacity-20"}`} />
                   <span className="tip-text">{memo.pinned ? "Unpin" : "Pin"}</span>
                 </div>
                 <div className="btn" onClick={handleEditMemoClick}>
-                  <i className="fa-solid fa-pen-to-square icon-img"></i>
+                  <Icon.Edit className="icon-img" />
                   <span className="tip-text">Edit</span>
                 </div>
                 <div className="btn" onClick={handleGenMemoImageBtnClick}>
-                  <i className="fa-solid fa-share-nodes icon-img"></i>
+                  <Icon.Share className="icon-img" />
                   <span className="tip-text">Share</span>
                 </div>
               </div>
@@ -219,7 +220,7 @@ const Memo: React.FC<Props> = (props: Props) => {
         <div className="expand-btn-container">
           <span className={`btn ${state.expandButtonStatus === 0 ? "expand-btn" : "fold-btn"}`} onClick={handleExpandBtnClick}>
             {state.expandButtonStatus === 0 ? "Expand" : "Fold"}
-            <i className="fa-solid fa-chevron-right icon-img"></i>
+            <Icon.ChevronRight className="icon-img" />
           </span>
         </div>
       )}
@@ -233,16 +234,5 @@ const Memo: React.FC<Props> = (props: Props) => {
     </div>
   );
 };
-
-export function formatMemoContent(content: string) {
-  const tempElement = document.createElement("div");
-  tempElement.innerHTML = parseMarkedToHtml(escape(content));
-
-  return tempElement.innerHTML
-    .replace(IMAGE_URL_REG, "")
-    .replace(MEMO_LINK_REG, "<span class='memo-link-text' data-value='$2'>$1</span>")
-    .replace(LINK_URL_REG, "<a class='link' target='_blank' rel='noreferrer' href='$2'>$1</a>")
-    .replace(TAG_REG, "<span class='tag-span'>#$1</span> ");
-}
 
 export default memo(Memo);
