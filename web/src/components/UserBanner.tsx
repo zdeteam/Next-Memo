@@ -42,7 +42,7 @@ const UserBanner: React.FC<Props> = () => {
       <div className="user-banner-container">
         <div className="username-container" onClick={handleUsernameClick}>
           <span className="username-text">{username}</span>
-          {!isVisitorMode && user?.role === "HOST" ? <span className="tag">MOD</span> : null}
+          {!isVisitorMode && user?.role === "HOST" ? <span className="tag">ADMIN</span> : null}
         </div>
         <button className="action-btn menu-popup-btn" onClick={handlePopupBtnClick}>
           <i className="fa-solid fa-ellipsis icon-img"></i>
