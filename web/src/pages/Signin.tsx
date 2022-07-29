@@ -16,18 +16,28 @@ const validateConfig: ValidatorConfig = {
 };
 
 const Signin: React.FC<Props> = () => {
-  const verifiedEmail = window.atob(location.search.slice(1,)).split('p=')[1];
+
   const pageLoadingState = useLoading(true);
   const [siteHost, setSiteHost] = useState<User>();
-  const [status, setStatus] = useState<'signin' | 'invite' | 'signup'>(verifiedEmail ? 'signup' : 'signin')
+  const [status, setStatus] = useState<'signin' | 'invite' | 'signup'>('signin')
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [inviteEmail, setInviteEmail] = useState("");
+  const [verifiedEmail, setVerifiedEmail] = useState("");
   const [signupConfirmPassword, setSignupConfirmPassword] = useState("");
   const [signupPassword, setSignupPassword] = useState("");
   const actionBtnLoadingState = useLoading(false);
 
   useEffect(() => {
+    try {
+      const verifiedEmail = window.atob(location.search.slice(1,)).split('p=')[1];
+      if (verifiedEmail) {
+        setVerifiedEmail(verifiedEmail);
+        setStatus('signup');
+      }
+    } catch (error) {
+
+    }
     api.getSystemStatus().then(({ data }) => {
       const { data: status } = data;
       setSiteHost(status.host);
@@ -146,11 +156,11 @@ const Signin: React.FC<Props> = () => {
           {
             status === 'signin' && <>
               <div className="form-item-container input-form-container">
-                <span className={`normal-text ${email ? "not-null" : ""}`}>Email</span>
+                <span className={`normal-text not-null`}>Email</span>
                 <input type="email" value={email} onChange={handleEmailInputChanged} />
               </div>
               <div className="form-item-container input-form-container">
-                <span className={`normal-text ${password ? "not-null" : ""}`}>Password</span>
+                <span className={`normal-text not-null`}>Password</span>
                 <input type="password" value={password} onChange={handlePasswordInputChanged} />
               </div>
             </>
@@ -158,7 +168,7 @@ const Signin: React.FC<Props> = () => {
           {
             status === 'invite' && <>
               <div className="form-item-container input-form-container">
-                <span className={`normal-text ${email ? "not-null" : ""}`}>Email</span>
+                <span className={`normal-text not-null`}>Email</span>
                 <input type="email" value={inviteEmail} onChange={handleVerifyEmailInputChanged} />
               </div>
             </>
