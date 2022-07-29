@@ -22,6 +22,11 @@ type Profile struct {
 	DSN string `json:"dsn"`
 	// Version is the current version of server
 	Version string `json:"version"`
+	// EmailHost is the Email host
+	EmailHost     string `json:"email_host"`
+	EmailPort     int    `json:"email_port"`
+	EmailUserName string `json:"email_user_name"`
+	EmailPassword string `json:"email_password"`
 }
 
 func checkDSN(dataDir string) (string, error) {
@@ -50,6 +55,10 @@ func GetProfile() *Profile {
 	flag.StringVar(&profile.Mode, "mode", "dev", "mode of server")
 	flag.IntVar(&profile.Port, "port", 8080, "port of server")
 	flag.StringVar(&profile.Data, "data", "", "data directory")
+	flag.StringVar(&profile.EmailHost, "emailHost", "", "host of email")
+	flag.IntVar(&profile.EmailPort, "emailPort", 465, "port of email")
+	flag.StringVar(&profile.EmailUserName, "emailUsername", "", "username of email")
+	flag.StringVar(&profile.EmailPassword, "emailPassword", "", "password of email")
 	flag.Parse()
 
 	if profile.Mode != "dev" && profile.Mode != "prod" {

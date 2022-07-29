@@ -1,4 +1,4 @@
-<h1 align="center">✍️ Memos</h1>
+<h1 align="center">字里笔记</h1>
 
 <p align="center">An open source, self-hosted knowledge base that works with a SQLite db file.</p>
 
@@ -33,7 +33,11 @@ docker run \
   --volume ~/.memos/:/var/opt/memos \
   neosmemo/memos:latest \
   --mode prod \
-  --port 5230
+  --port 5230 \
+  --emailHost=xxxx \
+  --emailPort=xxxx \
+  --emailUsername=xxxx \
+  --emailPassword=xxxx
 ```
 
 Memos should now be running at [http://localhost:5230](http://localhost:5230). If the `~/.memos/` does not have a `memos_prod.db` file, then `memos` will auto generate it.
