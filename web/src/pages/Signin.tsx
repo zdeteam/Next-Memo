@@ -1,4 +1,8 @@
-import { useEffect, useState } from "react";
+import React, { SetStateAction, useEffect, useState } from "react";
+import { Button } from "@strapi/design-system/Button";
+import { TextInput } from "@strapi/design-system/TextInput";
+import { TextButton } from "@strapi/design-system/TextButton";
+import ArrowLeft from "@strapi/icons/ArrowLeft";
 import * as api from "../helpers/api";
 import { validate, ValidatorConfig } from "../helpers/validator";
 import useLoading from "../hooks/useLoading";
@@ -25,9 +29,8 @@ const Signin: React.FC<Props> = () => {
   const [verifiedEmail, setVerifiedEmail] = useState("");
   const [signupConfirmPassword, setSignupConfirmPassword] = useState("");
   const [resetPasswordEmail, setResetPasswordEmail] = useState("");
-  const [resetPasswordError, setResetPasswordError] = useState<string>('');
+  const [resetPasswordError, setResetPasswordError] = useState<string>("");
   const [signupPassword, setSignupPassword] = useState("");
-  const actionBtnLoadingState = useLoading(false);
 
   useEffect(() => {
     try {
@@ -81,10 +84,6 @@ const Signin: React.FC<Props> = () => {
   };
 
   const handleSigninBtnsClick = async () => {
-    if (actionBtnLoadingState.isLoading) {
-      return;
-    }
-
     const emailValidResult = validate(email, validateConfig);
     if (!emailValidResult.result) {
       toastHelper.error("Email: " + emailValidResult.reason);
@@ -98,7 +97,6 @@ const Signin: React.FC<Props> = () => {
     }
 
     try {
-      actionBtnLoadingState.setLoading();
       await api.signin(email, password);
       const user = await userService.doSignIn();
       if (user) {
@@ -110,11 +108,9 @@ const Signin: React.FC<Props> = () => {
       console.error(error);
       toastHelper.error("😟 " + error.message);
     }
-    actionBtnLoadingState.setFinish();
   };
 
   const handleInviteBtnClick = async () => {
-    actionBtnLoadingState.setLoading();
     const res = await api.invite(
       inviteEmail,
       location.origin +
@@ -126,14 +122,12 @@ const Signin: React.FC<Props> = () => {
             })
         )}`
     );
-    actionBtnLoadingState.setFinish();
     if (res)
       toastHelper.success("Check your email for a link to start. If it doesn’t appear within a few minutes, check your spam folder.");
     else toastHelper.error("User already exists");
   };
 
   const handleResetPasswordBtnClick = async () => {
-    actionBtnLoadingState.setLoading();
     const res = await api.resetPassword(
       resetPasswordEmail,
       location.origin +
@@ -145,7 +139,6 @@ const Signin: React.FC<Props> = () => {
             })
         )}`
     );
-    actionBtnLoadingState.setFinish();
     if (res)
       toastHelper.success(
         "Check your email for a link to reset your password. If it doesn’t appear within a few minutes, check your spam folder."
@@ -154,10 +147,6 @@ const Signin: React.FC<Props> = () => {
   };
 
   const handleSignUpBtnClick = async (email: string, password: string, role: UserRole) => {
-    if (actionBtnLoadingState.isLoading) {
-      return;
-    }
-
     const emailValidResult = validate(email, validateConfig);
     if (!emailValidResult.result) {
       toastHelper.error("Email: " + emailValidResult.reason);
@@ -171,7 +160,6 @@ const Signin: React.FC<Props> = () => {
     }
 
     try {
-      actionBtnLoadingState.setLoading();
       await api.signup(email, password, role);
       const user = await userService.doSignIn();
       if (user) {
@@ -183,7 +171,6 @@ const Signin: React.FC<Props> = () => {
       console.error(error);
       toastHelper.error("😟 " + error.message);
     }
-    actionBtnLoadingState.setFinish();
   };
 
   return (
@@ -191,133 +178,119 @@ const Signin: React.FC<Props> = () => {
       <div className="page-container">
         <div className="page-header-container">
           <div className="title-container">
-            <p className="title-text">Memoz</p>
+            <p className="title-text">OpenFlomo</p>
           </div>
           <p className="slogan-text">
-            An <i>open source</i>, <i>self-hosted</i> knowledge base that works with a SQLite db file.
+            An <i>open source</i> Flomo, help you quickly record ideas.
           </p>
         </div>
-        <div className={`page-content-container ${actionBtnLoadingState.isLoading ? "requesting" : ""}`}>
+        <div className={`page-content-container`}>
           {status === "signin" && (
             <>
-              <div className="form-item-container input-form-container">
-                <span className={`normal-text not-null`}>Email</span>
-                <input type="email" value={email} onChange={handleEmailInputChanged} />
-              </div>
-              <div className="form-item-container input-form-container">
-                <span className={`normal-text not-null`}>Password</span>
-                <input type="password" value={password} onChange={handlePasswordInputChanged} />
-              </div>
+              <TextInput label="Email" name="email" value={email} onChange={handleEmailInputChanged} />
+              <TextInput type="password" label="Password" name="password" value={password} onChange={handlePasswordInputChanged} />
             </>
           )}
           {status === "invite" && (
             <>
-              <div className="form-item-container input-form-container">
-                <span className={`normal-text not-null`}>Email</span>
-                <input type="email" value={inviteEmail} onChange={handleVerifyEmailInputChanged} />
-              </div>
+              <TextInput label="Email" name="email" value={inviteEmail} onChange={handleVerifyEmailInputChanged} />
             </>
           )}
           {status === "forgot" && (
             <>
-              <span>Enter your user account's verified email address and we will send you a password reset link.</span>
-              <div className="form-item-container input-form-container">
-                <span className={`normal-text not-null`}>Email</span>
-                <input type="email" value={resetPasswordEmail} onChange={(e) => setResetPasswordEmail(e.target.value)} />
-              </div>
+              {/* eslint-disable-next-line react/no-unescaped-entities */}
+              <p className="form-text">Enter your user account's verified email address and we will send you a password reset link.</p>
+              <TextInput
+                label="Email"
+                name="email"
+                value={resetPasswordEmail}
+                onChange={(e: { target: { value: SetStateAction<string> } }) => setResetPasswordEmail(e.target.value)}
+              />
             </>
           )}
           {status === "signup" && (
             <>
-              <p>You're almost done!</p>
-              <div className="form-item-container input-form-container">
-                <span className={`normal-text not-null`}>Email</span>
-                <input disabled type="email" value={verifiedEmail} onChange={handleVerifyEmailInputChanged} />
-              </div>
-              <div className="form-item-container input-form-container">
-                <span className={`normal-text not-null`}>Password</span>
-                <input type="password" value={signupPassword} onChange={(e) => setSignupPassword(e.target.value)} />
-              </div>
-              <div className="form-item-container input-form-container">
-                <span className={`normal-text not-null`}>Confirm Password</span>
-                <input type="password" value={signupConfirmPassword} onChange={(e) => setSignupConfirmPassword(e.target.value)} />
-              </div>
+              {/* eslint-disable-next-line react/no-unescaped-entities */}
+              <p className="form-text">You're almost done!</p>
+              <TextInput label="Email" name="email" value={verifiedEmail} onChange={handleVerifyEmailInputChanged} />
+              <TextInput
+                type="password"
+                label="Password"
+                name="password"
+                value={signupPassword}
+                onChange={(e: { target: { value: SetStateAction<string> } }) => setSignupPassword(e.target.value)}
+              />
+              <TextInput
+                type="password"
+                label="Confirm Password"
+                name="password"
+                value={signupConfirmPassword}
+                onChange={(e: { target: { value: SetStateAction<string> } }) => setSignupConfirmPassword(e.target.value)}
+              />
             </>
           )}
         </div>
         {status === "signin" && (
-          <div className="action-btns-container">
-            <a className="btn" onClick={() => setStatus("forgot")}>
-              Forgot password?
-            </a>
-            <span className="btn" onClick={() => setStatus("invite")}>
-              New to Memoz? Create an account
-            </span>
+          <div className="action-btn-container">
+            <TextButton onClick={() => setStatus("forgot")}>Forgot password?</TextButton>
             {siteHost || pageLoadingState.isLoading ? (
-              <button
-                className={`btn signin-btn ${actionBtnLoadingState.isLoading ? "requesting" : ""}`}
-                onClick={() => handleSigninBtnsClick()}
-              >
+              <Button fullWidth size="L" onClick={handleSigninBtnsClick}>
                 Sign in
-              </button>
+              </Button>
             ) : (
-              <button
-                className={`btn signin-btn ${actionBtnLoadingState.isLoading ? "requesting" : ""}`}
+              <Button
+                fullWidth
+                size="L"
+                disabled={email === "" || password === ""}
                 onClick={() => handleSignUpBtnClick(email, password, "HOST")}
               >
                 Sign up as Host
-              </button>
+              </Button>
             )}
+            <Button size="L" variant="ghost" fullWidth onClick={() => setStatus("invite")}>
+              New to OpenFlomo? Create an account
+            </Button>
           </div>
         )}
         {status === "invite" && (
-          <div className="action-btns-container">
-            <span className="btn" onClick={() => setStatus("signin")}>
-              Back
-            </span>
-            <button
-              className={`btn signin-btn ${actionBtnLoadingState.isLoading ? "requesting" : ""}`}
-              onClick={() => handleInviteBtnClick()}
-            >
-              Verify Email
-            </button>
+          <div className="action-btn-container">
+            <Button fullWidth size="L" disabled={inviteEmail === ""} onClick={handleInviteBtnClick}>
+              Send verify Email
+            </Button>
+            <TextButton startIcon={<ArrowLeft />} onClick={() => setStatus("signin")}>
+              Back to Sign in
+            </TextButton>
           </div>
         )}
         {status === "forgot" && (
-          <div className="action-btns-container">
-            <span className="btn" onClick={() => setStatus("signin")}>
-              Back
-            </span>
-            <button
-              className={`btn signin-btn ${actionBtnLoadingState.isLoading ? "requesting" : ""}`}
-              onClick={() => handleResetPasswordBtnClick()}
-            >
+          <div className="action-btn-container">
+            <Button fullWidth size="L" disabled={resetPasswordEmail === ""} onClick={handleResetPasswordBtnClick}>
               Send password reset email
-            </button>
+            </Button>
+            <TextButton startIcon={<ArrowLeft />} onClick={() => setStatus("signin")}>
+              Back to Sign in
+            </TextButton>
           </div>
         )}
         {status === "signup" && (
-          <div className="action-btns-container">
-            <button
-              className={`btn signin-btn ${actionBtnLoadingState.isLoading ? "requesting" : ""}`}
-              onClick={() => handleSignUpBtnClick(verifiedEmail, signupPassword, "USER")}
-            >
+          <div className="action-btn-container">
+            <Button fullWidth size="L" onClick={() => handleSignUpBtnClick(verifiedEmail, signupPassword, "USER")}>
               Start now
-            </button>
+            </Button>
           </div>
         )}
         {status === "reset" && (
-          <div>
+          <div className="action-btn-container">
             {resetPasswordError}
-            <p>If it doesn’t appear within a few minutes, check your spam folder.</p>
-            <span className="btn" onClick={() => setStatus("signin")}>
-              Back to sign in
-            </span>
+            <div className="text-container">
+              <p>A new password has been sent to your email.</p>
+              <p>If it doesn’t appear within a few minutes, check your spam folder.</p>
+            </div>
+            <TextButton startIcon={<ArrowLeft />} onClick={() => setStatus("signin")}>
+              Back to Sign in
+            </TextButton>
           </div>
         )}
-        <p className={`tip-text ${siteHost || pageLoadingState.isLoading ? "" : "host-tip"}`}>
-          {siteHost || pageLoadingState.isLoading ? null : "You are registering as the Site Host."}
-        </p>
       </div>
     </div>
   );
