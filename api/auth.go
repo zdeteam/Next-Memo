@@ -20,3 +20,12 @@ type Invite struct {
 	Email string `json:"email"`
 	Host  string `json:"host"`
 }
+
+type ResetPassword struct {
+	Email string `json:"email"`
+	Host  string `json:"host"`
+}
+
+type ChangePassword struct {
+	Email string `json:"email"`
+}

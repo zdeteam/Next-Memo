@@ -2,6 +2,7 @@ package server
 
 import (
 	"fmt"
+	"github.com/patrickmn/go-cache"
 	"time"
 
 	"github.com/usememos/memos/server/profile"
@@ -20,6 +21,8 @@ type Server struct {
 	Profile *profile.Profile
 
 	Store *store.Store
+
+	Cache *cache.Cache
 }
 
 func NewServer(profile *profile.Profile) *Server {
@@ -43,7 +46,7 @@ func NewServer(profile *profile.Profile) *Server {
 	embedFrontend(e)
 
 	// In dev mode, set the const secret key to make signin session persistence.
-	secret := []byte("usememos")
+	secret := []byte("nextmemoz")
 	if profile.Mode == "prod" {
 		secret = securecookie.GenerateRandomKey(16)
 	}
@@ -52,6 +55,7 @@ func NewServer(profile *profile.Profile) *Server {
 	s := &Server{
 		e:       e,
 		Profile: profile,
+		Cache:   cache.New(5*time.Minute, 10*time.Minute),
 	}
 
 	// Webhooks api skips auth checker.
