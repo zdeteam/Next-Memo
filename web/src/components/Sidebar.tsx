@@ -32,15 +32,15 @@ const Sidebar: React.FC<Props> = () => {
       <UsageHeatMap />
       <div className="action-btns-container">
         <button className="btn action-btn" onClick={() => showDailyReviewDialog()}>
-          <span className="icon">📅</span> Daily Review
+          <Icon.Calendar className="icon" /> Daily Review
         </button>
         <Only when={!userService.isVisitorMode()}>
           <button className="btn action-btn" onClick={handleMyAccountBtnClick}>
-            <span className="icon">⚙️</span> Setting
+            <Icon.Settings className="icon" /> Setting
           </button>
         </Only>
         <button className="btn action-btn" onClick={handleArchivedBtnClick}>
-          <span className="icon">🗂</span> Archived
+          <Icon.Archive className="icon" /> Archived
         </button>
       </div>
       <Only when={!userService.isVisitorMode()}>

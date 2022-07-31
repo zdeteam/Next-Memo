@@ -1,4 +1,7 @@
 import { useState } from "react";
+import Crown from "@strapi/icons/Crown";
+// import { Icon } from "@strapi/design-system/Icon";
+
 import { useAppSelector } from "../store";
 import { generateDialog } from "./Dialog";
 import MyAccountSection from "./Settings/MyAccountSection";
@@ -40,13 +43,13 @@ const SettingDialog: React.FC<Props> = (props: Props) => {
             onClick={() => handleSectionSelectorItemClick("my-account")}
             className={`section-item ${state.selectedSection === "my-account" ? "selected" : ""}`}
           >
-            <span className="icon-text">🤠</span> My account
+            <Icon.User className="icon-text" /> My account
           </span>
           <span
             onClick={() => handleSectionSelectorItemClick("preferences")}
             className={`section-item ${state.selectedSection === "preferences" ? "selected" : ""}`}
           >
-            <span className="icon-text">🏟</span> Preferences
+            <Icon.Feather className="icon-text" /> Preferences
           </span>
         </div>
         {user?.role === "HOST" ? (
@@ -57,7 +60,7 @@ const SettingDialog: React.FC<Props> = (props: Props) => {
                 onClick={() => handleSectionSelectorItemClick("member")}
                 className={`section-item ${state.selectedSection === "member" ? "selected" : ""}`}
               >
-                <span className="icon-text">👤</span> Member
+                <Icon.Users className="icon-text" /> Member
               </span>
             </div>
           </>

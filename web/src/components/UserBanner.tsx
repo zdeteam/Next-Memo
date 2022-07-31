@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
+import Crown from "@strapi/icons/Crown";
+import { Icon } from "@strapi/design-system/Icon";
 import * as utils from "../helpers/utils";
 import userService from "../services/userService";
 import { locationService } from "../services";
 import { useAppSelector } from "../store";
-import Icon from "./Icon";
-import MenuBtnsPopup from "./MenuBtnsPopup";
 import "../less/user-banner.less";
 
 interface Props {}
@@ -42,13 +42,11 @@ const UserBanner: React.FC<Props> = () => {
     <>
       <div className="user-banner-container">
         <div className="username-container" onClick={handleUsernameClick}>
+          {!isVisitorMode && user?.role === "HOST" ? (
+            <Icon width={`${30 / 16}rem`} height={`${30 / 16}rem`} color="danger500" as={Crown} />
+          ) : null}
           <span className="username-text">{username}</span>
-          {!isVisitorMode && user?.role === "HOST" ? <span className="tag">ADMIN</span> : null}
         </div>
-        <button className="action-btn menu-popup-btn" onClick={handlePopupBtnClick}>
-          <Icon.MoreHorizontal className="icon-img" />
-        </button>
-        <MenuBtnsPopup shownStatus={shouldShowPopupBtns} setShownStatus={setShouldShowPopupBtns} />
       </div>
       <div className="amount-text-container">
         <div className="status-text memos-text">

@@ -4,3 +4,7 @@ declare module "@strapi/design-system/Button";
 declare module "@strapi/design-system/TextInput";
 declare module "@strapi/design-system/TextButton";
 declare module "@strapi/icons/ArrowLeft";
+declare module "@strapi/design-system/Searchbar";
+declare module "@strapi/icons/Crown";
+declare module "@strapi/design-system/Icon";
+declare module "@strapi/icons/Write";

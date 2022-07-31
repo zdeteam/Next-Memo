@@ -1,29 +1,19 @@
 @import "./mixin.less";
 
 .user-banner-container {
+  //border: 1px solid;
   @apply flex flex-row justify-between items-center relative w-full h-auto px-6 flex-nowrap mb-1;
 
   > .username-container {
     @apply shrink flex flex-row justify-start items-center flex-nowrap truncate;
 
     > .username-text {
+      margin-left: 4px;
       @apply font-bold text-lg pr-1 text-slate-800 cursor-pointer shrink truncate;
     }
 
     > .tag {
       @apply text-xs px-1 bg-blue-600 rounded text-white shadow;
-    }
-  }
-
-  > .action-btn {
-    @apply shrink-0 select-none border-none;
-
-    &.menu-popup-btn {
-      @apply flex flex-col justify-center items-center w-9 h-10 -mr-2 cursor-pointer;
-
-      > .icon-img {
-        @apply w-5 h-auto;
-      }
     }
   }
 }

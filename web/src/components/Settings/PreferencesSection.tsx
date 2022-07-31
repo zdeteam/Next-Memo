@@ -2,6 +2,7 @@ import { memoService } from "../../services";
 import * as utils from "../../helpers/utils";
 import toastHelper from "../Toast";
 import "../../less/settings/preferences-section.less";
+import { Button } from "@strapi/design-system/Button";
 
 interface Props {}
 
@@ -68,12 +69,12 @@ const PreferencesSection: React.FC<Props> = () => {
     <div className="section-container preferences-section-container">
       <p className="title-text">Others</p>
       <div className="btns-container">
-        <button className="btn" onClick={handleExportBtnClick}>
+        <Button variant="tertiary" onClick={handleImportBtnClick}>
           Export data as JSON
-        </button>
-        <button className="btn" onClick={handleImportBtnClick}>
+        </Button>
+        <Button variant="tertiary" onClick={handleImportBtnClick}>
           Import from JSON
-        </button>
+        </Button>
       </div>
     </div>
   );

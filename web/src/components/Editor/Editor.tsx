@@ -1,4 +1,6 @@
 import { forwardRef, ReactNode, useCallback, useEffect, useImperativeHandle, useRef } from "react";
+import Write from "@strapi/icons/Write";
+import { Icon } from "@strapi/design-system/Icon";
 import useRefresh from "../../hooks/useRefresh";
 import Only from "../common/OnlyWhen";
 import "../../less/editor.less";
@@ -104,6 +106,9 @@ const Editor = forwardRef((props: EditorProps, ref: React.ForwardedRef<EditorRef
     if (!editorRef.current) {
       return;
     }
+    if (editorRef.current?.value === "") {
+      return;
+    }
 
     handleConfirmBtnClickCallback(editorRef.current.value);
     editorRef.current.value = "";
@@ -134,9 +139,14 @@ const Editor = forwardRef((props: EditorProps, ref: React.ForwardedRef<EditorRef
             </button>
           </Only>
           <Only when={showConfirmBtn}>
-            <button className="action-btn confirm-btn" disabled={editorRef.current?.value === ""} onClick={handleCommonConfirmBtnClick}>
-              Save <span className="icon-text">✍️</span>
-            </button>
+            <Icon
+              className="confirm-btn"
+              onClick={handleCommonConfirmBtnClick}
+              width="1.4rem"
+              height="1.4rem"
+
+              as={Write}
+            />
           </Only>
         </div>
       </div>
