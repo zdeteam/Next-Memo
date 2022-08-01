@@ -7,12 +7,13 @@ import { generateDialog } from "./Dialog";
 import MyAccountSection from "./Settings/MyAccountSection";
 import PreferencesSection from "./Settings/PreferencesSection";
 import MemberSection from "./Settings/MemberSection";
+import AboutSection from "./Settings/AboutSection";
 import "../less/setting-dialog.less";
 import Icon from "./Icon";
 
 interface Props extends DialogProps {}
 
-type SettingSection = "my-account" | "preferences" | "member";
+type SettingSection = "my-account" | "preferences" | "member" | "about";
 
 interface State {
   selectedSection: SettingSection;
@@ -51,6 +52,12 @@ const SettingDialog: React.FC<Props> = (props: Props) => {
           >
             <Icon.Feather className="icon-text" /> Preferences
           </span>
+          <span
+            onClick={() => handleSectionSelectorItemClick("about")}
+            className={`section-item ${state.selectedSection === "about" ? "selected" : ""}`}
+          >
+            <Icon.Heart className="icon-text" /> About
+          </span>
         </div>
         {user?.role === "HOST" ? (
           <>
@@ -67,13 +74,10 @@ const SettingDialog: React.FC<Props> = (props: Props) => {
         ) : null}
       </div>
       <div className="section-content-container">
-        {state.selectedSection === "my-account" ? (
-          <MyAccountSection />
-        ) : state.selectedSection === "preferences" ? (
-          <PreferencesSection />
-        ) : state.selectedSection === "member" ? (
-          <MemberSection />
-        ) : null}
+        {state.selectedSection === "my-account" && <MyAccountSection />}
+        {state.selectedSection === "preferences" && <PreferencesSection />}
+        {state.selectedSection === "member" && <MemberSection />}
+        {state.selectedSection === "about" && <AboutSection />}
       </div>
     </div>
   );

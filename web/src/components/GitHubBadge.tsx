@@ -15,13 +15,13 @@ const GitHubBadge: React.FC<Props> = () => {
   }, []);
 
   return (
-    <a className="github-badge-container" href="https://github.com/usememos/memos">
+    <a className="github-badge-container" href="https://github.com/zdeteam/open-flomo">
       <div className="github-icon">
         <Icon.GitHub className="icon-img" />
         Star
       </div>
       <div className="count-text">
-        {starCount || ""}
+        {starCount}
         <span className="icon-text">🌟</span>
       </div>
     </a>

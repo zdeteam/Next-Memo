@@ -2,12 +2,14 @@ import { useState } from "react";
 import { TextInput } from "@strapi/design-system/TextInput";
 import { TextButton } from "@strapi/design-system/TextButton";
 import { Button } from "@strapi/design-system/Button";
+import Only from "../common/OnlyWhen";
 import { useAppSelector } from "../../store";
-import { userService } from "../../services";
+import { locationService, userService } from "../../services";
 import { validate, ValidatorConfig } from "../../helpers/validator";
 import toastHelper from "../Toast";
 import { showCommonDialog } from "../Dialog/CommonDialog";
 import showChangePasswordDialog from "../ChangePasswordDialog";
+
 import "../../less/settings/my-account-section.less";
 
 const validateConfig: ValidatorConfig = {
@@ -68,6 +70,14 @@ const MyAccountSection: React.FC<Props> = () => {
     e.stopPropagation();
   };
 
+  const handleSignOutBtnClick = async () => {
+    userService.doSignOut().catch(() => {
+      // do nth
+    });
+    locationService.replaceHistory("/signin");
+    window.location.reload();
+  };
+
   return (
     <>
       <div className="section-container account-section-container">
@@ -94,6 +104,11 @@ const MyAccountSection: React.FC<Props> = () => {
           <span className="normal-text">Password:</span>
           <TextButton onClick={handleChangePasswordBtnClick}>Change it</TextButton>
         </label>
+        <Only when={!userService.isVisitorMode()}>
+          <Button variant="tertiary" onClick={handleSignOutBtnClick}>
+            Sign out
+          </Button>
+        </Only>
       </div>
       <div className="section-container openapi-section-container">
         <p className="title-text">Your MEMO API</p>
