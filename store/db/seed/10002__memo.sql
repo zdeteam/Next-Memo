@@ -7,8 +7,7 @@ INSERT INTO
 VALUES
   (
     1001,
-    "#Hello
-👋 Welcome to OpenFlomo.
+    "#Hello 👋 Welcome to OpenFlomo.
 And here is Jack's Page: [/u/102](/u/102)",
     101
   );
@@ -57,8 +56,7 @@ INSERT INTO
 VALUES
   (
     1004,
-    '#TODO 
-- [x] Take more photos about **🌄 sunset**;
+    '#TODO - [x] Take more photos about **🌄 sunset**;
 - [ ] Clean the classroom;
 - [ ] Watch *👦 The Boys*;
 (👆 click to toggle status)
