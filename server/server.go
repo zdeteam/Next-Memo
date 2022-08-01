@@ -46,7 +46,7 @@ func NewServer(profile *profile.Profile) *Server {
 	embedFrontend(e)
 
 	// In dev mode, set the const secret key to make signin session persistence.
-	secret := []byte("nextmemoz")
+	secret := []byte("openflomo")
 	if profile.Mode == "prod" {
 		secret = securecookie.GenerateRandomKey(16)
 	}
