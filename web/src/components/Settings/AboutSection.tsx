@@ -27,14 +27,13 @@ const AboutSection: React.FC<Props> = () => {
 
   return (
     <div className="section-container preferences-section-container">
-      <p className="title-text">Others</p>
+      <p className="title-text">About</p>
       <div className="btns-container">
         <p>
-          <b>OpenFlomo</b> is an <i>open source</i>, <i>self-hosted</i> knowledge base that works with a SQLite db file.
+          An open source Flomo, help you quickly record ideas.
         </p>
         <br />
         <div className="addtion-info-container">
-          <GitHubBadge />
           <Only when={profile !== undefined}>
             <>
               version:
