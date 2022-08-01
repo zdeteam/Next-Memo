@@ -10,7 +10,7 @@ INSERT INTO
 VALUES
   (
     101, 
-    'demo@usememos.com',
+    'demo@openflomo.com',
     'HOST',
     'Demo Host',
     'demo_open_id',
@@ -30,7 +30,7 @@ INSERT INTO
 VALUES
   (
     102, 
-    'jack@usememos.com',
+    'jack@openflomo.com',
     'USER',
     'Jack',
     'jack_open_id',
@@ -52,7 +52,7 @@ VALUES
   (
     103, 
     'ARCHIVED', 
-    'bob@usememos.com',
+    'bob@openflomo.com',
     'USER',
     'Bob',
     'bob_open_id',

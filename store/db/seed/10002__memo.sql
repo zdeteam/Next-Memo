@@ -7,8 +7,9 @@ INSERT INTO
 VALUES
   (
     1001,
-    "#Hello 👋 Welcome to memos.
-And here is old Jack's Page: [/u/102](/u/102)", 
+    "#Hello
+👋 Welcome to OpenFlomo.
+And here is Jack's Page: [/u/102](/u/102)",
     101
   );
 
@@ -22,7 +23,7 @@ INSERT INTO
 VALUES
   (
     1002,
-    '#TODO 
+    '#TODO
 - [ ] Take more photos about **🌄 sunset**;
 - [x] Clean the room;
 - [x] Read *📖 The Little Prince*;
@@ -41,7 +42,7 @@ INSERT INTO
 VALUES
   (
     1003,
-    '好好学习，天天向上。🤜🤛',
+    'Let''s record memo from here 🤜🤛',
     101,
     'PUBLIC'
   );
