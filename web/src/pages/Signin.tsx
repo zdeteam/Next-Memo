@@ -65,7 +65,6 @@ const Signin: React.FC<Props> = () => {
     setResetPasswordEmail("");
     setSignupPassword("");
     setSignupConfirmPassword("");
-    setVerifiedEmail("");
     setSignupConfirmPasswordError("");
     setResetPasswordEmailError("");
     setResetPasswordEmailInfo("");
