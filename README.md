@@ -1,4 +1,4 @@
-<h1 align="center">字里笔记</h1>
+<h1 align="center">OpenFlomo</h1>
 
 <p align="center">An open source, self-hosted knowledge base that works with a SQLite db file.</p>
 
