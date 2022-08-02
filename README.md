@@ -1,6 +1,6 @@
 <h1 align="center">OpenFlomo</h1>
 
-<p align="center">An open source, self-hosted knowledge base that works with a SQLite db file.</p>
+<p align="center">An open source Flomo, help you quickly record memos.</p>
 
 <p align="center">
   <a href="https://github.com/usememos/memos/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/zdeteam/open-flomo" /></a>
@@ -12,7 +12,7 @@
   <a href="https://openflomo.zde.today">Live Demo</a>
 </p>
 
-![demo](./screen.png)
+[![demo](./screen.png)](https://github.com/zdeteam/open-flomo/blob/13e6bffcf988427602886d848d33ad1fc35bf9a1/screen.png)
 
 ## ✨ Features
 
