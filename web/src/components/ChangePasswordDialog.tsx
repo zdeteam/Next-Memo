@@ -9,6 +9,7 @@ import toastHelper from "./Toast";
 import "../less/change-password-dialog.less";
 
 const validateConfig: ValidatorConfig = {
+  notEmpty: true,
   minLength: 4,
   maxLength: 24,
   noSpace: true,
