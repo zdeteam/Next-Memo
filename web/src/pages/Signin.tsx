@@ -13,6 +13,7 @@ import "../less/signin.less";
 interface Props {}
 
 const validateConfig: ValidatorConfig = {
+  notEmpty: true,
   minLength: 4,
   maxLength: 24,
   noSpace: true,
@@ -23,19 +24,58 @@ const Signin: React.FC<Props> = () => {
   const pageLoadingState = useLoading(true);
   const [siteHost, setSiteHost] = useState<User>();
   const [status, setStatus] = useState<"signin" | "invite" | "signup" | "forgot" | "reset">("signin");
+
   const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+
   const [inviteEmail, setInviteEmail] = useState("");
+  const [inviteEmailError, setInviteEmailError] = useState("");
+  const [inviteEmailInfo, setInviteEmailInfo] = useState("");
+  const [inviteLoading, setInviteLoading] = useState(false);
   const [verifiedEmail, setVerifiedEmail] = useState("");
-  const [signupConfirmPassword, setSignupConfirmPassword] = useState("");
-  const [resetPasswordEmail, setResetPasswordEmail] = useState("");
-  const [resetPasswordError, setResetPasswordError] = useState<string>("");
+
   const [signupPassword, setSignupPassword] = useState("");
+  const [signupPasswordError, setSignupPasswordError] = useState("");
+  const [signupConfirmPassword, setSignupConfirmPassword] = useState("");
+  const [signupConfirmPasswordError, setSignupConfirmPasswordError] = useState("");
+
+  const [resetPasswordEmail, setResetPasswordEmail] = useState("");
+  const [resetPasswordEmailError, setResetPasswordEmailError] = useState("");
+  const [resetPasswordEmailInfo, setResetPasswordEmailInfo] = useState("");
+  const [resetLoading, setResetLoading] = useState(false);
+
+  const [resetPasswordSuccess, setResetPasswordSuccess] = useState<boolean>(false);
+  const [resetPasswordError, setResetPasswordError] = useState<string>("");
+
+  useEffect(() => {
+    clear();
+  }, [status]);
+
+  const clear = () => {
+    setEmail("");
+    setEmailError("");
+    setPassword("");
+    setPasswordError("");
+    setInviteEmail("");
+    setInviteEmailError("");
+    setInviteEmailInfo("");
+    setSignupPasswordError("");
+    setResetPasswordEmail("");
+    setSignupPassword("");
+    setSignupConfirmPassword("");
+    setVerifiedEmail("");
+    setSignupConfirmPasswordError("");
+    setResetPasswordEmailError("");
+    setResetPasswordEmailInfo("");
+    setResetPasswordSuccess(false);
+    setResetPasswordError("");
+  };
 
   useEffect(() => {
     try {
       const { action, email } = JSON.parse(window.atob(location.search.slice(1)).split("p=")[1]);
-      console.log(action);
       if (action === "invite") {
         setVerifiedEmail(email);
         setStatus("signup");
@@ -46,9 +86,8 @@ const Signin: React.FC<Props> = () => {
         api
           .changePassword(email)
           .then((data) => {
-            console.log("data", data);
             // setResetPasswordStatus(data);
-            setResetPasswordError("A new password has been sent to your email.");
+            setResetPasswordSuccess(true);
           })
           .catch((error) => {
             setResetPasswordError(error.response.data.message);
@@ -71,28 +110,31 @@ const Signin: React.FC<Props> = () => {
   const handleEmailInputChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
     const text = e.target.value as string;
     setEmail(text);
+    setEmailError("");
   };
 
   const handlePasswordInputChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
     const text = e.target.value as string;
     setPassword(text);
+    setPasswordError("");
   };
 
   const handleVerifyEmailInputChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
     const text = e.target.value as string;
     setInviteEmail(text);
+    setInviteEmailError("");
   };
 
   const handleSigninBtnsClick = async () => {
-    const emailValidResult = validate(email, validateConfig);
+    const emailValidResult = validate(email, { isEmail: true, ...validateConfig });
     if (!emailValidResult.result) {
-      toastHelper.error("Email: " + emailValidResult.reason);
+      setEmailError(emailValidResult.reason);
       return;
     }
 
     const passwordValidResult = validate(password, validateConfig);
     if (!passwordValidResult.result) {
-      toastHelper.error("Password: " + passwordValidResult.reason);
+      setPasswordError(passwordValidResult.reason);
       return;
     }
 
@@ -105,29 +147,54 @@ const Signin: React.FC<Props> = () => {
         toastHelper.error("😟 Login failed");
       }
     } catch (error: any) {
-      console.error(error);
-      toastHelper.error("😟 " + error.message);
+      const data = error.response.data;
+      if (data.message.match("User")) {
+        setEmailError(data.message);
+      }
+      if (data.message.match("password")) {
+        setPasswordError(data.message);
+      }
     }
   };
 
   const handleInviteBtnClick = async () => {
-    const res = await api.invite(
-      inviteEmail,
-      location.origin +
-        `/signin?${window.btoa(
-          "p=" +
-            JSON.stringify({
-              action: status,
-              email: inviteEmail,
-            })
-        )}`
-    );
-    if (res)
-      toastHelper.success("Check your email for a link to start. If it doesn’t appear within a few minutes, check your spam folder.");
-    else toastHelper.error("User already exists");
+    setInviteLoading(true);
+    const validResult = validate(inviteEmail, { isEmail: true, ...validateConfig });
+    if (!validResult.result) {
+      setInviteEmailError(validResult.reason);
+      return setInviteLoading(false);
+    }
+    const res = await api
+      .invite(
+        inviteEmail,
+        location.origin +
+          `/signin?${window.btoa(
+            "p=" +
+              JSON.stringify({
+                action: status,
+                email: inviteEmail,
+              })
+          )}`
+      )
+      .catch((error) => {
+        const data = error.response.data;
+        setInviteEmailError(data.message);
+      });
+    if (res) {
+      setInviteEmailInfo("Check your email for a link to start. If it doesn’t appear within a few minutes, check your spam folder.");
+    } else {
+      setInviteEmailError("User already exists");
+    }
+    setInviteLoading(false);
   };
 
   const handleResetPasswordBtnClick = async () => {
+    setResetLoading(true);
+    const validResult = validate(resetPasswordEmail, { isEmail: true, ...validateConfig });
+    if (!validResult.result) {
+      setResetPasswordEmailError(validResult.reason);
+      return setResetLoading(false);
+    }
     const res = await api.resetPassword(
       resetPasswordEmail,
       location.origin +
@@ -140,22 +207,23 @@ const Signin: React.FC<Props> = () => {
         )}`
     );
     if (res)
-      toastHelper.success(
+      setResetPasswordEmailInfo(
         "Check your email for a link to reset your password. If it doesn’t appear within a few minutes, check your spam folder."
       );
-    else toastHelper.error("User is not exists");
+    else setResetPasswordEmailError("User is not exists");
+    setResetLoading(false);
   };
 
   const handleSignUpBtnClick = async (email: string, password: string, role: UserRole) => {
-    const emailValidResult = validate(email, validateConfig);
-    if (!emailValidResult.result) {
-      toastHelper.error("Email: " + emailValidResult.reason);
+    const signupPasswordValidResult = validate(signupPassword, validateConfig);
+    if (!signupPasswordValidResult.result) {
+      setSignupPasswordError(signupPasswordValidResult.reason);
       return;
     }
 
-    const passwordValidResult = validate(password, validateConfig);
-    if (!passwordValidResult.result) {
-      toastHelper.error("Password: " + passwordValidResult.reason);
+    const signupConfirmPasswordValidResult = validate(signupConfirmPassword, validateConfig);
+    if (!signupConfirmPasswordValidResult.result) {
+      setSignupConfirmPasswordError(signupConfirmPasswordValidResult.reason);
       return;
     }
 
@@ -168,7 +236,6 @@ const Signin: React.FC<Props> = () => {
         toastHelper.error("😟 Signup failed");
       }
     } catch (error: any) {
-      console.error(error);
       toastHelper.error("😟 " + error.message);
     }
   };
@@ -187,13 +254,27 @@ const Signin: React.FC<Props> = () => {
         <div className={`page-content-container`}>
           {status === "signin" && (
             <>
-              <TextInput label="Email" name="email" value={email} onChange={handleEmailInputChanged} />
-              <TextInput type="password" label="Password" name="password" value={password} onChange={handlePasswordInputChanged} />
+              <TextInput error={emailError} label="Email" name="email" value={email} onChange={handleEmailInputChanged} />
+              <TextInput
+                error={passwordError}
+                type="password"
+                label="Password"
+                name="password"
+                value={password}
+                onChange={handlePasswordInputChanged}
+              />
             </>
           )}
           {status === "invite" && (
             <>
-              <TextInput label="Email" name="email" value={inviteEmail} onChange={handleVerifyEmailInputChanged} />
+              <TextInput
+                error={inviteEmailError}
+                hint={inviteEmailInfo}
+                label="Email"
+                name="email"
+                value={inviteEmail}
+                onChange={handleVerifyEmailInputChanged}
+              />
             </>
           )}
           {status === "forgot" && (
@@ -201,31 +282,47 @@ const Signin: React.FC<Props> = () => {
               {/* eslint-disable-next-line react/no-unescaped-entities */}
               <p className="form-text">Enter your user account's verified email address and we will send you a password reset link.</p>
               <TextInput
+                error={resetPasswordEmailError}
+                hint={resetPasswordEmailInfo}
                 label="Email"
                 name="email"
                 value={resetPasswordEmail}
-                onChange={(e: { target: { value: SetStateAction<string> } }) => setResetPasswordEmail(e.target.value)}
+                onChange={(e: { target: { value: SetStateAction<string> } }) => {
+                  setResetPasswordEmailError("");
+                  setResetPasswordEmailInfo("");
+                  setResetPasswordEmail(e.target.value);
+                }}
               />
             </>
           )}
           {status === "signup" && (
             <>
-              {/* eslint-disable-next-line react/no-unescaped-entities */}
-              <p className="form-text">You're almost done!</p>
-              <TextInput label="Email" name="email" value={verifiedEmail} onChange={handleVerifyEmailInputChanged} />
+              <p className="form-text">
+                Hello, <span style={{ fontWeight: "bold" }}>{verifiedEmail}</span> .
+                {/* eslint-disable-next-line react/no-unescaped-entities */}
+                You're almost done!
+              </p>
               <TextInput
+                error={signupPasswordError}
                 type="password"
                 label="Password"
                 name="password"
                 value={signupPassword}
-                onChange={(e: { target: { value: SetStateAction<string> } }) => setSignupPassword(e.target.value)}
+                onChange={(e: { target: { value: SetStateAction<string> } }) => {
+                  setSignupPasswordError("");
+                  setSignupPassword(e.target.value);
+                }}
               />
               <TextInput
+                error={signupConfirmPasswordError}
                 type="password"
                 label="Confirm Password"
                 name="password"
                 value={signupConfirmPassword}
-                onChange={(e: { target: { value: SetStateAction<string> } }) => setSignupConfirmPassword(e.target.value)}
+                onChange={(e: { target: { value: SetStateAction<string> } }) => {
+                  setSignupConfirmPasswordError("");
+                  setSignupConfirmPassword(e.target.value);
+                }}
               />
             </>
           )}
@@ -254,7 +351,7 @@ const Signin: React.FC<Props> = () => {
         )}
         {status === "invite" && (
           <div className="action-btn-container">
-            <Button fullWidth size="L" disabled={inviteEmail === ""} onClick={handleInviteBtnClick}>
+            <Button loading={inviteLoading} fullWidth size="L" onClick={handleInviteBtnClick}>
               Send verify Email
             </Button>
             <TextButton startIcon={<ArrowLeft />} onClick={() => setStatus("signin")}>
@@ -264,7 +361,7 @@ const Signin: React.FC<Props> = () => {
         )}
         {status === "forgot" && (
           <div className="action-btn-container">
-            <Button fullWidth size="L" disabled={resetPasswordEmail === ""} onClick={handleResetPasswordBtnClick}>
+            <Button loading={resetLoading} fullWidth size="L" onClick={handleResetPasswordBtnClick}>
               Send password reset email
             </Button>
             <TextButton startIcon={<ArrowLeft />} onClick={() => setStatus("signin")}>
@@ -280,11 +377,18 @@ const Signin: React.FC<Props> = () => {
           </div>
         )}
         {status === "reset" && (
-          <div className="action-btn-container">
-            {resetPasswordError}
+          <div>
             <div className="text-container">
-              <p>A new password has been sent to your email.</p>
-              <p>If it doesn’t appear within a few minutes, check your spam folder.</p>
+              {resetPasswordSuccess && (
+                <>
+                  <p style={{ fontWeight: "bold", marginBottom: "12px", fontSize: "16px" }}>Your password reset completed</p>
+                  <p style={{ fontWeight: "200", fontSize: "12px" }}>A new password has been sent to your email.</p>
+                  <span style={{ fontWeight: "200", fontSize: "12px" }}>
+                    If it doesn’t appear within a few minutes, check your spam folder.
+                  </span>
+                </>
+              )}
+              {resetPasswordError && <p>{resetPasswordError}</p>}
             </div>
             <TextButton startIcon={<ArrowLeft />} onClick={() => setStatus("signin")}>
               Back to Sign in
