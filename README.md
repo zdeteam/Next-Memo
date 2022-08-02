@@ -28,16 +28,17 @@
 
 ```docker
 docker run \
-  --name memos \
+  --name open-flomo \
   --publish 5230:5230 \
   --volume ~/.memos/:/var/opt/memos \
-  neosmemo/memos:latest \
   --mode prod \
   --port 5230 \
   --emailHost=xxxx \
   --emailPort=xxxx \
   --emailUsername=xxxx \
   --emailPassword=xxxx
+  zdeteam/open-flomo:latest
+
 ```
 
 Memos should be running at [http://localhost:5230](http://localhost:5230). If the `~/.memos/` does not have a `memos_prod.db` file, then memos will auto generate it.
