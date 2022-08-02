@@ -3,17 +3,16 @@
 <p align="center">An open source, self-hosted knowledge base that works with a SQLite db file.</p>
 
 <p align="center">
-  <a href="https://github.com/usememos/memos/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/usememos/memos" /></a>
-  <a href="https://hub.docker.com/r/neosmemo/memos"><img alt="Docker pull" src="https://img.shields.io/docker/pulls/neosmemo/memos.svg" /></a>
-  <img alt="Go report" src="https://goreportcard.com/badge/github.com/usememos/memos" />
+  <a href="https://github.com/usememos/memos/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/zdeteam/open-flomo" /></a>
+  <a href="https://hub.docker.com/r/neosmemo/memos"><img alt="Docker pull" src="https://img.shields.io/docker/pulls/zdeteam/open-flomo.svg" /></a>
+  <img alt="Go report" src="https://goreportcard.com/badge/github.com/zdeteam/open-flomo" />
 </p>
 
 <p align="center">
-  <a href="https://demo.usememos.com/">Live Demo</a> •
-  <a href="https://t.me/+-_tNF1k70UU4ZTc9">Discuss in Telegram 👾</a>
+  <a href="https://openflomo.zde.today">Live Demo</a>
 </p>
 
-![demo](https://raw.githubusercontent.com/usememos/memos/main/resources/demo.webp)
+![demo](./screen.png)
 
 ## ✨ Features
 
