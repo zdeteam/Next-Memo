@@ -13,6 +13,7 @@ import showChangePasswordDialog from "../ChangePasswordDialog";
 import "../../less/settings/my-account-section.less";
 
 const validateConfig: ValidatorConfig = {
+  notEmpty: true,
   minLength: 4,
   maxLength: 24,
   noSpace: true,
