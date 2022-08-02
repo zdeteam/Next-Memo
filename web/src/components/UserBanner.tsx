@@ -42,9 +42,6 @@ const UserBanner: React.FC<Props> = () => {
     <>
       <div className="user-banner-container">
         <div className="username-container" onClick={handleUsernameClick}>
-          {!isVisitorMode && user?.role === "HOST" ? (
-            <Icon width={`${30 / 16}rem`} height={`${30 / 16}rem`} color="danger500" as={Crown} />
-          ) : null}
           <span className="username-text">{username}</span>
         </div>
       </div>
