@@ -98,9 +98,10 @@ const Signin: React.FC<Props> = () => {
     }
     api.getSystemStatus().then(({ data }) => {
       const { data: status } = data;
+
       setSiteHost(status.host);
       if (status.profile?.mode === "dev") {
-        setEmail("admin@memoz.today");
+        setEmail("admin@openflomo.today");
         setPassword("123456");
       }
       pageLoadingState.setFinish();
@@ -214,19 +215,20 @@ const Signin: React.FC<Props> = () => {
     setResetLoading(false);
   };
 
-  const handleSignUpBtnClick = async (email: string, password: string, role: UserRole) => {
-    const signupPasswordValidResult = validate(signupPassword, validateConfig);
-    if (!signupPasswordValidResult.result) {
-      setSignupPasswordError(signupPasswordValidResult.reason);
-      return;
-    }
+  const handleSignUpBtnClick = async (email: string, password: string, role: UserRole ) => {
+    if (siteHost !== null) {
+      const signupPasswordValidResult = validate(signupPassword, validateConfig);
+      if (!signupPasswordValidResult.result) {
+        setSignupPasswordError(signupPasswordValidResult.reason);
+        return;
+      }
 
-    const signupConfirmPasswordValidResult = validate(signupConfirmPassword, validateConfig);
-    if (!signupConfirmPasswordValidResult.result) {
-      setSignupConfirmPasswordError(signupConfirmPasswordValidResult.reason);
-      return;
+      const signupConfirmPasswordValidResult = validate(signupConfirmPassword, validateConfig);
+      if (!signupConfirmPasswordValidResult.result) {
+        setSignupConfirmPasswordError(signupConfirmPasswordValidResult.reason);
+        return;
+      }
     }
-
     try {
       await api.signup(email, password, role);
       const user = await userService.doSignIn();
@@ -338,7 +340,6 @@ const Signin: React.FC<Props> = () => {
               <Button
                 fullWidth
                 size="L"
-                disabled={email === "" || password === ""}
                 onClick={() => handleSignUpBtnClick(email, password, "HOST")}
               >
                 Sign up as Host
