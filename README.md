@@ -9,10 +9,11 @@
 </p>
 
 <p align="center">
-  <a href="https://openflomo.zde.today">Live Demo</a>
+  <a href="https://openflomo.zde.today">Live Demo</a> •
+  <a href="https://github.com/zdeteam/open-flomo/discussions">Discuss in Github 👾</a>
 </p>
 
-![demo](https://github.com/zdeteam/open-flomo/blob/13e6bffcf988427602886d848d33ad1fc35bf9a1/screen.png)
+![demo](https://github.com/zdeteam/open-flomo/blob/a4c463f801c67b4bd93b18a9dd87e97b22f565b1/screen.png)
 
 ## ✨ Features
 
@@ -26,36 +27,19 @@
 ## ⚓️ Deploy with Docker
 
 ```docker
-docker run \
-  --name open-flomo \
-  --publish 5230:5230 \
-  --volume ~/.memos/:/var/opt/memos \
-  --mode prod \
-  --port 5230 \
-  --emailHost=xxxx \
-  --emailPort=xxxx \
-  --emailUsername=xxxx \
-  --emailPassword=xxxx
-  zdeteam/open-flomo:latest
-
+docker run -d --name open-flomo --publish 8080:8080 --volume ~/.open-flomo/:/var/opt/open-flomo zdeteam/open-flomo:latest --mode prod --port 8080 --emailHost 发送邮件服务器(例如：smtp.exmail.qq.com) --emailPort 端口号 --emailUsername 邮箱账号 --emailPassword 邮箱密码
 ```
 
-Memos should be running at [http://localhost:5230](http://localhost:5230). If the `~/.memos/` does not have a `memos_prod.db` file, then memos will auto generate it.
+OpenFlomo should be running at [http://localhost:5230](http://localhost:5230). If the `~/.memos/` does not have a `memos_prod.db` file, then memos will auto generate it.
 
 ## 🏗 Development
 
-Memos is built with a curated tech stack. It is optimized for developer experience and is very easy to start working on the code:
-
+OpenFlomo is built with a curated tech stack. It is optimized for developer experience and is very easy to start working on the code:
 1. It has no external dependency.
 2. It requires zero config.
 3. 1 command to start backend and 1 command to start frontend, both with live reload support.
 
-### Tech Stack
-
-<img alt="tech stack" src="https://raw.githubusercontent.com/usememos/memos/main/resources/tech-stack.png" width="360" />
-
 ### Prerequisites
-
 - [Go](https://golang.org/doc/install)
 - [Air](https://github.com/cosmtrek/air#installation) for backend live reload
 - [Node.js](https://nodejs.org/)
@@ -66,7 +50,7 @@ Memos is built with a curated tech stack. It is optimized for developer experien
 1. pull source code
 
    ```bash
-   git clone https://github.com/usememos/memos
+   git clone https://github.com/zdeteam/open-flomo.git
    ```
 
 2. start backend using air(with live reload)
@@ -81,12 +65,7 @@ Memos is built with a curated tech stack. It is optimized for developer experien
    cd web && yarn && yarn dev
    ```
 
-Memos should now be running at [http://localhost:3000](http://localhost:3000) and change either frontend or backend code would trigger live reload.
+OpenFlomo should now be running at [http://localhost:3000](http://localhost:3000) and change either frontend or backend code would trigger live reload.
 
 ### Contributing
-
 Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are greatly appreciated. 🥰
-
-## 🌟 Star history
-
-[![Star History Chart](https://api.star-history.com/svg?repos=usememos/memos&type=Date)](https://star-history.com/#usememos/memos&Date)
