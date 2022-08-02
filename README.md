@@ -12,7 +12,7 @@
   <a href="https://openflomo.zde.today">Live Demo</a>
 </p>
 
-[![demo](./screen.png)](https://github.com/zdeteam/open-flomo/blob/13e6bffcf988427602886d848d33ad1fc35bf9a1/screen.png)
+![demo](https://github.com/zdeteam/open-flomo/blob/13e6bffcf988427602886d848d33ad1fc35bf9a1/screen.png)
 
 ## ✨ Features
 
