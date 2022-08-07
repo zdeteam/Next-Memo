@@ -10,7 +10,7 @@ type Resource struct {
 
 	// Domain specific fields
 	Filename string `json:"filename"`
-	Blob     []byte `json:"blob"`
+	Blob     []byte `json:"-"`
 	Type     string `json:"type"`
 	Size     int64  `json:"size"`
 }
@@ -38,4 +38,7 @@ type ResourceFind struct {
 
 type ResourceDelete struct {
 	ID int
+
+	// Standard fields
+	CreatorID int
 }

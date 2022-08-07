@@ -3,9 +3,10 @@ package server
 import (
 	"encoding/json"
 	"fmt"
-	"gopkg.in/gomail.v2"
 	"mime"
 	"net/http"
+
+	"gopkg.in/gomail.v2"
 
 	"github.com/usememos/memos/api"
 	"github.com/usememos/memos/common"
@@ -16,6 +17,7 @@ import (
 
 func (s *Server) registerAuthRoutes(g *echo.Group) {
 	g.POST("/auth/signin", func(c echo.Context) error {
+		ctx := c.Request().Context()
 		signin := &api.Signin{}
 		if err := json.NewDecoder(c.Request().Body).Decode(signin); err != nil {
 			return echo.NewHTTPError(http.StatusBadRequest, "Malformatted signin request").SetInternal(err)
@@ -24,7 +26,7 @@ func (s *Server) registerAuthRoutes(g *echo.Group) {
 		userFind := &api.UserFind{
 			Email: &signin.Email,
 		}
-		user, err := s.Store.FindUser(userFind)
+		user, err := s.Store.FindUser(ctx, userFind)
 		if err != nil {
 			return echo.NewHTTPError(http.StatusInternalServerError, fmt.Sprintf("Failed to find user by email %s", signin.Email)).SetInternal(err)
 		}
@@ -62,6 +64,7 @@ func (s *Server) registerAuthRoutes(g *echo.Group) {
 	})
 
 	g.POST("/auth/signup", func(c echo.Context) error {
+		ctx := c.Request().Context()
 
 		signup := &api.Signup{}
 		if err := json.NewDecoder(c.Request().Body).Decode(signup); err != nil {
@@ -73,7 +76,7 @@ func (s *Server) registerAuthRoutes(g *echo.Group) {
 		hostUserFind := api.UserFind{
 			Role: &hostUserType,
 		}
-		hostUser, err := s.Store.FindUser(&hostUserFind)
+		hostUser, err := s.Store.FindUser(ctx, &hostUserFind)
 		if err != nil {
 			return echo.NewHTTPError(http.StatusInternalServerError, "Failed to find host user").SetInternal(err)
 		}
@@ -102,7 +105,7 @@ func (s *Server) registerAuthRoutes(g *echo.Group) {
 			PasswordHash: string(passwordHash),
 			OpenID:       common.GenUUID(),
 		}
-		user, err := s.Store.CreateUser(userCreate)
+		user, err := s.Store.CreateUser(ctx, userCreate)
 		if err != nil {
 			return echo.NewHTTPError(http.StatusInternalServerError, "Failed to create user").SetInternal(err)
 		}
@@ -120,6 +123,7 @@ func (s *Server) registerAuthRoutes(g *echo.Group) {
 	})
 
 	g.POST("/auth/invite", func(c echo.Context) error {
+		ctx := c.Request().Context()
 		invite := &api.Invite{}
 		if err := json.NewDecoder(c.Request().Body).Decode(invite); err != nil {
 			return echo.NewHTTPError(http.StatusBadRequest, "Malformatted signin request").SetInternal(err)
@@ -128,7 +132,7 @@ func (s *Server) registerAuthRoutes(g *echo.Group) {
 			Email: &invite.Email,
 		}
 
-		user, _ := s.Store.FindUser(userFind)
+		user, _ := s.Store.FindUser(ctx, userFind)
 		if user != nil {
 			return c.JSON(http.StatusOK, false)
 		}

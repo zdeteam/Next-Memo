@@ -238,7 +238,7 @@ const MemoEditor: React.FC<Props> = () => {
                   return <span key={t}>{t}</span>;
                 })}
               </div>
-            </div>}
+            </div>
             <button className="action-btn">
               <Icon.Image className="icon-img" onClick={handleUploadFileBtnClick} />
               <span className={`tip-text ${state.isUploadingResource ? "!block" : ""}`}>Uploading</span>
