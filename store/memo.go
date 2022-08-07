@@ -1,6 +1,7 @@
 package store
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"strings"
@@ -43,43 +44,93 @@ func (raw *memoRaw) toMemo() *api.Memo {
 	}
 }
 
-func (s *Store) CreateMemo(create *api.MemoCreate) (*api.Memo, error) {
-	memoRaw, err := createMemoRaw(s.db, create)
+func (s *Store) composeMemo(ctx context.Context, raw *memoRaw) (*api.Memo, error) {
+	memo := raw.toMemo()
+
+	memoOrganizer, err := s.FindMemoOrganizer(ctx, &api.MemoOrganizerFind{
+		MemoID: memo.ID,
+		UserID: memo.CreatorID,
+	})
+	if err != nil && common.ErrorCode(err) != common.NotFound {
+		return nil, err
+	} else if memoOrganizer != nil {
+		memo.Pinned = memoOrganizer.Pinned
+	}
+
+	return memo, nil
+}
+
+func (s *Store) CreateMemo(ctx context.Context, create *api.MemoCreate) (*api.Memo, error) {
+	tx, err := s.db.BeginTx(ctx, nil)
+	if err != nil {
+		return nil, FormatError(err)
+	}
+	defer tx.Rollback()
+
+	memoRaw, err := createMemoRaw(ctx, tx, create)
 	if err != nil {
 		return nil, err
 	}
 
-	memo, err := s.composeMemo(memoRaw)
+	if err := tx.Commit(); err != nil {
+		return nil, FormatError(err)
+	}
+
+	memo, err := s.composeMemo(ctx, memoRaw)
 	if err != nil {
+		return nil, err
+	}
+
+	if err := s.cache.UpsertCache(api.MemoCache, memo.ID, memo); err != nil {
 		return nil, err
 	}
 
 	return memo, nil
 }
 
-func (s *Store) PatchMemo(patch *api.MemoPatch) (*api.Memo, error) {
-	memoRaw, err := patchMemoRaw(s.db, patch)
+func (s *Store) PatchMemo(ctx context.Context, patch *api.MemoPatch) (*api.Memo, error) {
+	tx, err := s.db.BeginTx(ctx, nil)
+	if err != nil {
+		return nil, FormatError(err)
+	}
+	defer tx.Rollback()
+
+	memoRaw, err := patchMemoRaw(ctx, tx, patch)
 	if err != nil {
 		return nil, err
 	}
 
-	memo, err := s.composeMemo(memoRaw)
+	if err := tx.Commit(); err != nil {
+		return nil, FormatError(err)
+	}
+
+	memo, err := s.composeMemo(ctx, memoRaw)
 	if err != nil {
+		return nil, err
+	}
+
+	if err := s.cache.UpsertCache(api.MemoCache, memo.ID, memo); err != nil {
 		return nil, err
 	}
 
 	return memo, nil
 }
 
-func (s *Store) FindMemoList(find *api.MemoFind) ([]*api.Memo, error) {
-	memoRawList, err := findMemoRawList(s.db, find)
+func (s *Store) FindMemoList(ctx context.Context, find *api.MemoFind) ([]*api.Memo, error) {
+	tx, err := s.db.BeginTx(ctx, nil)
+	if err != nil {
+		return nil, FormatError(err)
+	}
+	defer tx.Rollback()
+
+	memoRawList, err := findMemoRawList(ctx, tx, find)
 	if err != nil {
 		return nil, err
 	}
 
 	list := []*api.Memo{}
 	for _, raw := range memoRawList {
-		memo, err := s.composeMemo(raw)
+		memo, err := s.composeMemo(ctx, raw)
 		if err != nil {
 			return nil, err
 		}
@@ -90,8 +141,25 @@ func (s *Store) FindMemoList(find *api.MemoFind) ([]*api.Memo, error) {
 	return list, nil
 }
 
-func (s *Store) FindMemo(find *api.MemoFind) (*api.Memo, error) {
-	list, err := findMemoRawList(s.db, find)
+func (s *Store) FindMemo(ctx context.Context, find *api.MemoFind) (*api.Memo, error) {
+	if find.ID != nil {
+		memo := &api.Memo{}
+		has, err := s.cache.FindCache(api.MemoCache, *find.ID, memo)
+		if err != nil {
+			return nil, err
+		}
+		if has {
+			return memo, nil
+		}
+	}
+
+	tx, err := s.db.BeginTx(ctx, nil)
+	if err != nil {
+		return nil, FormatError(err)
+	}
+	defer tx.Rollback()
+
+	list, err := findMemoRawList(ctx, tx, find)
 	if err != nil {
 		return nil, err
 	}
@@ -100,24 +168,39 @@ func (s *Store) FindMemo(find *api.MemoFind) (*api.Memo, error) {
 		return nil, &common.Error{Code: common.NotFound, Err: fmt.Errorf("not found")}
 	}
 
-	memo, err := s.composeMemo(list[0])
+	memo, err := s.composeMemo(ctx, list[0])
 	if err != nil {
+		return nil, err
+	}
+
+	if err := s.cache.UpsertCache(api.MemoCache, memo.ID, memo); err != nil {
 		return nil, err
 	}
 
 	return memo, nil
 }
 
-func (s *Store) DeleteMemo(delete *api.MemoDelete) error {
-	err := deleteMemo(s.db, delete)
+func (s *Store) DeleteMemo(ctx context.Context, delete *api.MemoDelete) error {
+	tx, err := s.db.BeginTx(ctx, nil)
 	if err != nil {
 		return FormatError(err)
 	}
+	defer tx.Rollback()
+
+	if err := deleteMemo(ctx, tx, delete); err != nil {
+		return FormatError(err)
+	}
+
+	if err := tx.Commit(); err != nil {
+		return FormatError(err)
+	}
+
+	s.cache.DeleteCache(api.MemoCache, delete.ID)
 
 	return nil
 }
 
-func createMemoRaw(db *sql.DB, create *api.MemoCreate) (*memoRaw, error) {
+func createMemoRaw(ctx context.Context, tx *sql.Tx, create *api.MemoCreate) (*memoRaw, error) {
 	set := []string{"creator_id", "content"}
 	placeholder := []string{"?", "?"}
 	args := []interface{}{create.CreatorID, create.Content}
@@ -130,22 +213,14 @@ func createMemoRaw(db *sql.DB, create *api.MemoCreate) (*memoRaw, error) {
 	}
 
 	query := `
-	INSERT INTO memo (
-		` + strings.Join(set, ", ") + `
-	)
-	VALUES (` + strings.Join(placeholder, ",") + `)
-	RETURNING id, creator_id, created_ts, updated_ts, row_status, content, visibility`
-	row, err := db.Query(query,
-		args...,
-	)
-	if err != nil {
-		return nil, FormatError(err)
-	}
-	defer row.Close()
-
-	row.Next()
+		INSERT INTO memo (
+			` + strings.Join(set, ", ") + `
+		)
+		VALUES (` + strings.Join(placeholder, ",") + `)
+		RETURNING id, creator_id, created_ts, updated_ts, row_status, content, visibility
+	`
 	var memoRaw memoRaw
-	if err := row.Scan(
+	if err := tx.QueryRowContext(ctx, query, args...).Scan(
 		&memoRaw.ID,
 		&memoRaw.CreatorID,
 		&memoRaw.CreatedTs,
@@ -160,7 +235,7 @@ func createMemoRaw(db *sql.DB, create *api.MemoCreate) (*memoRaw, error) {
 	return &memoRaw, nil
 }
 
-func patchMemoRaw(db *sql.DB, patch *api.MemoPatch) (*memoRaw, error) {
+func patchMemoRaw(ctx context.Context, tx *sql.Tx, patch *api.MemoPatch) (*memoRaw, error) {
 	set, args := []string{}, []interface{}{}
 
 	if v := patch.Content; v != nil {
@@ -175,21 +250,14 @@ func patchMemoRaw(db *sql.DB, patch *api.MemoPatch) (*memoRaw, error) {
 
 	args = append(args, patch.ID)
 
-	row, err := db.Query(`
+	query := `
 		UPDATE memo
-		SET `+strings.Join(set, ", ")+`
+		SET ` + strings.Join(set, ", ") + `
 		WHERE id = ?
 		RETURNING id, creator_id, created_ts, updated_ts, row_status, content, visibility
-	`, args...)
-	if err != nil {
-		return nil, FormatError(err)
-	}
-	defer row.Close()
-
-	row.Next()
-
+	`
 	var memoRaw memoRaw
-	if err := row.Scan(
+	if err := tx.QueryRowContext(ctx, query, args...).Scan(
 		&memoRaw.ID,
 		&memoRaw.CreatorID,
 		&memoRaw.CreatedTs,
@@ -204,7 +272,7 @@ func patchMemoRaw(db *sql.DB, patch *api.MemoPatch) (*memoRaw, error) {
 	return &memoRaw, nil
 }
 
-func findMemoRawList(db *sql.DB, find *api.MemoFind) ([]*memoRaw, error) {
+func findMemoRawList(ctx context.Context, tx *sql.Tx, find *api.MemoFind) ([]*memoRaw, error) {
 	where, args := []string{"1 = 1"}, []interface{}{}
 
 	if v := find.ID; v != nil {
@@ -239,7 +307,7 @@ func findMemoRawList(db *sql.DB, find *api.MemoFind) ([]*memoRaw, error) {
 		}
 	}
 
-	rows, err := db.Query(`
+	query := `
 		SELECT
 			id,
 			creator_id,
@@ -249,10 +317,10 @@ func findMemoRawList(db *sql.DB, find *api.MemoFind) ([]*memoRaw, error) {
 			content,
 			visibility
 		FROM memo
-		WHERE `+strings.Join(where, " AND ")+`
-		ORDER BY created_ts DESC`+pagination,
-		args...,
-	)
+		WHERE ` + strings.Join(where, " AND ") + `
+		ORDER BY created_ts DESC
+	` + pagination
+	rows, err := tx.QueryContext(ctx, query, args...)
 	if err != nil {
 		return nil, FormatError(err)
 	}
@@ -283,8 +351,8 @@ func findMemoRawList(db *sql.DB, find *api.MemoFind) ([]*memoRaw, error) {
 	return memoRawList, nil
 }
 
-func deleteMemo(db *sql.DB, delete *api.MemoDelete) error {
-	result, err := db.Exec(`
+func deleteMemo(ctx context.Context, tx *sql.Tx, delete *api.MemoDelete) error {
+	_, err := tx.ExecContext(ctx, `
 		PRAGMA foreign_keys = ON;
 		DELETE FROM memo WHERE id = ?
 	`, delete.ID)
@@ -292,26 +360,5 @@ func deleteMemo(db *sql.DB, delete *api.MemoDelete) error {
 		return FormatError(err)
 	}
 
-	rows, _ := result.RowsAffected()
-	if rows == 0 {
-		return &common.Error{Code: common.NotFound, Err: fmt.Errorf("memo ID not found: %d", delete.ID)}
-	}
-
 	return nil
-}
-
-func (s *Store) composeMemo(raw *memoRaw) (*api.Memo, error) {
-	memo := raw.toMemo()
-
-	memoOrganizer, err := s.FindMemoOrganizer(&api.MemoOrganizerFind{
-		MemoID: memo.ID,
-		UserID: memo.CreatorID,
-	})
-	if err != nil && common.ErrorCode(err) != common.NotFound {
-		return nil, err
-	} else if memoOrganizer != nil {
-		memo.Pinned = memoOrganizer.Pinned
-	}
-
-	return memo, nil
 }

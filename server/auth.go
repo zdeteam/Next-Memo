@@ -3,13 +3,14 @@ package server
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/patrickmn/go-cache"
-	"gopkg.in/gomail.v2"
 	"math/rand"
 	"mime"
 	"net/http"
 	"strings"
 	"time"
+
+	"github.com/patrickmn/go-cache"
+	"gopkg.in/gomail.v2"
 
 	"github.com/usememos/memos/api"
 	"github.com/usememos/memos/common"
@@ -20,6 +21,7 @@ import (
 
 func (s *Server) registerAuthRoutes(g *echo.Group) {
 	g.POST("/auth/signin", func(c echo.Context) error {
+		ctx := c.Request().Context()
 		signin := &api.Signin{}
 		if err := json.NewDecoder(c.Request().Body).Decode(signin); err != nil {
 			return echo.NewHTTPError(http.StatusBadRequest, "Malformatted signin request").SetInternal(err)
@@ -28,7 +30,7 @@ func (s *Server) registerAuthRoutes(g *echo.Group) {
 		userFind := &api.UserFind{
 			Email: &signin.Email,
 		}
-		user, err := s.Store.FindUser(userFind)
+		user, err := s.Store.FindUser(ctx, userFind)
 		if err != nil {
 			return echo.NewHTTPError(http.StatusInternalServerError, fmt.Sprintf("Failed to find user by email %s", signin.Email)).SetInternal(err)
 		}
@@ -66,6 +68,7 @@ func (s *Server) registerAuthRoutes(g *echo.Group) {
 	})
 
 	g.POST("/auth/signup", func(c echo.Context) error {
+		ctx := c.Request().Context()
 
 		signup := &api.Signup{}
 		if err := json.NewDecoder(c.Request().Body).Decode(signup); err != nil {
@@ -77,7 +80,7 @@ func (s *Server) registerAuthRoutes(g *echo.Group) {
 		hostUserFind := api.UserFind{
 			Role: &hostUserType,
 		}
-		hostUser, err := s.Store.FindUser(&hostUserFind)
+		hostUser, err := s.Store.FindUser(ctx, &hostUserFind)
 		if err != nil {
 			return echo.NewHTTPError(http.StatusInternalServerError, "Failed to find host user").SetInternal(err)
 		}
@@ -106,7 +109,7 @@ func (s *Server) registerAuthRoutes(g *echo.Group) {
 			PasswordHash: string(passwordHash),
 			OpenID:       common.GenUUID(),
 		}
-		user, err := s.Store.CreateUser(userCreate)
+		user, err := s.Store.CreateUser(ctx, userCreate)
 		if err != nil {
 			return echo.NewHTTPError(http.StatusInternalServerError, "Failed to create user").SetInternal(err)
 		}
@@ -124,6 +127,7 @@ func (s *Server) registerAuthRoutes(g *echo.Group) {
 	})
 
 	g.POST("/auth/invite", func(c echo.Context) error {
+		ctx := c.Request().Context()
 		invite := &api.Invite{}
 		if err := json.NewDecoder(c.Request().Body).Decode(invite); err != nil {
 			return echo.NewHTTPError(http.StatusBadRequest, "Malformatted signin request").SetInternal(err)
@@ -131,7 +135,8 @@ func (s *Server) registerAuthRoutes(g *echo.Group) {
 		userFind := &api.UserFind{
 			Email: &invite.Email,
 		}
-		user, _ := s.Store.FindUser(userFind)
+
+		user, _ := s.Store.FindUser(ctx, userFind)
 		if user != nil {
 			return c.JSON(http.StatusOK, false)
 		}
@@ -149,6 +154,7 @@ func (s *Server) registerAuthRoutes(g *echo.Group) {
 	})
 
 	g.POST("/auth/resetPassword", func(c echo.Context) error {
+		ctx := c.Request().Context()
 		params := &api.ResetPassword{}
 		if err := json.NewDecoder(c.Request().Body).Decode(params); err != nil {
 			return echo.NewHTTPError(http.StatusBadRequest, "Malformatted signin request").SetInternal(err)
@@ -156,7 +162,7 @@ func (s *Server) registerAuthRoutes(g *echo.Group) {
 		userFind := &api.UserFind{
 			Email: &params.Email,
 		}
-		user, _ := s.Store.FindUser(userFind)
+		user, _ := s.Store.FindUser(ctx,userFind)
 		if user == nil {
 			return c.JSON(http.StatusOK, false)
 		}
@@ -176,6 +182,7 @@ func (s *Server) registerAuthRoutes(g *echo.Group) {
 	})
 
 	g.POST("/auth/changePassword", func(c echo.Context) error {
+		ctx := c.Request().Context()
 		params := &api.ChangePassword{}
 		if err := json.NewDecoder(c.Request().Body).Decode(params); err != nil {
 			return echo.NewHTTPError(http.StatusBadRequest, "Malformatted signin request").SetInternal(err)
@@ -183,13 +190,12 @@ func (s *Server) registerAuthRoutes(g *echo.Group) {
 		userFind := &api.UserFind{
 			Email: &params.Email,
 		}
-		user, _ := s.Store.FindUser(userFind)
+		user, _ := s.Store.FindUser(ctx, userFind)
 		if user == nil {
 			return echo.NewHTTPError(http.StatusInternalServerError, "Failed to find user")
 		}
 		action, found := s.Cache.Get(params.Email)
 		if found && action == "resetPassword" {
-			user, _ := s.Store.FindUser(userFind)
 
 			numeric := [10]byte{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
 			r := len(numeric)
@@ -211,7 +217,7 @@ func (s *Server) registerAuthRoutes(g *echo.Group) {
 			passwordHashStr := string(passwordHash)
 			userPatch.PasswordHash = &passwordHashStr
 
-			res, err := s.Store.PatchUser(userPatch)
+			res, err := s.Store.PatchUser(ctx, userPatch)
 			if err != nil {
 				return echo.NewHTTPError(http.StatusInternalServerError, "Failed to patch user").SetInternal(err)
 			}

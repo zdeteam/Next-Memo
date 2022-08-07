@@ -4,6 +4,7 @@ import Only from "./common/OnlyWhen";
 import showDailyReviewDialog from "./DailyReviewDialog";
 import showSettingDialog from "./SettingDialog";
 import showArchivedMemoDialog from "./ArchivedMemoDialog";
+import showResourcesDialog from "./ResourcesDialog";
 import UserBanner from "./UserBanner";
 import UsageHeatMap from "./UsageHeatMap";
 import ShortcutList from "./ShortcutList";
@@ -15,6 +16,10 @@ interface Props {}
 const Sidebar: React.FC<Props> = () => {
   const handleMyAccountBtnClick = () => {
     showSettingDialog();
+  };
+
+  const handleResourcesBtnClick = () => {
+    showResourcesDialog();
   };
 
   const handleArchivedBtnClick = () => {
@@ -35,6 +40,9 @@ const Sidebar: React.FC<Props> = () => {
           <Icon.Calendar className="icon" /> Daily Review
         </button>
         <Only when={!userService.isVisitorMode()}>
+          <button className="btn action-btn" onClick={handleResourcesBtnClick}>
+            <span className="icon">🌄</span> Resources
+          </button>
           <button className="btn action-btn" onClick={handleMyAccountBtnClick}>
             <Icon.Settings className="icon" /> Setting
           </button>

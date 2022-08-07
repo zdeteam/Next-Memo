@@ -1,6 +1,7 @@
 package store
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"strings"
@@ -43,30 +44,64 @@ func (raw *userRaw) toUser() *api.User {
 	}
 }
 
-func (s *Store) CreateUser(create *api.UserCreate) (*api.User, error) {
-	userRaw, err := createUser(s.db, create)
+func (s *Store) CreateUser(ctx context.Context, create *api.UserCreate) (*api.User, error) {
+	tx, err := s.db.BeginTx(ctx, nil)
+	if err != nil {
+		return nil, FormatError(err)
+	}
+	defer tx.Rollback()
+
+	userRaw, err := createUser(ctx, tx, create)
 	if err != nil {
 		return nil, err
 	}
 
-	user := userRaw.toUser()
-
-	return user, nil
-}
-
-func (s *Store) PatchUser(patch *api.UserPatch) (*api.User, error) {
-	userRaw, err := patchUser(s.db, patch)
-	if err != nil {
-		return nil, err
+	if err := tx.Commit(); err != nil {
+		return nil, FormatError(err)
 	}
 
 	user := userRaw.toUser()
 
+	if err := s.cache.UpsertCache(api.UserCache, user.ID, user); err != nil {
+		return nil, err
+	}
+
 	return user, nil
 }
 
-func (s *Store) FindUserList(find *api.UserFind) ([]*api.User, error) {
-	userRawList, err := findUserList(s.db, find)
+func (s *Store) PatchUser(ctx context.Context, patch *api.UserPatch) (*api.User, error) {
+	tx, err := s.db.BeginTx(ctx, nil)
+	if err != nil {
+		return nil, FormatError(err)
+	}
+	defer tx.Rollback()
+
+	userRaw, err := patchUser(ctx, tx, patch)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := tx.Commit(); err != nil {
+		return nil, FormatError(err)
+	}
+
+	user := userRaw.toUser()
+
+	if err := s.cache.UpsertCache(api.UserCache, user.ID, user); err != nil {
+		return nil, err
+	}
+
+	return user, nil
+}
+
+func (s *Store) FindUserList(ctx context.Context, find *api.UserFind) ([]*api.User, error) {
+	tx, err := s.db.BeginTx(ctx, nil)
+	if err != nil {
+		return nil, FormatError(err)
+	}
+	defer tx.Rollback()
+
+	userRawList, err := findUserList(ctx, tx, find)
 	if err != nil {
 		return nil, err
 	}
@@ -79,8 +114,25 @@ func (s *Store) FindUserList(find *api.UserFind) ([]*api.User, error) {
 	return list, nil
 }
 
-func (s *Store) FindUser(find *api.UserFind) (*api.User, error) {
-	list, err := findUserList(s.db, find)
+func (s *Store) FindUser(ctx context.Context, find *api.UserFind) (*api.User, error) {
+	if find.ID != nil {
+		user := &api.User{}
+		has, err := s.cache.FindCache(api.UserCache, *find.ID, user)
+		if err != nil {
+			return nil, err
+		}
+		if has {
+			return user, nil
+		}
+	}
+
+	tx, err := s.db.BeginTx(ctx, nil)
+	if err != nil {
+		return nil, FormatError(err)
+	}
+	defer tx.Rollback()
+
+	list, err := findUserList(ctx, tx, find)
 	if err != nil {
 		return nil, err
 	}
@@ -93,20 +145,36 @@ func (s *Store) FindUser(find *api.UserFind) (*api.User, error) {
 
 	user := list[0].toUser()
 
+	if err := s.cache.UpsertCache(api.UserCache, user.ID, user); err != nil {
+		return nil, err
+	}
+
 	return user, nil
 }
 
-func (s *Store) DeleteUser(delete *api.UserDelete) error {
-	err := deleteUser(s.db, delete)
+func (s *Store) DeleteUser(ctx context.Context, delete *api.UserDelete) error {
+	tx, err := s.db.BeginTx(ctx, nil)
+	if err != nil {
+		return FormatError(err)
+	}
+	defer tx.Rollback()
+
+	err = deleteUser(ctx, tx, delete)
 	if err != nil {
 		return FormatError(err)
 	}
 
+	if err := tx.Commit(); err != nil {
+		return FormatError(err)
+	}
+
+	s.cache.DeleteCache(api.UserCache, delete.ID)
+
 	return nil
 }
 
-func createUser(db *sql.DB, create *api.UserCreate) (*userRaw, error) {
-	row, err := db.Query(`
+func createUser(ctx context.Context, tx *sql.Tx, create *api.UserCreate) (*userRaw, error) {
+	query := `
 		INSERT INTO user (
 			email,
 			role,
@@ -116,21 +184,15 @@ func createUser(db *sql.DB, create *api.UserCreate) (*userRaw, error) {
 		)
 		VALUES (?, ?, ?, ?, ?)
 		RETURNING id, email, role, name, password_hash, open_id, created_ts, updated_ts, row_status
-	`,
+	`
+	var userRaw userRaw
+	if err := tx.QueryRowContext(ctx, query,
 		create.Email,
 		create.Role,
 		create.Name,
 		create.PasswordHash,
 		create.OpenID,
-	)
-	if err != nil {
-		return nil, FormatError(err)
-	}
-	defer row.Close()
-
-	row.Next()
-	var userRaw userRaw
-	if err := row.Scan(
+	).Scan(
 		&userRaw.ID,
 		&userRaw.Email,
 		&userRaw.Role,
@@ -147,7 +209,7 @@ func createUser(db *sql.DB, create *api.UserCreate) (*userRaw, error) {
 	return &userRaw, nil
 }
 
-func patchUser(db *sql.DB, patch *api.UserPatch) (*userRaw, error) {
+func patchUser(ctx context.Context, tx *sql.Tx, patch *api.UserPatch) (*userRaw, error) {
 	set, args := []string{}, []interface{}{}
 
 	if v := patch.RowStatus; v != nil {
@@ -168,12 +230,13 @@ func patchUser(db *sql.DB, patch *api.UserPatch) (*userRaw, error) {
 
 	args = append(args, patch.ID)
 
-	row, err := db.Query(`
+	query := `
 		UPDATE user
-		SET `+strings.Join(set, ", ")+`
+		SET ` + strings.Join(set, ", ") + `
 		WHERE id = ?
 		RETURNING id, email, role, name, password_hash, open_id, created_ts, updated_ts, row_status
-	`, args...)
+	`
+	row, err := tx.QueryContext(ctx, query, args...)
 	if err != nil {
 		return nil, FormatError(err)
 	}
@@ -201,7 +264,7 @@ func patchUser(db *sql.DB, patch *api.UserPatch) (*userRaw, error) {
 	return nil, &common.Error{Code: common.NotFound, Err: fmt.Errorf("user ID not found: %d", patch.ID)}
 }
 
-func findUserList(db *sql.DB, find *api.UserFind) ([]*userRaw, error) {
+func findUserList(ctx context.Context, tx *sql.Tx, find *api.UserFind) ([]*userRaw, error) {
 	where, args := []string{"1 = 1"}, []interface{}{}
 
 	if v := find.ID; v != nil {
@@ -220,7 +283,7 @@ func findUserList(db *sql.DB, find *api.UserFind) ([]*userRaw, error) {
 		where, args = append(where, "open_id = ?"), append(args, *v)
 	}
 
-	rows, err := db.Query(`
+	query := `
 		SELECT 
 			id,
 			email,
@@ -232,10 +295,10 @@ func findUserList(db *sql.DB, find *api.UserFind) ([]*userRaw, error) {
 			updated_ts,
 			row_status
 		FROM user
-		WHERE `+strings.Join(where, " AND ")+`
-		ORDER BY created_ts DESC, row_status DESC`,
-		args...,
-	)
+		WHERE ` + strings.Join(where, " AND ") + `
+		ORDER BY created_ts DESC, row_status DESC
+	`
+	rows, err := tx.QueryContext(ctx, query, args...)
 	if err != nil {
 		return nil, FormatError(err)
 	}
@@ -268,18 +331,12 @@ func findUserList(db *sql.DB, find *api.UserFind) ([]*userRaw, error) {
 	return userRawList, nil
 }
 
-func deleteUser(db *sql.DB, delete *api.UserDelete) error {
-	result, err := db.Exec(`
+func deleteUser(ctx context.Context, tx *sql.Tx, delete *api.UserDelete) error {
+	if _, err := tx.ExecContext(ctx, `
 		PRAGMA foreign_keys = ON;
 		DELETE FROM user WHERE id = ?
-	`, delete.ID)
-	if err != nil {
+	`, delete.ID); err != nil {
 		return FormatError(err)
-	}
-
-	rows, _ := result.RowsAffected()
-	if rows == 0 {
-		return &common.Error{Code: common.NotFound, Err: fmt.Errorf("user ID not found: %d", delete.ID)}
 	}
 
 	return nil
