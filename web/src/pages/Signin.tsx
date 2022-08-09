@@ -65,7 +65,6 @@ const Signin: React.FC<Props> = () => {
     setResetPasswordEmail("");
     setSignupPassword("");
     setSignupConfirmPassword("");
-    setVerifiedEmail("");
     setSignupConfirmPasswordError("");
     setResetPasswordEmailError("");
     setResetPasswordEmailInfo("");
@@ -100,8 +99,8 @@ const Signin: React.FC<Props> = () => {
       const { data: status } = data;
       setSiteHost(status.host);
       if (status.profile?.mode === "dev") {
-        setEmail("admin@memoz.today");
-        setPassword("123456");
+        setEmail("demo@openflomo.com");
+        setPassword("secret");
       }
       pageLoadingState.setFinish();
     });
