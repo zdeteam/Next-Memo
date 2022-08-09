@@ -8,7 +8,6 @@ import { lightTheme } from "@strapi/design-system/themes";
 
 interface DialogConfig {
   className: string;
-  useAppContext?: boolean;
   clickSpaceDestroy?: boolean;
 }
 
@@ -63,21 +62,15 @@ export function generateDialog<T extends DialogProps>(
     destroy: cbs.destroy,
   } as T;
 
-  let Fragment = (
-    <ThemeProvider theme={lightTheme}>
-      <BaseDialog destroy={cbs.destroy} clickSpaceDestroy={true} {...config}>
-        <DialogComponent {...dialogProps} />
-      </BaseDialog>
-    </ThemeProvider>
+  const Fragment = (
+    <Provider store={store}>
+      <ThemeProvider theme={lightTheme}>
+        <BaseDialog destroy={cbs.destroy} clickSpaceDestroy={true} {...config}>
+          <DialogComponent {...dialogProps} />
+        </BaseDialog>
+      </ThemeProvider>
+    </Provider>
   );
-
-  if (config.useAppContext) {
-    Fragment = (
-      <Provider store={store}>
-        <ThemeProvider theme={lightTheme}>{Fragment}</ThemeProvider>
-      </Provider>
-    );
-  }
 
   dialog.render(Fragment);
 
