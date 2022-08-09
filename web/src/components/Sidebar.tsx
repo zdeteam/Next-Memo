@@ -41,7 +41,7 @@ const Sidebar: React.FC<Props> = () => {
         </button>
         <Only when={!userService.isVisitorMode()}>
           <button className="btn action-btn" onClick={handleResourcesBtnClick}>
-            <span className="icon">🌄</span> Resources
+            <Icon.Image className="icon" /> Resources
           </button>
           <button className="btn action-btn" onClick={handleMyAccountBtnClick}>
             <Icon.Settings className="icon" /> Setting

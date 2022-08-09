@@ -98,7 +98,6 @@ const ResourcesDialog: React.FC<Props> = (props: Props) => {
     <>
       <div className="dialog-header-container">
         <p className="title-text">
-          <span className="icon-text">🌄</span>
           Resources
         </p>
         <button className="btn close-btn" onClick={destroy}>
