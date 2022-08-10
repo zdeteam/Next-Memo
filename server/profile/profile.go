@@ -66,7 +66,7 @@ func GetProfile() *Profile {
 	}
 
 	if profile.Mode == "prod" && profile.Data == "" {
-		profile.Data = "/var/opt/memos"
+		profile.Data = "/var/opt/open-flomo"
 	}
 
 	dataDir, err := checkDSN(profile.Data)
