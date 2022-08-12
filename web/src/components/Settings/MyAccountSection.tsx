@@ -37,7 +37,7 @@ const MyAccountSection: React.FC<Props> = () => {
       return;
     }
 
-    const usernameValidResult = validate(username, validateConfig);
+    const usernameValidResult = validate(username, { ...validateConfig, noChinese: false });
     if (!usernameValidResult.result) {
       toastHelper.error("Username " + usernameValidResult.reason);
       return;
