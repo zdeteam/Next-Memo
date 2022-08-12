@@ -46,10 +46,10 @@ const Sidebar: React.FC<Props> = () => {
           <button className="btn action-btn" onClick={handleMyAccountBtnClick}>
             <Icon.Settings className="icon" /> Setting
           </button>
+          <button className="btn action-btn" onClick={handleArchivedBtnClick}>
+            <Icon.Archive className="icon" /> Archived
+          </button>
         </Only>
-        <button className="btn action-btn" onClick={handleArchivedBtnClick}>
-          <Icon.Archive className="icon" /> Archived
-        </button>
       </div>
       <Only when={!userService.isVisitorMode()}>
         <ShortcutList />
