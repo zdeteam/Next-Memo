@@ -26,6 +26,29 @@ export function signup(email: string, password: string, role: UserRole) {
   });
 }
 
+export async function invite(email: string, host: string) {
+  const { data } = await axios.post<ResponseObject<User>>("/api/auth/invite", {
+    email,
+    host,
+  });
+  return data;
+}
+
+export async function resetPassword(email: string, host: string) {
+  const { data } = await axios.post<ResponseObject<User>>("/api/auth/resetPassword", {
+    email,
+    host,
+  });
+  return data;
+}
+
+export async function changePassword(email: string) {
+  const { data } = await axios.post<ResponseObject<User>>("/api/auth/changePassword", {
+    email,
+  });
+  return data;
+}
+
 export function signout() {
   return axios.post("/api/auth/logout");
 }

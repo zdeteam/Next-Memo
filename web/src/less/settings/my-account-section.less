@@ -16,18 +16,10 @@
       }
 
       > .btns-container {
-        @apply shrink-0 grow flex flex-row justify-start items-center;
-
-        > .btn {
-          @apply text-sm shadow px-2 leading-7 rounded border hover:opacity-80 bg-gray-50;
-
-          &.cancel-btn {
-            @apply shadow-none border-none bg-transparent;
-          }
-
-          &.confirm-btn {
-            @apply bg-green-600 border-green-600 text-white;
-          }
+        margin-left: 4px;
+        button{
+          display: inline-block;
+          margin: 0 4px
         }
       }
     }
@@ -54,6 +46,7 @@
     @apply mt-2 w-full;
 
     > .title-text {
+
       @apply my-2 text-sm;
     }
 

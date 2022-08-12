@@ -1,13 +1,19 @@
 import { useState } from "react";
+import { TextInput } from "@strapi/design-system/TextInput";
+import { TextButton } from "@strapi/design-system/TextButton";
+import { Button } from "@strapi/design-system/Button";
+import Only from "../common/OnlyWhen";
 import { useAppSelector } from "../../store";
-import { userService } from "../../services";
+import { locationService, userService } from "../../services";
 import { validate, ValidatorConfig } from "../../helpers/validator";
 import toastHelper from "../Toast";
 import { showCommonDialog } from "../Dialog/CommonDialog";
 import showChangePasswordDialog from "../ChangePasswordDialog";
+
 import "../../less/settings/my-account-section.less";
 
 const validateConfig: ValidatorConfig = {
+  notEmpty: true,
   minLength: 4,
   maxLength: 24,
   noSpace: true,
@@ -65,46 +71,54 @@ const MyAccountSection: React.FC<Props> = () => {
     e.stopPropagation();
   };
 
+  const handleSignOutBtnClick = async () => {
+    userService.doSignOut().catch(() => {
+      // do nth
+    });
+    locationService.replaceHistory("/signin");
+    window.location.reload();
+  };
+
   return (
     <>
       <div className="section-container account-section-container">
         <p className="title-text">Account Information</p>
         <label className="form-label">
-          <span className="normal-text">Email:</span>
+          <span className="normal-text">Account:</span>
           <span className="normal-text">{user.email}</span>
         </label>
         <label className="form-label input-form-label username-label">
           <span className="normal-text">Username:</span>
-          <input type="text" value={username} onChange={handleUsernameChanged} />
+          <TextInput aria-label="username" type="text" size="S" value={username} onChange={handleUsernameChanged} />
           <div className={`btns-container ${username === user.name ? "!hidden" : ""}`} onClick={handlePreventDefault}>
-            <span className="btn confirm-btn" onClick={handleConfirmEditUsernameBtnClick}>
-              Save
-            </span>
-            <span
-              className="btn cancel-btn"
+            <TextButton onClick={handleConfirmEditUsernameBtnClick}>Save</TextButton>
+            <TextButton
               onClick={() => {
                 setUsername(user.name);
               }}
             >
               Cancel
-            </span>
+            </TextButton>
           </div>
         </label>
         <label className="form-label password-label">
           <span className="normal-text">Password:</span>
-          <span className="btn" onClick={handleChangePasswordBtnClick}>
-            Change it
-          </span>
+          <TextButton onClick={handleChangePasswordBtnClick}>Change it</TextButton>
         </label>
+        <Only when={!userService.isVisitorMode()}>
+          <Button variant="tertiary" onClick={handleSignOutBtnClick}>
+            Sign out
+          </Button>
+        </Only>
       </div>
       <div className="section-container openapi-section-container">
-        <p className="title-text">Open API</p>
+        <p className="title-text">Your MEMO API</p>
         <p className="value-text">{openAPIRoute}</p>
-        <span className="reset-btn" onClick={handleResetOpenIdBtnClick}>
+        <Button variant="danger" onClick={handleResetOpenIdBtnClick}>
           Reset API
-        </span>
+        </Button>
         <div className="usage-guide-container">
-          <p className="title-text">Usage guide:</p>
+          <p className="title-text">I want to develop API tools by myself:</p>
           <pre>{`POST ${openAPIRoute}\nContent-type: application/json\n{\n  "content": "Hello #memos from ${window.location.origin}"\n}`}</pre>
         </div>
       </div>

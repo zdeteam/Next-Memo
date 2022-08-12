@@ -18,16 +18,16 @@ COPY . .
 COPY --from=frontend /frontend-build/dist ./server/dist
 
 RUN go build \
-    -o memos \
+    -o open-flomo \
     ./bin/server/main.go
 
 # Make workspace with above generated files.
 FROM alpine:3.16.0 AS monolithic
-WORKDIR /usr/local/memos
+WORKDIR /usr/local/open-flomo
 
-COPY --from=backend /backend-build/memos /usr/local/memos/
+COPY --from=backend /backend-build/open-flomo /usr/local/open-flomo/
 
 # Directory to store the data, which can be referenced as the mounting point.
-RUN mkdir -p /var/opt/memos
+RUN mkdir -p /var/opt/open-flomo
 
-ENTRYPOINT ["./memos"]
+ENTRYPOINT ["./open-flomo"]

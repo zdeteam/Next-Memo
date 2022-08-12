@@ -37,17 +37,17 @@ const Sidebar: React.FC<Props> = () => {
       <UsageHeatMap />
       <div className="action-btns-container">
         <button className="btn action-btn" onClick={() => showDailyReviewDialog()}>
-          <span className="icon">📅</span> Daily Review
+          <Icon.Calendar className="icon" /> Daily Review
         </button>
         <Only when={!userService.isVisitorMode()}>
           <button className="btn action-btn" onClick={handleResourcesBtnClick}>
-            <span className="icon">🌄</span> Resources
+            <Icon.Image className="icon" /> Resources
           </button>
           <button className="btn action-btn" onClick={handleMyAccountBtnClick}>
-            <span className="icon">⚙️</span> Setting
+            <Icon.Settings className="icon" /> Setting
           </button>
           <button className="btn action-btn" onClick={handleArchivedBtnClick}>
-            <span className="icon">🗂</span> Archived
+            <Icon.Archive className="icon" /> Archived
           </button>
         </Only>
       </div>

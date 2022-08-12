@@ -1,19 +1,19 @@
-<h1 align="center">✍️ Memos</h1>
+<h1 align="center">OpenFlomo</h1>
 
-<p align="center">An open source, self-hosted knowledge base that works with a SQLite db file.</p>
+<p align="center">An open source Flomo, help you quickly record memos.</p>
 
 <p align="center">
-  <a href="https://github.com/usememos/memos/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/usememos/memos" /></a>
-  <a href="https://hub.docker.com/r/neosmemo/memos"><img alt="Docker pull" src="https://img.shields.io/docker/pulls/neosmemo/memos.svg" /></a>
-  <img alt="Go report" src="https://goreportcard.com/badge/github.com/usememos/memos" />
+  <a href="https://github.com/usememos/memos/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/zdeteam/open-flomo" /></a>
+  <a href="https://hub.docker.com/r/neosmemo/memos"><img alt="Docker pull" src="https://img.shields.io/docker/pulls/zdeteam/open-flomo.svg" /></a>
+  <img alt="Go report" src="https://goreportcard.com/badge/github.com/zdeteam/open-flomo" />
 </p>
 
 <p align="center">
-  <a href="https://demo.usememos.com/">Live Demo</a> •
-  <a href="https://t.me/+-_tNF1k70UU4ZTc9">Discuss in Telegram 👾</a>
+  <a href="https://openflomo.zde.today">Live Demo</a> •
+  <a href="https://github.com/zdeteam/open-flomo/discussions">Discuss in Github 👾</a>
 </p>
 
-![demo](https://raw.githubusercontent.com/usememos/memos/main/resources/demo.webp)
+![demo](https://github.com/zdeteam/open-flomo/blob/a4c463f801c67b4bd93b18a9dd87e97b22f565b1/screen.png)
 
 ## ✨ Features
 
@@ -27,31 +27,19 @@
 ## ⚓️ Deploy with Docker
 
 ```docker
-docker run \
-  --name memos \
-  --publish 5230:5230 \
-  --volume ~/.memos/:/var/opt/memos \
-  neosmemo/memos:latest \
-  --mode prod \
-  --port 5230
+docker run -d --name open-flomo --publish 8080:8080 --volume ~/.open-flomo/:/var/opt/open-flomo zdeteam/open-flomo:latest --mode prod --port 8080 --emailHost 发送邮件服务器(例如：smtp.exmail.qq.com) --emailPort 端口号 --emailUsername 邮箱账号 --emailPassword 邮箱密码
 ```
 
-Memos should be running at [http://localhost:5230](http://localhost:5230). If the `~/.memos/` does not have a `memos_prod.db` file, then memos will auto generate it.
+OpenFlomo should be running at [http://localhost:5230](http://localhost:5230). If the `~/.memos/` does not have a `memos_prod.db` file, then memos will auto generate it.
 
 ## 🏗 Development
 
-Memos is built with a curated tech stack. It is optimized for developer experience and is very easy to start working on the code:
-
+OpenFlomo is built with a curated tech stack. It is optimized for developer experience and is very easy to start working on the code:
 1. It has no external dependency.
 2. It requires zero config.
 3. 1 command to start backend and 1 command to start frontend, both with live reload support.
 
-### Tech Stack
-
-<img alt="tech stack" src="https://raw.githubusercontent.com/usememos/memos/main/resources/tech-stack.png" width="360" />
-
 ### Prerequisites
-
 - [Go](https://golang.org/doc/install)
 - [Air](https://github.com/cosmtrek/air#installation) for backend live reload
 - [Node.js](https://nodejs.org/)
@@ -62,7 +50,7 @@ Memos is built with a curated tech stack. It is optimized for developer experien
 1. pull source code
 
    ```bash
-   git clone https://github.com/usememos/memos
+   git clone https://github.com/zdeteam/open-flomo.git
    ```
 
 2. start backend using air(with live reload)
@@ -77,12 +65,7 @@ Memos is built with a curated tech stack. It is optimized for developer experien
    cd web && yarn && yarn dev
    ```
 
-Memos should now be running at [http://localhost:3000](http://localhost:3000) and change either frontend or backend code would trigger live reload.
+OpenFlomo should now be running at [http://localhost:3000](http://localhost:3000) and change either frontend or backend code would trigger live reload.
 
 ### Contributing
-
 Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are greatly appreciated. 🥰
-
-## 🌟 Star history
-
-[![Star History Chart](https://api.star-history.com/svg?repos=usememos/memos&type=Date)](https://star-history.com/#usememos/memos&Date)

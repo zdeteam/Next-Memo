@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { Button } from "@strapi/design-system/Button";
+import { TextInput } from "@strapi/design-system/TextInput";
 import { validate, ValidatorConfig } from "../helpers/validator";
 import { userService } from "../services";
 import Icon from "./Icon";
@@ -7,6 +9,7 @@ import toastHelper from "./Toast";
 import "../less/change-password-dialog.less";
 
 const validateConfig: ValidatorConfig = {
+  notEmpty: true,
   minLength: 4,
   maxLength: 24,
   noSpace: true,
@@ -77,19 +80,13 @@ const ChangePasswordDialog: React.FC<Props> = ({ destroy }: Props) => {
         </button>
       </div>
       <div className="dialog-content-container">
-        <label className="form-label input-form-label">
-          <input type="password" placeholder="New passworld" value={newPassword} onChange={handleNewPasswordChanged} />
-        </label>
-        <label className="form-label input-form-label">
-          <input type="password" placeholder="Repeat the new password" value={newPasswordAgain} onChange={handleNewPasswordAgainChanged} />
-        </label>
+        <TextInput label="New passworld" type="password" value={newPassword} onChange={handleNewPasswordChanged} />
+        <TextInput label="Repeat the new password" type="password" value={newPasswordAgain} onChange={handleNewPasswordAgainChanged} />
         <div className="btns-container">
-          <span className="btn cancel-btn" onClick={handleCloseBtnClick}>
+          <Button variant="ghost" onClick={handleCloseBtnClick}>
             Cancel
-          </span>
-          <span className="btn confirm-btn" onClick={handleSaveBtnClick}>
-            Save
-          </span>
+          </Button>
+          <Button onClick={handleSaveBtnClick}>Save</Button>
         </div>
       </div>
     </>

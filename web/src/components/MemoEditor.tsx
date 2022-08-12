@@ -8,7 +8,7 @@ import toastHelper from "./Toast";
 import Editor, { EditorRefActions } from "./Editor/Editor";
 import "../less/memo-editor.less";
 
-interface Props {}
+interface Props { }
 
 interface State {
   isUploadingResource: boolean;

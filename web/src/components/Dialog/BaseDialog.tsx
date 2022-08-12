@@ -3,6 +3,8 @@ import { Provider } from "react-redux";
 import { ANIMATION_DURATION } from "../../helpers/consts";
 import store from "../../store";
 import "../../less/base-dialog.less";
+import { ThemeProvider } from "@strapi/design-system/ThemeProvider";
+import { lightTheme } from "@strapi/design-system/themes";
 
 interface DialogConfig {
   className: string;
@@ -62,9 +64,11 @@ export function generateDialog<T extends DialogProps>(
 
   const Fragment = (
     <Provider store={store}>
-      <BaseDialog destroy={cbs.destroy} clickSpaceDestroy={true} {...config}>
-        <DialogComponent {...dialogProps} />
-      </BaseDialog>
+      <ThemeProvider theme={lightTheme}>
+        <BaseDialog destroy={cbs.destroy} clickSpaceDestroy={true} {...config}>
+          <DialogComponent {...dialogProps} />
+        </BaseDialog>
+      </ThemeProvider>
     </Provider>
   );
 

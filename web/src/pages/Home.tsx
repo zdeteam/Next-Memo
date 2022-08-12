@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { Button } from "@strapi/design-system/Button";
 import { locationService, userService } from "../services";
 import { useAppSelector } from "../store";
 import useLoading from "../hooks/useLoading";
@@ -57,13 +58,13 @@ function Home() {
             <Only when={userService.isVisitorMode()}>
               <div className="addtion-btn-container">
                 {user ? (
-                  <button className="btn" onClick={() => (window.location.href = "/")}>
-                    <span className="icon">🏠</span> Back to Home
-                  </button>
+                  <Button size="L" onClick={() => (window.location.href = "/")}>
+                    Back to Home
+                  </Button>
                 ) : (
-                  <button className="btn" onClick={() => (window.location.href = "/signin")}>
-                    <span className="icon">👉</span> Sign in
-                  </button>
+                  <Button size="L" onClick={() => (window.location.href = "/signin")}>
+                    Welcome to OpenFlomo, go to login
+                  </Button>
                 )}
               </div>
             </Only>

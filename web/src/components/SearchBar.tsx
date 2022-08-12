@@ -1,14 +1,16 @@
+import { Searchbar, SearchForm } from "@strapi/design-system/Searchbar";
 import { locationService } from "../services";
 import { useAppSelector } from "../store";
 import { memoSpecialTypes } from "../helpers/filter";
 import Icon from "./Icon";
 import "../less/search-bar.less";
+import { useEffect, useState } from "react";
 
 interface Props {}
 
 const SearchBar: React.FC<Props> = () => {
   const memoType = useAppSelector((state) => state.location.query?.type);
-
+  const [keyword, setKeyword] = useState("");
   const handleMemoTypeItemClick = (type: MemoSpecType | undefined) => {
     const { type: prevType } = locationService.getState().query ?? {};
     if (type === prevType) {
@@ -19,15 +21,17 @@ const SearchBar: React.FC<Props> = () => {
 
   const handleTextQueryInput = (event: React.FormEvent<HTMLInputElement>) => {
     const text = event.currentTarget.value;
-    locationService.setTextQuery(text);
+
+    setKeyword(text);
   };
+
+  useEffect(() => {
+    locationService.setTextQuery(keyword);
+  }, [keyword]);
 
   return (
     <div className="search-bar-container">
-      <div className="search-bar-inputer">
-        <Icon.Search className="icon-img" />
-        <input className="text-input" type="text" placeholder="" onChange={handleTextQueryInput} />
-      </div>
+      <Searchbar name="searchbar" value={keyword} clearLabel="" onClear={() => setKeyword("")} onChange={handleTextQueryInput} />
       <div className="quickly-action-wrapper">
         <div className="quickly-action-container">
           <p className="title-text">QUICKLY FILTER</p>

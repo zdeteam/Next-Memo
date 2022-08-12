@@ -1,6 +1,7 @@
 import Icon from "../Icon";
 import { generateDialog } from "./BaseDialog";
 import "../../less/common-dialog.less";
+import {Button} from "@strapi/design-system/Button";
 
 type DialogStyle = "info" | "warning";
 
@@ -51,12 +52,10 @@ const CommonDialog: React.FC<Props> = (props: Props) => {
       <div className="dialog-content-container">
         <p className="content-text">{content}</p>
         <div className="btns-container">
-          <span className="btn cancel-btn" onClick={handleCloseBtnClick}>
+          <Button variant="ghost" onClick={handleCloseBtnClick}>
             {closeBtnText}
-          </span>
-          <span className={`btn confirm-btn ${style}`} onClick={handleConfirmBtnClick}>
-            {confirmBtnText}
-          </span>
+          </Button>
+          <Button onClick={handleConfirmBtnClick}>{confirmBtnText}</Button>
         </div>
       </div>
     </>

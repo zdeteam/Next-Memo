@@ -52,10 +52,11 @@
       }
 
       > .confirm-btn {
-        @apply shadow cursor-pointer px-3 py-0 leading-8 bg-green-600 text-white text-sm hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-60;
-
-        > .icon-text {
-          @apply text-base ml-1;
+        cursor: pointer;
+        &:hover {
+         path{
+            fill: #4945ff;
+          }
         }
       }
     }
