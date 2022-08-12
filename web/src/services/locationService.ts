@@ -1,9 +1,10 @@
 import { stringify } from "qs";
 import store from "../store";
-import { setQuery, setPathname, Query, updateStateWithLocation } from "../store/modules/location";
+import { setQuery, Query } from "../store/modules/location";
 
 const updateLocationUrl = (method: "replace" | "push" = "replace") => {
-  const { query, pathname, hash } = store.getState().location;
+  console.log('updateLocationUrl')
+  const { query, hash } = store.getState().location;
   let queryString = stringify(query);
   if (queryString) {
     queryString = "?" + queryString;
@@ -12,9 +13,9 @@ const updateLocationUrl = (method: "replace" | "push" = "replace") => {
   }
 
   if (method === "replace") {
-    window.history.replaceState(null, "", pathname + hash + queryString);
+    window.history.replaceState(null, "", window.location.pathname + hash + queryString);
   } else {
-    window.history.pushState(null, "", pathname + hash + queryString);
+    window.history.pushState(null, "", window.location.pathname + hash + queryString);
   }
 };
 
@@ -23,22 +24,9 @@ const locationService = {
     return store.getState().location;
   },
 
-  updateStateWithLocation: () => {
-    store.dispatch(updateStateWithLocation());
-  },
 
-  setPathname: (pathname: string) => {
-    store.dispatch(setPathname(pathname));
-    updateLocationUrl();
-  },
-
-  pushHistory: (pathname: string) => {
-    store.dispatch(setPathname(pathname));
-    updateLocationUrl("push");
-  },
 
   replaceHistory: (pathname: string) => {
-    store.dispatch(setPathname(pathname));
     updateLocationUrl("replace");
   },
 

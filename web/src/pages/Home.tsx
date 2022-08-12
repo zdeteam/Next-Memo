@@ -1,6 +1,7 @@
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@strapi/design-system/Button";
-import { locationService, userService } from "../services";
+import { userService } from "../services";
 import { useAppSelector } from "../store";
 import useLoading from "../hooks/useLoading";
 import Only from "../components/common/OnlyWhen";
@@ -13,6 +14,7 @@ import toastHelper from "../components/Toast";
 import "../less/home.less";
 
 function Home() {
+  const navigate = useNavigate();
   const user = useAppSelector((state) => state.user.user);
   const location = useAppSelector((state) => state.location);
   const loadingState = useLoading();
@@ -24,17 +26,16 @@ function Home() {
       .finally(async () => {
         const { host, owner, user } = userService.getState();
         if (!host) {
-          locationService.replaceHistory("/signin");
-          return;
+          return navigate(`/signin`);
         }
-
         if (userService.isVisitorMode()) {
           if (!owner) {
             toastHelper.error("User not found");
           }
         } else {
           if (!user) {
-            locationService.replaceHistory(`/u/${host.id}`);
+            // locationService.replaceHistory();
+            navigate(`/u/${host.id}`);
           }
         }
         loadingState.setFinish();

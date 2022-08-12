@@ -1,4 +1,5 @@
 import React, { SetStateAction, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@strapi/design-system/Button";
 import { TextInput } from "@strapi/design-system/TextInput";
 import { TextButton } from "@strapi/design-system/TextButton";
@@ -6,7 +7,7 @@ import ArrowLeft from "@strapi/icons/ArrowLeft";
 import * as api from "../helpers/api";
 import { validate, ValidatorConfig } from "../helpers/validator";
 import useLoading from "../hooks/useLoading";
-import { locationService, userService } from "../services";
+import { userService } from "../services";
 import toastHelper from "../components/Toast";
 import "../less/signin.less";
 
@@ -21,6 +22,7 @@ const validateConfig: ValidatorConfig = {
 };
 
 const Signin: React.FC<Props> = () => {
+  const navigate = useNavigate();
   const pageLoadingState = useLoading(true);
   const [siteHost, setSiteHost] = useState<User>();
   const [status, setStatus] = useState<"signin" | "invite" | "signup" | "forgot" | "reset">("signin");
@@ -141,7 +143,7 @@ const Signin: React.FC<Props> = () => {
       await api.signin(email, password);
       const user = await userService.doSignIn();
       if (user) {
-        locationService.replaceHistory("/");
+        navigate("/");
       } else {
         toastHelper.error("😟 Login failed");
       }
@@ -230,7 +232,7 @@ const Signin: React.FC<Props> = () => {
       await api.signup(email, password, role);
       const user = await userService.doSignIn();
       if (user) {
-        locationService.replaceHistory("/");
+        navigate("/");
       } else {
         toastHelper.error("😟 Signup failed");
       }

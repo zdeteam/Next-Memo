@@ -4,7 +4,7 @@ import { TextButton } from "@strapi/design-system/TextButton";
 import { Button } from "@strapi/design-system/Button";
 import Only from "../common/OnlyWhen";
 import { useAppSelector } from "../../store";
-import { locationService, userService } from "../../services";
+import { userService } from "../../services";
 import { validate, ValidatorConfig } from "../../helpers/validator";
 import toastHelper from "../Toast";
 import { showCommonDialog } from "../Dialog/CommonDialog";
@@ -75,8 +75,7 @@ const MyAccountSection: React.FC<Props> = () => {
     userService.doSignOut().catch(() => {
       // do nth
     });
-    locationService.replaceHistory("/signin");
-    window.location.reload();
+    window.location.href = "/signin";
   };
 
   return (

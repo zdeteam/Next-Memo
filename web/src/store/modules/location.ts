@@ -19,20 +19,12 @@ interface State {
   query: Query;
 }
 
-const getValidPathname = (pathname: string): string => {
-  const userPageUrlRegex = /^\/u\/\d+.*/;
-  if (["/", "/signin"].includes(pathname) || userPageUrlRegex.test(pathname)) {
-    return pathname;
-  } else {
-    return "/";
-  }
-};
-
 const getStateFromLocation = () => {
   const { pathname, search, hash } = window.location;
+
   const urlParams = new URLSearchParams(search);
   const state: State = {
-    pathname: getValidPathname(pathname),
+    pathname: pathname,
     hash: hash,
     query: {},
   };
@@ -60,19 +52,6 @@ const locationSlice = createSlice({
   name: "location",
   initialState: getStateFromLocation(),
   reducers: {
-    updateStateWithLocation: () => {
-      return getStateFromLocation();
-    },
-    setPathname: (state, action: PayloadAction<string>) => {
-      if (state.pathname === action.payload) {
-        return state;
-      }
-
-      return {
-        ...state,
-        pathname: action.payload,
-      };
-    },
     setQuery: (state, action: PayloadAction<Partial<Query>>) => {
       if (JSON.stringify(action.payload) === state.query) {
         return state;
@@ -89,6 +68,6 @@ const locationSlice = createSlice({
   },
 });
 
-export const { setPathname, setQuery, updateStateWithLocation } = locationSlice.actions;
+export const { setQuery } = locationSlice.actions;
 
 export default locationSlice.reducer;
