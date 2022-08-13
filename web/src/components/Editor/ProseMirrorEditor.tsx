@@ -19,7 +19,12 @@ import toastHelper from "../Toast";
 import { useAppSelector } from "../../store";
 import { EditorRefActions } from "./Editor";
 
-
+interface ProseMirrorEditorProps {
+  content?: string;
+  editable: boolean;
+  cardMode?: boolean;
+  onCancel?: () => void;
+}
 const MenuBar = ({ editor }: { editor: any }) => {
   if (!editor) {
     return null;
@@ -46,36 +51,47 @@ const MenuBar = ({ editor }: { editor: any }) => {
   );
 };
 
-const ProseMirrorEditor = function () {
+const ProseMirrorEditor = function (
+  props: ProseMirrorEditorProps = {
+    editable: true,
+  }
+) {
+  console.log(props.editable);
   const editorState = useAppSelector((state) => state.editor);
   const editorRef = useRef<EditorRefActions>(null);
   const prevGlobalStateRef = useRef(editorState);
 
   useEffect(() => {
-    if (editorState.markMemoId && editorState.markMemoId !== UNKNOWN_ID) {
+    if (editorState.markMemoId && editorState.markMemoId !== UNKNOWN_ID&&!props.cardMode) {
       const editorCurrentValue = editorRef.current?.getContent();
       const memoLinkText = `${editorCurrentValue ? "\n" : ""}Mark: @[MEMO](${editorState.markMemoId})`;
-      editorRef.current?.insertText(memoLinkText);
+      editor?.commands.setContent(memoLinkText);
       editorStateService.clearMarkMemo();
     }
 
-    if (
-      editorState.editMemoId &&
-      editorState.editMemoId !== UNKNOWN_ID &&
-      editorState.editMemoId !== prevGlobalStateRef.current.editMemoId
-    ) {
-      const editMemo = memoService.getMemoById(editorState.editMemoId ?? UNKNOWN_ID);
-      if (editMemo) {
-        editor?.commands.setContent(editMemo.content);
-      }
-    }
+    // if (
+    //   editorState.editMemoId &&
+    //   editorState.editMemoId !== UNKNOWN_ID &&
+    //   editorState.editMemoId !== prevGlobalStateRef.current.editMemoId
+    // ) {
+    //   const editMemo = memoService.getMemoById(editorState.editMemoId ?? UNKNOWN_ID);
+    //   if (editMemo) {
+    //     editor?.commands.setContent(editMemo.content);
+    //   }
+    // }
 
     prevGlobalStateRef.current = editorState;
   }, [editorState.markMemoId, editorState.editMemoId]);
+
   const editor = useEditor({
     extensions: [Bold, Document, Paragraph, Text, TaskList, TaskItem, BulletList, OrderedList, ListItem],
-    content: "",
+    content: props.content || "",
+    editable: props.editable,
   });
+
+  useEffect(() => {
+    editor?.setOptions({ editable: props.editable });
+  }, [props.editable]);
 
   const onOk = async () => {
     const content = editor?.getHTML();
@@ -91,6 +107,7 @@ const ProseMirrorEditor = function () {
           });
         }
         editorStateService.clearEditMemo();
+        props.onCancel && props.onCancel();
       } else {
         if (content) await memoService.createMemo({ content });
         locationService.clearQuery();
@@ -101,20 +118,25 @@ const ProseMirrorEditor = function () {
   };
 
   return (
-    <div className="prosemirror-editor">
+    <div className={`prosemirror-editor ${props.cardMode && "no-hover"}`}>
       <div className="editor">
         <EditorContent editor={editor} />
       </div>
-      {editor && (
+      {editor && props.editable ? (
         <>
           <div className="toolbar">
             <MenuBar editor={editor} />
+            {props.cardMode && props.editable && (
+              <button className="cancel" onClick={props.onCancel}>
+                取消
+              </button>
+            )}
             <button className="write" onClick={onOk}>
               保存轻笔记
             </button>
           </div>
         </>
-      )}
+      ) : null}
     </div>
   );
 };

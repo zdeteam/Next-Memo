@@ -2,7 +2,15 @@
 @import "./memo-content.less";
 
 .memo-wrapper {
-  @apply flex flex-col justify-start items-start w-full max-w-full p-4 pt-3 mt-2 bg-white rounded-lg border border-white hover:border-gray-200;
+  margin-top: 0.5rem;
+  display: flex;
+  width: 100%;
+  max-width: 100%;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  border-radius: 0.5rem;
+  background-color:#fff;
 
   &.archived-memo {
     @apply border-gray-200;
@@ -12,8 +20,23 @@
     @apply border-gray-200 border-2;
   }
 
+  &.editing:hover{
+    border: 2px solid #FFAB27;
+  }
+
+  &.editing{
+    border: 2px solid #FFF6E9;
+  }
+
   > .memo-top-wrapper {
-    @apply flex flex-row justify-between items-center w-full h-6 mb-1;
+    padding:0 16px;
+    margin-bottom: 0.25rem;
+    display: flex;
+    height: 1.5rem;
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
 
     > .status-text-container {
       @apply flex flex-row justify-start items-center;

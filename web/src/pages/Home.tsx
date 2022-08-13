@@ -51,7 +51,7 @@ function Home() {
             <div className="memos-editor-wrapper">
               <MemosHeader />
               <Only when={!userService.isVisitorMode()}>
-                <ProseMirrorEditor />
+                <ProseMirrorEditor editable />
               </Only>
               <MemoFilter />
             </div>

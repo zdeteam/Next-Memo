@@ -11,6 +11,7 @@ import toastHelper from "./Toast";
 import Image from "./Image";
 import showMemoCardDialog from "./MemoCardDialog";
 import showShareMemoImageDialog from "./ShareMemoImageDialog";
+import ProseMirrorEditor from "./Editor/ProseMirrorEditor";
 import "../less/memo.less";
 
 dayjs.extend(relativeTime);
@@ -36,7 +37,7 @@ export const getFormatedMemoCreatedAtStr = (createdTs: number): string => {
 };
 
 const Memo: React.FC<Props> = (props: Props) => {
-  const memo = props.memo;
+  const [memo, setMemo] = useState({ editable: false, ...props.memo });
   const [state, setState] = useState<State>({
     expandButtonStatus: -1,
   });
@@ -85,6 +86,9 @@ const Memo: React.FC<Props> = (props: Props) => {
   };
 
   const handleEditMemoClick = () => {
+    // editorStateService.setEditMemoWithId(memo.id);
+    memo.editable = true;
+    setMemo({ ...memo });
     editorStateService.setEditMemoWithId(memo.id);
   };
 
@@ -169,7 +173,7 @@ const Memo: React.FC<Props> = (props: Props) => {
   };
 
   return (
-    <div className={`memo-wrapper ${"memos-" + memo.id} ${memo.pinned ? "pinned" : ""}`}>
+    <div className={`memo-wrapper ${"memos-" + memo.id} ${memo.pinned && "pinned"} ${memo.editable && "editing"}`}>
       <div className="memo-top-wrapper">
         <div className="status-text-container" onClick={handleShowMemoStoryDialog}>
           <span className="time-text">{createdAtStr}</span>
@@ -200,9 +204,9 @@ const Memo: React.FC<Props> = (props: Props) => {
               <span className="btn" onClick={handleMarkMemoClick}>
                 Mark
               </span>
-              <span className="btn" onClick={handleShowMemoStoryDialog}>
-                View Story
-              </span>
+              {/*<span className="btn" onClick={handleShowMemoStoryDialog}>*/}
+              {/*  View Story*/}
+              {/*</span>*/}
               <span className="btn archive-btn" onClick={handleArchiveMemoClick}>
                 Archive
               </span>
@@ -210,12 +214,18 @@ const Memo: React.FC<Props> = (props: Props) => {
           </div>
         </div>
       </div>
-      <div
-        ref={memoContainerRef}
-        className={`memo-content-text ${state.expandButtonStatus === 0 ? "expanded" : ""}`}
-        onClick={handleMemoContentClick}
-        dangerouslySetInnerHTML={{ __html: memo.content }}
-      ></div>
+      {/*<div*/}
+      {/*  ref={memoContainerRef}*/}
+      {/*  className={`memo-content-text ${state.expandButtonStatus === 0 ? "expanded" : ""}`}*/}
+      {/*  onClick={handleMemoContentClick}*/}
+      {/*  dangerouslySetInnerHTML={{ __html: memo.content }}*/}
+      {/*></div>*/}
+      <ProseMirrorEditor
+        cardMode
+        content={memo.content}
+        editable={memo.editable}
+        onCancel={() => setMemo({ ...memo, editable: false })}
+      />
       {state.expandButtonStatus !== -1 && (
         <div className="expand-btn-container">
           <span className={`btn ${state.expandButtonStatus === 0 ? "expand-btn" : "fold-btn"}`} onClick={handleExpandBtnClick}>

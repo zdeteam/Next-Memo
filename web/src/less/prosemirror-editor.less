@@ -7,16 +7,21 @@
   align-items: flex-start;
   justify-content: flex-start;
   border-radius: 0.5rem;
-  border-width: 2px;
   //--tw-border-opacity: 1;
-  border-color: rgb(229 231 235);
   //--tw-bg-opacity: 1;
   background-color: rgb(255 255 255);
   padding: 1rem;
   transition-property: all;
   transition-timing-function: cubic-bezier(.4, 0, .2, 1);
   transition-duration: .15s;
+  border: 2px solid rgba(0,0,0,0);
 
+  &:hover{
+  border:  2px solid #FFAB27;
+  }
+  &.no-hover{
+    border: none;
+  }
 
   .editor {
     flex: 1;
@@ -51,6 +56,18 @@
       svg:focus {
         fill: #409eff;
       }
+      &.cancel{
+        position: absolute;
+        right:128px;
+        font-size: 12px;
+        color:#606266;
+        //border: 1px solid;
+        height: 36px;
+        line-height:36px;
+        background:#fff;
+        //width:48px;
+        padding:0;
+      }
 
       &.write {
         border-radius: 18px;
@@ -74,9 +91,9 @@
       margin-top: 0.75em;
     }
     outline: none;
-    &:focus-visible {
-      outline: 2px solid #FFAB27;
-    }
+    //&:focus-visible {
+    //  outline: 2px solid #FFAB27;
+    //}
 
     ul[data-type="taskList"] {
       list-style: none;
