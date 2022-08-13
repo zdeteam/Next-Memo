@@ -69,6 +69,10 @@ export function getUserById(id: number) {
   return axios.get<ResponseObject<User>>(`/api/user/${id}`);
 }
 
+export function upsertUserSetting(upsert: UserSettingUpsert) {
+  return axios.post<ResponseObject<UserSetting>>(`/api/user/setting`, upsert);
+}
+
 export function patchUser(userPatch: UserPatch) {
   return axios.patch<ResponseObject<User>>(`/api/user/${userPatch.id}`, userPatch);
 }
