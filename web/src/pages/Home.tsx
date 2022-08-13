@@ -7,7 +7,7 @@ import useLoading from "../hooks/useLoading";
 import Only from "../components/common/OnlyWhen";
 import Sidebar from "../components/Sidebar";
 import MemosHeader from "../components/MemosHeader";
-import MemoEditor from "../components/MemoEditor";
+import ProseMirrorEditor from "../components/Editor/ProseMirrorEditor";
 import MemoFilter from "../components/MemoFilter";
 import MemoList from "../components/MemoList";
 import toastHelper from "../components/Toast";
@@ -51,7 +51,7 @@ function Home() {
             <div className="memos-editor-wrapper">
               <MemosHeader />
               <Only when={!userService.isVisitorMode()}>
-                <MemoEditor />
+                <ProseMirrorEditor />
               </Only>
               <MemoFilter />
             </div>

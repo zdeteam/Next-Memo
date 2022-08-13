@@ -214,7 +214,7 @@ const Memo: React.FC<Props> = (props: Props) => {
         ref={memoContainerRef}
         className={`memo-content-text ${state.expandButtonStatus === 0 ? "expanded" : ""}`}
         onClick={handleMemoContentClick}
-        dangerouslySetInnerHTML={{ __html: formatMemoContent(memo.content) }}
+        dangerouslySetInnerHTML={{ __html: memo.content }}
       ></div>
       {state.expandButtonStatus !== -1 && (
         <div className="expand-btn-container">
