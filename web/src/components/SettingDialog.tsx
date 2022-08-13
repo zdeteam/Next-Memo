@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Crown from "@strapi/icons/Crown";
 // import { Icon } from "@strapi/design-system/Icon";
+import { GoPerson, GoBeaker, GoHubot, GoOrganization } from "react-icons/go";
 
 import { useAppSelector } from "../store";
 import { generateDialog } from "./Dialog";
@@ -38,36 +39,36 @@ const SettingDialog: React.FC<Props> = (props: Props) => {
         <Icon.X className="icon-img" />
       </button>
       <div className="section-selector-container">
-        <span className="section-title">Basic</span>
+        <span className="section-title">基础</span>
         <div className="section-items-container">
           <span
             onClick={() => handleSectionSelectorItemClick("my-account")}
             className={`section-item ${state.selectedSection === "my-account" ? "selected" : ""}`}
           >
-            <Icon.User className="icon-text" /> My account
+            <GoPerson /> 我的账号
           </span>
           <span
             onClick={() => handleSectionSelectorItemClick("preferences")}
             className={`section-item ${state.selectedSection === "preferences" ? "selected" : ""}`}
           >
-            <Icon.Feather className="icon-text" /> Preferences
+            <GoBeaker /> 高级配置
           </span>
           <span
             onClick={() => handleSectionSelectorItemClick("about")}
             className={`section-item ${state.selectedSection === "about" ? "selected" : ""}`}
           >
-            <Icon.Heart className="icon-text" /> About
+            <GoHubot /> 关于有墨
           </span>
         </div>
         {user?.role === "HOST" ? (
           <>
-            <span className="section-title">Admin</span>
+            <span className="section-title">系统管理</span>
             <div className="section-items-container">
               <span
                 onClick={() => handleSectionSelectorItemClick("member")}
                 className={`section-item ${state.selectedSection === "member" ? "selected" : ""}`}
               >
-                <Icon.Users className="icon-text" /> Member
+                <GoOrganization /> 用户
               </span>
             </div>
           </>

@@ -69,14 +69,14 @@ const TagList: React.FC<Props> = () => {
 
   return (
     <div className="tags-wrapper">
-      <p className="title-text">Tags</p>
+      <p className="title-text">标签</p>
       <div className="tags-container">
         {tags.map((t, idx) => (
           <TagItemContainer key={t.text + "-" + idx} tag={t} tagQuery={query?.tag} />
         ))}
         <Only when={!userService.isVisitorMode() && tags.length < 5}>
           <p className="tag-tip-container">
-            Enter <span className="code-text">#tag </span> to create a tag
+            输入 <span className="code-text">#tag </span> 创建标签
           </p>
         </Only>
       </div>

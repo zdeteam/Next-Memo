@@ -16,14 +16,26 @@
     @apply w-full px-2 my-2 flex flex-col justify-start items-start shrink-0;
 
     > .action-btn {
-      @apply leading-10 px-4 rounded-lg text-base hover:bg-white;
-
-      > .icon {
-        position: relative;
-        top: 2px;
-        vertical-align: sub;
-        display: inline-block;
-        //@apply mr-1;
+      width: calc(100% - 1.5rem);
+      text-align: left;
+      height:34px;
+      display: flex;
+      align-items: center;
+      margin-bottom:2px;
+      padding:0 8px;
+      border-radius:21px;
+      transition: all .2s ease-in-out;
+      font-size: 14px;
+      border:1px solid transparent;
+      &:hover{
+        background-color: @primary-color-100;
+        color:@primary-color-400;
+        border-color: @primary-color-400;
+      }
+      svg {
+        margin-right: 4px;
+        width: 20px;
+        height: 20px;
       }
     }
   }

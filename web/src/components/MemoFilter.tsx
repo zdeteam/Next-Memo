@@ -1,4 +1,5 @@
 import { useAppSelector } from "../store";
+import { GoTag, GoCalendar, GoSearch, GoLightBulb,GoTelescope } from "react-icons/go";
 import { locationService, shortcutService } from "../services";
 import * as utils from "../helpers/utils";
 import { getTextWithMemoType } from "../helpers/filter";
@@ -15,31 +16,38 @@ const MemoFilter: React.FC<FilterProps> = () => {
 
   return (
     <div className={`filter-query-container ${showFilter ? "" : "!hidden"}`}>
-      <span className="tip-text">Filter:</span>
-      <div
-        className={"filter-item-container " + (shortcut ? "" : "hidden")}
-        onClick={() => {
-          locationService.setMemoShortcut(undefined);
-        }}
-      >
-        <span className="icon-text">🎯</span> {shortcut?.title}
-      </div>
-      <div
-        className={"filter-item-container " + (tagQuery ? "" : "hidden")}
-        onClick={() => {
-          locationService.setTagQuery(undefined);
-        }}
-      >
-        <span className="icon-text">🏷️</span> {tagQuery}
-      </div>
-      <div
-        className={"filter-item-container " + (memoType ? "" : "hidden")}
-        onClick={() => {
-          locationService.setMemoTypeQuery(undefined);
-        }}
-      >
-        <span className="icon-text">📦</span> {getTextWithMemoType(memoType as MemoSpecType)}
-      </div>
+      <span className="tip-text">我想看的:</span>
+      {shortcut && (
+        <div
+          className="filter-item-container"
+          onClick={() => {
+            locationService.setMemoShortcut(undefined);
+          }}
+        >
+          <GoTelescope /> {shortcut?.title}
+        </div>
+      )}
+      {tagQuery && (
+        <div
+          className="filter-item-container"
+          onClick={() => {
+            locationService.setTagQuery(undefined);
+          }}
+        >
+          <GoTag /> {tagQuery}
+        </div>
+      )}
+      {memoType && (
+        <div
+          className="filter-item-container"
+          onClick={() => {
+            locationService.setMemoTypeQuery(undefined);
+          }}
+        >
+          <GoLightBulb /> {getTextWithMemoType(memoType as MemoSpecType)}
+        </div>
+      )}
+
       {duration && duration.from < duration.to ? (
         <div
           className="filter-item-container"
@@ -47,17 +55,19 @@ const MemoFilter: React.FC<FilterProps> = () => {
             locationService.setFromAndToQuery();
           }}
         >
-          <span className="icon-text">🗓️</span> {utils.getDateString(duration.from)} to {utils.getDateString(duration.to)}
+          <GoCalendar /> {utils.getDateString(duration.from)} to {utils.getDateString(duration.to)}
         </div>
       ) : null}
-      <div
-        className={"filter-item-container " + (textQuery ? "" : "hidden")}
-        onClick={() => {
-          locationService.setTextQuery("");
-        }}
-      >
-        <span className="icon-text">🔍</span> {textQuery}
-      </div>
+      {textQuery && (
+        <div
+          className="filter-item-container"
+          onClick={() => {
+            locationService.setTextQuery("");
+          }}
+        >
+          <GoSearch /> {textQuery}
+        </div>
+      )}
     </div>
   );
 };

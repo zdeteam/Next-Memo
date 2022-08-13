@@ -1,4 +1,5 @@
 import { userService } from "../services";
+import { GoCalendar, GoSettings, GoTrashcan, GoFileMedia } from "react-icons/go";
 import Icon from "./Icon";
 import Only from "./common/OnlyWhen";
 import showDailyReviewDialog from "./DailyReviewDialog";
@@ -37,17 +38,21 @@ const Sidebar: React.FC<Props> = () => {
       <UsageHeatMap />
       <div className="action-btns-container">
         <button className="btn action-btn" onClick={() => showDailyReviewDialog()}>
-          <Icon.Calendar className="icon" /> Daily Review
+          <GoCalendar className="icon" />
+          <span>每日回顾</span>
         </button>
         <Only when={!userService.isVisitorMode()}>
           <button className="btn action-btn" onClick={handleResourcesBtnClick}>
-            <Icon.Image className="icon" /> Resources
+            <GoFileMedia />
+            <span>我的文件</span>
           </button>
           <button className="btn action-btn" onClick={handleMyAccountBtnClick}>
-            <Icon.Settings className="icon" /> Setting
+            <GoSettings />
+            <span>系统设置</span>
           </button>
           <button className="btn action-btn" onClick={handleArchivedBtnClick}>
-            <Icon.Archive className="icon" /> Archived
+            <GoTrashcan />
+            <span>回收站</span>
           </button>
         </Only>
       </div>
