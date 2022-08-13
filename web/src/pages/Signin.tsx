@@ -6,6 +6,7 @@ import { TextButton } from "@strapi/design-system/TextButton";
 import ArrowLeft from "@strapi/icons/ArrowLeft";
 import * as api from "../helpers/api";
 import { validate, ValidatorConfig } from "../helpers/validator";
+import useI18n from "../hooks/useI18n";
 import useLoading from "../hooks/useLoading";
 import { userService } from "../services";
 import toastHelper from "../components/Toast";
@@ -22,6 +23,7 @@ const validateConfig: ValidatorConfig = {
 };
 
 const Signin: React.FC<Props> = () => {
+  const { t } = useI18n();
   const navigate = useNavigate();
   const pageLoadingState = useLoading(true);
   const [siteHost, setSiteHost] = useState<User>();
