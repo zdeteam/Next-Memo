@@ -45,9 +45,6 @@ const MenuBar = ({ editor }: { editor: any }) => {
       <button onClick={() => editor.chain().focus().toggleTaskList().run()}>
         <GoTasklist />
       </button>
-      {/*<button>*/}
-      {/*  <GoFileMedia />*/}
-      {/*</button>*/}
     </div>
   );
 };
