@@ -4,13 +4,14 @@ import "../../less/common/button.less";
 interface ButtonProps {
   onClick: () => void;
   children: any;
+  className: string;
 }
 
 const Button = (props: ButtonProps) => {
   return (
-    <div className="button-wrapper" onClick={props.onClick}>
+    <button className={`button-wrapper ${props.className}`} onClick={props.onClick}>
       {props.children}
-    </div>
+    </button>
   );
 };
 
