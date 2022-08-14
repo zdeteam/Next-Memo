@@ -19,7 +19,7 @@ interface Props extends DialogConfig, DialogProps {
 
 const BaseDialog: React.FC<Props> = (props: Props) => {
   const { children, className, clickSpaceDestroy, destroy, title } = props;
-
+  console.log('props',props)
   const handleSpaceClicked = () => {
     if (clickSpaceDestroy) {
       destroy();

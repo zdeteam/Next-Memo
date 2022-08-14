@@ -14,7 +14,6 @@
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
   box-shadow: var(--box-shadow);
-  //display:flex;
 
 
   &.showup {
@@ -37,6 +36,7 @@
     padding:8px;
     max-height:100vh;
     overflow-y: auto;
+    border-radius: 8px;
     .pretty-scroll-bar(0, 0);
     @media (min-width: 640px){
       width: 28rem;
@@ -44,11 +44,9 @@
       border-radius: 0.5rem;
     }
     > .dialog-header-container {
-      //border: 1px solid;
-      //padding:4px;
       position: relative;
+      z-index: 999;
       >span{
-        //margin-left:8px;
         font-size: 14px;
         font-weight:bold;
       }

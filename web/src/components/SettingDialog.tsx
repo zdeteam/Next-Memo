@@ -35,11 +35,8 @@ const SettingDialog: React.FC<Props> = (props: Props) => {
 
   return (
     <div className="dialog-content-container">
-      <button className="btn close-btn" onClick={destroy}>
-        <Icon.X className="icon-img" />
-      </button>
       <div className="section-selector-container">
-        <span className="section-title">基础</span>
+        <span className="section-title">通用</span>
         <div className="section-items-container">
           <span
             onClick={() => handleSectionSelectorItemClick("my-account")}
@@ -53,26 +50,32 @@ const SettingDialog: React.FC<Props> = (props: Props) => {
           >
             <GoBeaker /> 高级配置
           </span>
-          <span
-            onClick={() => handleSectionSelectorItemClick("about")}
-            className={`section-item ${state.selectedSection === "about" ? "selected" : ""}`}
-          >
-            <GoHubot /> 关于有墨
-          </span>
         </div>
-        {user?.role === "HOST" ? (
-          <>
-            <span className="section-title">系统管理</span>
-            <div className="section-items-container">
+        <>
+          <span className="section-title">更多</span>
+          <div className="section-items-container">
+            {user?.role === "HOST" ? (
               <span
                 onClick={() => handleSectionSelectorItemClick("member")}
                 className={`section-item ${state.selectedSection === "member" ? "selected" : ""}`}
               >
-                <GoOrganization /> 用户
+                <GoOrganization /> 用户管理
               </span>
-            </div>
-          </>
-        ) : null}
+            ) : null}
+            {/*<span*/}
+            {/*  onClick={() => handleSectionSelectorItemClick("install")}*/}
+            {/*  className={`section-item ${state.selectedSection === "install" ? "selected" : ""}`}*/}
+            {/*>*/}
+            {/*  <GoHubot /> 安装快捷方式*/}
+            {/*</span>*/}
+            <span
+              onClick={() => handleSectionSelectorItemClick("about")}
+              className={`section-item ${state.selectedSection === "about" ? "selected" : ""}`}
+            >
+              <GoHubot /> 关于
+            </span>
+          </div>
+        </>
       </div>
       <div className="section-content-container">
         {state.selectedSection === "my-account" && <MyAccountSection />}

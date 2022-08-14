@@ -32,15 +32,6 @@ const ArchivedMemoDialog: React.FC<Props> = (props: Props) => {
 
   return (
     <>
-      <div className="dialog-header-container">
-        <p className="title-text">
-          <span className="icon-text">🗂</span>
-          Archived Memos
-        </p>
-        <button className="btn close-btn" onClick={destroy}>
-          <Icon.X className="icon-img" />
-        </button>
-      </div>
       <div className="dialog-content-container">
         {loadingState.isLoading ? (
           <div className="tip-text-container">
@@ -48,7 +39,7 @@ const ArchivedMemoDialog: React.FC<Props> = (props: Props) => {
           </div>
         ) : archivedMemos.length === 0 ? (
           <div className="tip-text-container">
-            <p className="tip-text">No archived memos.</p>
+            <p className="tip-text">空空如也</p>
           </div>
         ) : (
           <div className="archived-memos-container">
@@ -66,6 +57,7 @@ export default function showArchivedMemoDialog(): void {
   generateDialog(
     {
       className: "archived-memo-dialog",
+      title: "回收站",
     },
     ArchivedMemoDialog,
     {}
