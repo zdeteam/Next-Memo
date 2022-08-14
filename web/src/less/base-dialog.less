@@ -1,7 +1,6 @@
 @import "./mixin.less";
 
 .dialog-wrapper {
-  .hide-scroll-bar();
   position: fixed;
   top: 0;
   left: 0;
@@ -9,12 +8,14 @@
   height: 100%;
   width: 100%;
   overflow-x: hidden;
-  overflow-y: scroll;
+  overflow-y: hidden;
   background-color: transparent;
   transition-property: all;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
   box-shadow: var(--box-shadow);
+  //display:flex;
+
 
   &.showup {
     background-color: rgba(0, 0, 0, 0.6);
@@ -25,14 +26,18 @@
   }
 
   > .dialog-container {
-    position: absolute;
+    display:block;
+    position: relative;
+    margin:0 auto;
     top: 50%;
-    transform: translate(-50%,-50%);
-    left:50%;
+    transform: translateY(-50%);
     background:#fff;
     width: 100%;
     max-width: 100%;
     padding:8px;
+    max-height:100vh;
+    overflow-y: auto;
+
     @media (min-width: 640px){
       width: 28rem;
       flex-grow: 0;
