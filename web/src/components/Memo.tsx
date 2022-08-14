@@ -173,7 +173,10 @@ const Memo: React.FC<Props> = (props: Props) => {
   };
 
   return (
-    <div className={`memo-wrapper ${"memos-" + memo.id} ${memo.pinned && "pinned"} ${memo.editable && "editing"}`}>
+    <div
+      onDoubleClick={handleEditMemoClick}
+      className={`memo-wrapper ${"memos-" + memo.id} ${memo.pinned && "pinned"} ${memo.editable && "editing"}`}
+    >
       <div className="memo-top-wrapper">
         <div className="status-text-container" onClick={handleShowMemoStoryDialog}>
           <span className="time-text">{createdAtStr}</span>
@@ -220,12 +223,7 @@ const Memo: React.FC<Props> = (props: Props) => {
       {/*  onClick={handleMemoContentClick}*/}
       {/*  dangerouslySetInnerHTML={{ __html: memo.content }}*/}
       {/*></div>*/}
-      <ProseMirrorEditor
-        cardMode
-        content={memo.content}
-        editable={memo.editable}
-        onCancel={() => setMemo({ ...memo, editable: false })}
-      />
+      <ProseMirrorEditor cardMode content={memo.content} editable={memo.editable} onCancel={() => setMemo({ ...memo, editable: false })} />
       {state.expandButtonStatus !== -1 && (
         <div className="expand-btn-container">
           <span className={`btn ${state.expandButtonStatus === 0 ? "expand-btn" : "fold-btn"}`} onClick={handleExpandBtnClick}>
