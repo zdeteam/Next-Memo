@@ -7,7 +7,6 @@ import * as utils from "../helpers/utils";
 import { generateDialog } from "./Dialog";
 import DatePicker from "./common/DatePicker";
 import Button from "./common/Button";
-import showPreviewImageDialog from "./PreviewImageDialog";
 import DailyMemo from "./DailyMemo";
 import "../less/daily-review-dialog.less";
 
