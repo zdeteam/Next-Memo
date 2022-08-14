@@ -4,9 +4,9 @@ import toImage from "../labs/html2image";
 import useToggle from "../hooks/useToggle";
 import { DAILY_TIMESTAMP } from "../helpers/consts";
 import * as utils from "../helpers/utils";
-import Icon from "./Icon";
 import { generateDialog } from "./Dialog";
 import DatePicker from "./common/DatePicker";
+import Button from "./common/Button";
 import showPreviewImageDialog from "./PreviewImageDialog";
 import DailyMemo from "./DailyMemo";
 import "../less/daily-review-dialog.less";
@@ -45,10 +45,12 @@ const DailyReviewDialog: React.FC<Props> = (props: Props) => {
       pixelRatio: window.devicePixelRatio * 2,
     })
       .then((url) => {
-        showPreviewImageDialog(url);
+        const link = document.createElement("a");
+        link.download = "每日回顾";
+        link.href = url;
+        link.click();
       })
       .catch(() => {
-        // do nth
       });
   };
 
@@ -58,36 +60,14 @@ const DailyReviewDialog: React.FC<Props> = (props: Props) => {
   };
 
   return (
-    <>
-      <div className="dialog-header-container">
-        <p className="title-text" onClick={() => toggleShowDatePicker()}>
-          Daily Review
-        </p>
-        <div className="btns-container">
-          <button className="btn-text" onClick={() => setCurrentDateStamp(currentDateStamp - DAILY_TIMESTAMP)}>
-            <Icon.ChevronLeft className="icon-img" />
-          </button>
-          <button className="btn-text" onClick={() => setCurrentDateStamp(currentDateStamp + DAILY_TIMESTAMP)}>
-            <Icon.ChevronRight className="icon-img" />
-          </button>
-          <button className="btn-text share" onClick={handleShareBtnClick}>
-            <Icon.Share className="icon-img" />
-          </button>
-          <span className="split-line">/</span>
-          <button className="btn-text" onClick={() => props.destroy()}>
-            <Icon.X className="icon-img" />
-          </button>
-        </div>
-        <DatePicker
-          className={`date-picker ${showDatePicker ? "" : "!hidden"}`}
-          datestamp={currentDateStamp}
-          handleDateStampChange={handleDataPickerChange}
-        />
-      </div>
-      <div className="dialog-content-container" ref={memosElRef}>
+    <div className="daily-review-wrapper">
+      <div className="content" ref={memosElRef}>
         <div className="date-card-container">
+          {showDatePicker && (
+            <DatePicker className={`date-picker`} datestamp={currentDateStamp} handleDateStampChange={handleDataPickerChange} />
+          )}
           <div className="year-text">{currentDate.getFullYear()}</div>
-          <div className="date-container">
+          <div className="date-container" onClick={() => toggleShowDatePicker()}>
             <div className="month-text">{monthChineseStrArray[currentDate.getMonth()]}</div>
             <div className="date-text">{currentDate.getDate()}</div>
             <div className="day-text">{weekdayChineseStrArray[currentDate.getDay()]}</div>
@@ -105,13 +85,15 @@ const DailyReviewDialog: React.FC<Props> = (props: Props) => {
           </div>
         )}
       </div>
-    </>
+      <Button onClick={handleShareBtnClick}>分享卡片</Button>
+    </div>
   );
 };
 
 export default function showDailyReviewDialog(datestamp: DateStamp = Date.now()): void {
   generateDialog(
     {
+      title: "每日回顾",
       className: "daily-review-dialog",
     },
     DailyReviewDialog,
