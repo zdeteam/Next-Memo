@@ -57,7 +57,6 @@ const ProseMirrorEditor = function (
     editable: true,
   }
 ) {
-  console.log(props.editable);
   const editorState = useAppSelector((state) => state.editor);
   const editorRef = useRef<EditorRefActions>(null);
   const prevGlobalStateRef = useRef(editorState);
@@ -132,7 +131,7 @@ const ProseMirrorEditor = function (
                 取消
               </button>
             )}
-            <Button className="write" onClick={onOk}>
+            <Button disabled={editor?.isEmpty} className="write" onClick={onOk}>
               保存轻笔记
             </Button>
           </div>
