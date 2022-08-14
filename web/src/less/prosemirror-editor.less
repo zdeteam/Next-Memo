@@ -29,51 +29,46 @@
     margin-top: 4px;
     width: 100%;
     height: 24px;
+    .editor-toolbar{
+      display: inline-block;
+      >button{
+        border-radius: 4px;
+        padding: 2px;
+        width: 28px;
+        height: 28px;
+        margin-right: 6px;
+        transition: all .2s ease-in-out;
+        &:focus {
+          color: #FFAB27;
+          background-color: #FFF6E9;
+        }
+        svg {
+          width: 20px;
+          height: 20px;
+        }
+        svg:focus {
+          fill: #409eff;
+        }
+      }
+    }
 
     > button {
-      border-radius: 4px;
-      padding: 2px;
-      width: 28px;
-      height: 28px;
       margin-right: 6px;
-      transition: all .2s ease-in-out;
 
-      &:focus {
-        color: #FFAB27;
-        background-color: #FFF6E9;
-      }
-
-      svg {
-        width: 20px;
-        height: 20px;
-      }
-
-      svg:focus {
-        fill: #409eff;
-      }
       &.cancel{
         position: absolute;
         right:128px;
         font-size: 12px;
         color:#606266;
-        //border: 1px solid;
         height: 36px;
         line-height:36px;
         background:#fff;
-        //width:48px;
         padding:0;
       }
 
       &.write {
-        border-radius: 18px;
-        //border: 1px solid;
         position: absolute;
         right: 0;
-        height: 36px;
-        width: 120px;
-        background-color: #FFAB27;
-        color: #fff;
-        font-size:14px;
       }
     }
   }

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { GoBold, GoListOrdered, GoListUnordered, GoTasklist, GoFileMedia } from "react-icons/go";
+import { GoBold, GoListOrdered, GoListUnordered, GoTasklist } from "react-icons/go";
 import { EditorContent, useEditor } from "@tiptap/react";
 import Document from "@tiptap/extension-document";
 import TaskItem from "@tiptap/extension-task-item";
@@ -18,6 +18,7 @@ import { UNKNOWN_ID } from "../../helpers/consts";
 import toastHelper from "../Toast";
 import { useAppSelector } from "../../store";
 import { EditorRefActions } from "./Editor";
+import Button from "../common/Button";
 
 interface ProseMirrorEditorProps {
   content?: string;
@@ -31,7 +32,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
   }
 
   return (
-    <>
+    <div className="editor-toolbar">
       <button onClick={() => editor.chain().focus().toggleBold().run()}>
         <GoBold />
       </button>
@@ -47,7 +48,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
       {/*<button>*/}
       {/*  <GoFileMedia />*/}
       {/*</button>*/}
-    </>
+    </div>
   );
 };
 
@@ -62,7 +63,7 @@ const ProseMirrorEditor = function (
   const prevGlobalStateRef = useRef(editorState);
 
   useEffect(() => {
-    if (editorState.markMemoId && editorState.markMemoId !== UNKNOWN_ID&&!props.cardMode) {
+    if (editorState.markMemoId && editorState.markMemoId !== UNKNOWN_ID && !props.cardMode) {
       const editorCurrentValue = editorRef.current?.getContent();
       const memoLinkText = `${editorCurrentValue ? "\n" : ""}Mark: @[MEMO](${editorState.markMemoId})`;
       editor?.commands.setContent(memoLinkText);
@@ -131,9 +132,9 @@ const ProseMirrorEditor = function (
                 取消
               </button>
             )}
-            <button className="write" onClick={onOk}>
+            <Button className="write" onClick={onOk}>
               保存轻笔记
-            </button>
+            </Button>
           </div>
         </>
       ) : null}
