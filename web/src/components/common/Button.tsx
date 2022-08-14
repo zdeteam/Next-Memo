@@ -4,12 +4,17 @@ import "../../less/common/button.less";
 interface ButtonProps {
   onClick: () => void;
   children: any;
-  className: string;
+  className?: string;
+  disabled?: boolean;
 }
 
 const Button = (props: ButtonProps) => {
+  const onClick = () => {
+    if (props.disabled) return false;
+    props.onClick();
+  };
   return (
-    <button className={`button-wrapper ${props.className}`} onClick={props.onClick}>
+    <button disabled={props.disabled} className={`button-wrapper ${props.className}`} onClick={onClick}>
       {props.children}
     </button>
   );

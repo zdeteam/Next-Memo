@@ -13,10 +13,16 @@
   line-height:32px;
   cursor: pointer;
   box-shadow: var(--box-shadow);
+
   &:hover{
     opacity: 0.9;
   }
   &:active{
     opacity: 1;
+  }
+  &[disabled]{
+    background-color:#000000;
+    opacity:0.2;
+    //color: #0D0D0D;
   }
 }
