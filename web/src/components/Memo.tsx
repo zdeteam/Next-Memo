@@ -2,7 +2,7 @@ import { memo, useEffect, useRef, useState } from "react";
 import { indexOf } from "lodash-es";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { GoKebabHorizontal, GoCloudDownload, GoBook, GoBroadcast, GoPin, GoArchive } from "react-icons/go";
+import { GoKebabHorizontal, GoCloudDownload, GoBook, GoBroadcast, GoTrashcan, GoPin } from "react-icons/go";
 import { HiAnnotation } from "react-icons/hi";
 import { IMAGE_URL_REG, UNKNOWN_ID } from "../helpers/consts";
 import { DONE_BLOCK_REG, TODO_BLOCK_REG } from "../helpers/marked";
@@ -250,7 +250,7 @@ const Memo: React.FC<Props> = (props: Props) => {
         <GoBroadcast
           onClick={() => clickCardMoreAction(() => handleVisibilitySelectorChange(memo.visibility === "PUBLIC" ? "PRIVATE" : "PUBLIC"))}
         />
-        <GoArchive onClick={() => clickCardMoreAction(handleArchiveMemoClick)} />
+        <GoTrashcan onClick={() => clickCardMoreAction(handleArchiveMemoClick)} />
       </div>
     </div>
   );
