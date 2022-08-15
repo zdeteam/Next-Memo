@@ -2,7 +2,8 @@ import { memo, useEffect, useRef, useState } from "react";
 import { indexOf } from "lodash-es";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { GoKebabHorizontal, GoCloudDownload, GoBook, GoBroadcast, GoPencil, GoPin, GoArchive } from "react-icons/go";
+import { GoKebabHorizontal, GoCloudDownload, GoBook, GoBroadcast, GoPin, GoArchive } from "react-icons/go";
+import { HiAnnotation } from "react-icons/hi";
 import { IMAGE_URL_REG, UNKNOWN_ID } from "../helpers/consts";
 import { DONE_BLOCK_REG, TODO_BLOCK_REG } from "../helpers/marked";
 import { editorStateService, locationService, memoService, userService } from "../services";
@@ -187,6 +188,21 @@ const Memo: React.FC<Props> = (props: Props) => {
     callback();
   };
 
+  const handleVisibilitySelectorChange = async (visibility: Visibility) => {
+    if (memo.visibility === visibility) {
+      return;
+    }
+
+    await memoService.patchMemo({
+      id: memo.id,
+      visibility: visibility,
+    });
+    setMemo({
+      ...memo,
+      visibility: visibility,
+    });
+  };
+
   return (
     <div
       onDoubleClick={handleEditMemoClick}
@@ -222,15 +238,18 @@ const Memo: React.FC<Props> = (props: Props) => {
           <GoPin />
         </Only>
         <Only when={memo.visibility === "PUBLIC"}>
-          <span className="public">已公开</span>
+          <GoBroadcast />
         </Only>
       </div>
       <div className="action-bar">
-        <GoBook className="btn" onClick={() => clickCardMoreAction(handleShowMemoStoryDialog)} />
+        <GoBook onClick={() => clickCardMoreAction(handleShowMemoStoryDialog)} />
+        <HiAnnotation />
         <GoPin onClick={() => clickCardMoreAction(handleTogglePinMemoBtnClick)} />
         {/*<GoPencil />*/}
         <GoCloudDownload onClick={() => clickCardMoreAction(handleGenMemoImageBtnClick)} />
-        <GoBroadcast />
+        <GoBroadcast
+          onClick={() => clickCardMoreAction(() => handleVisibilitySelectorChange(memo.visibility === "PUBLIC" ? "PRIVATE" : "PUBLIC"))}
+        />
         <GoArchive onClick={() => clickCardMoreAction(handleArchiveMemoClick)} />
       </div>
     </div>
