@@ -2,8 +2,9 @@ import { memo, useEffect, useRef, useState } from "react";
 import { indexOf } from "lodash-es";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { GoKebabHorizontal, GoCloudDownload, GoBook, GoBroadcast, GoPencil, GoPin, GoArchive } from "react-icons/go";
 import { IMAGE_URL_REG, UNKNOWN_ID } from "../helpers/consts";
-import { DONE_BLOCK_REG, formatMemoContent, TODO_BLOCK_REG } from "../helpers/marked";
+import { DONE_BLOCK_REG, TODO_BLOCK_REG } from "../helpers/marked";
 import { editorStateService, locationService, memoService, userService } from "../services";
 import Icon from "./Icon";
 import Only from "./common/OnlyWhen";
@@ -41,6 +42,7 @@ const Memo: React.FC<Props> = (props: Props) => {
   const [state, setState] = useState<State>({
     expandButtonStatus: -1,
   });
+  const [moreAction, setMoreAction] = useState(false);
   const [createdAtStr, setCreatedAtStr] = useState<string>(getFormatedMemoCreatedAtStr(memo.createdTs));
   const memoContainerRef = useRef<HTMLDivElement>(null);
   const imageUrls = Array.from(memo.content.match(IMAGE_URL_REG) ?? []).map((s) => s.replace(IMAGE_URL_REG, "$1"));
@@ -87,6 +89,7 @@ const Memo: React.FC<Props> = (props: Props) => {
 
   const handleEditMemoClick = () => {
     // editorStateService.setEditMemoWithId(memo.id);
+    setMoreAction(false);
     memo.editable = true;
     setMemo({ ...memo });
     editorStateService.setEditMemoWithId(memo.id);
@@ -172,57 +175,29 @@ const Memo: React.FC<Props> = (props: Props) => {
     });
   };
 
+  /**
+   *
+   */
+  const moreActions = () => {
+    setMoreAction(!moreAction);
+  };
+
+  const clickCardMoreAction = (callback: () => void) => {
+    setMoreAction(false);
+    callback();
+  };
+
   return (
     <div
       onDoubleClick={handleEditMemoClick}
-      className={`memo-wrapper ${"memos-" + memo.id} ${memo.pinned && "pinned"} ${memo.editable && "editing"}`}
+      className={`memo-wrapper ${"memos-" + memo.id} ${memo.pinned && "pinned"} ${memo.editable && "editing"} ${
+        moreAction && "more-actions"
+      }`}
     >
       <div className="memo-top-wrapper">
-        <div className="status-text-container" onClick={handleShowMemoStoryDialog}>
-          <span className="time-text">{createdAtStr}</span>
-          <Only when={memo.visibility !== "PRIVATE" && !isVisitorMode}>
-            <span className={`status-text ${memo.visibility.toLocaleLowerCase()}`}>{memo.visibility}</span>
-          </Only>
-        </div>
-        <div className={`btns-container ${userService.isVisitorMode() ? "!hidden" : ""}`}>
-          <span className="btn more-action-btn">
-            <Icon.MoreHorizontal className="icon-img" />
-          </span>
-          <div className="more-action-btns-wrapper">
-            <div className="more-action-btns-container">
-              <div className="btns-container">
-                <div className="btn" onClick={handleTogglePinMemoBtnClick}>
-                  <Icon.MapPin className={`icon-img ${memo.pinned ? "" : "opacity-20"}`} />
-                  <span className="tip-text">{memo.pinned ? "Unpin" : "Pin"}</span>
-                </div>
-                <div className="btn" onClick={handleEditMemoClick}>
-                  <Icon.Edit3 className="icon-img" />
-                  <span className="tip-text">Edit</span>
-                </div>
-                <div className="btn" onClick={handleGenMemoImageBtnClick}>
-                  <Icon.Share className="icon-img" />
-                  <span className="tip-text">Share</span>
-                </div>
-              </div>
-              <span className="btn" onClick={handleMarkMemoClick}>
-                Mark
-              </span>
-              {/*<span className="btn" onClick={handleShowMemoStoryDialog}>*/}
-              {/*  View Story*/}
-              {/*</span>*/}
-              <span className="btn archive-btn" onClick={handleArchiveMemoClick}>
-                Archive
-              </span>
-            </div>
-          </div>
-        </div>
+        <span className="time-text">{createdAtStr}</span>
+        {!userService.isVisitorMode() && <GoKebabHorizontal onClick={moreActions} />}
       </div>
-      {/*<div*/}
-      {/*  ref={memoContainerRef}*/}
-      {/*  className={`memo-content-text ${state.expandButtonStatus === 0 ? "expanded" : ""}`}*/}
-      {/*  onClick={handleMemoContentClick}*/}
-      {/*  dangerouslySetInnerHTML={{ __html: memo.content }}*/}
-      {/*></div>*/}
       <ProseMirrorEditor cardMode content={memo.content} editable={memo.editable} onCancel={() => setMemo({ ...memo, editable: false })} />
       {state.expandButtonStatus !== -1 && (
         <div className="expand-btn-container">
@@ -239,6 +214,25 @@ const Memo: React.FC<Props> = (props: Props) => {
           ))}
         </div>
       </Only>
+      <Only when={moreAction}>
+        <span className="double-click-tip">双击编辑轻笔记</span>
+      </Only>
+      <div className="card-status">
+        <Only when={memo.pinned}>
+          <GoPin />
+        </Only>
+        <Only when={memo.visibility === "PUBLIC"}>
+          <span className="public">已公开</span>
+        </Only>
+      </div>
+      <div className="action-bar">
+        <GoBook className="btn" onClick={() => clickCardMoreAction(handleShowMemoStoryDialog)} />
+        <GoPin onClick={() => clickCardMoreAction(handleTogglePinMemoBtnClick)} />
+        {/*<GoPencil />*/}
+        <GoCloudDownload onClick={() => clickCardMoreAction(handleGenMemoImageBtnClick)} />
+        <GoBroadcast />
+        <GoArchive onClick={() => clickCardMoreAction(handleArchiveMemoClick)} />
+      </div>
     </div>
   );
 };

@@ -11,13 +11,83 @@
   justify-content: flex-start;
   border-radius: 0.5rem;
   background-color:#fff;
+  box-shadow: var(--box-shadow);
+  position:relative;
+  >.action-bar{
+    //border: 1px solid;
+    position: absolute;
+    top: 0;
+    right:0px;
+    width: 24px;
+    height: 100%;
+    overflow: hidden;
+    z-index: -1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    //background-color:
+    background-color:@primary-color-400;
+    padding:2px 2px;
+    //border:1px solid;
+    border-radius: 0 0.5rem 0.5rem 0 ;
+    //box-sizing: border-box;
+    box-shadow: var(--box-shadow);
+    >svg{
+      fill: #fff;
+      //fill: @primary-color-400;
+      //font-weight: bold ;
+      width:18px;
+      height:18px;
+      cursor: pointer;
+      &:active{
+        fill: @primary-color-100;
+      }
+    }
 
-  &.archived-memo {
-    @apply border-gray-200;
+
   }
+  &.more-actions{
+    //border: 1px solid;
+    //left: -20px;
+    border-radius:0.5rem 0 0 0.5rem;
+    transform: translateX(-24px);
+    transition-property: all;
+    transition-timing-function: cubic-bezier(.4, 0, .2, 1);
+    transition-duration: .15s;
+  >.action-bar{
+    transform: translateX(24px);
+  }
+    //transition:transformX(-20px);
+  }
+  >.card-status{
+    position: absolute;
+    right:0;
+    bottom:0;
+    //border: 1px solid;
+    height:24px;
+    //width:100px;
+    background-color: @primary-color-200;
+    color:@primary-color-400;
+    //padding: 4px 6px;
+    border-radius:10px 0 0 0;
+    display:flex;
+    align-items: center;
+    justify-content:space-between;
+    >svg{
+      margin-right: 6px;
+    }
+    > span.public{
+      font-size:12px;
+    }
+  }
+  >span.double-click-tip{
+    //color:red;
+    position: absolute;
+    right:2px;
+    bottom:2px;
+    font-size:12px;
+    color: #9ca3af;
 
-  &.pinned {
-    @apply border-gray-200 border-2;
   }
 
   &.editing:hover{
@@ -29,97 +99,21 @@
   }
 
   > .memo-top-wrapper {
+    margin-top: 4px;
     padding:0 16px;
-    margin-bottom: 0.25rem;
     display: flex;
     height: 1.5rem;
     width: 100%;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-
-    > .status-text-container {
-      @apply flex flex-row justify-start items-center;
-
-      > .time-text {
-        @apply text-xs text-gray-400 cursor-pointer;
-        font-size: 13px;
-      }
-
-      > .status-text {
-        @apply text-xs cursor-pointer ml-2 rounded border px-1;
-
-        &.public {
-          @apply border-green-600 text-green-600;
-        }
-
-        &.protected {
-          @apply border-gray-400 text-gray-400;
-        }
-      }
-    }
-
+    line-height:12px;
     > .time-text {
-      @apply text-xs text-gray-400 cursor-pointer;
+      font-size: 12px;
+      color: rgb(156, 163, 175);
     }
-
-    > .btns-container {
-      @apply flex flex-row justify-end items-center relative flex-shrink-0;
-
-      > .more-action-btns-wrapper {
-        @apply hidden flex-col justify-start items-center absolute top-2 -right-4 flex-nowrap hover:flex p-3;
-
-        > .more-action-btns-container {
-          @apply w-28 h-auto p-1 z-1 whitespace-nowrap rounded-lg bg-white;
-          box-shadow: 0 0 8px 0 rgb(0 0 0 / 20%);
-
-          > .btns-container {
-            @apply w-full flex flex-row justify-around items-center border-b border-gray-100 p-1 mb-1;
-
-            > .btn {
-              @apply relative w-6 h-6 p-1 text-gray-600;
-
-              &:hover > .tip-text {
-                @apply block;
-              }
-
-              > .icon-img {
-                @apply w-5 h-auto;
-              }
-
-              > .tip-text {
-                @apply hidden absolute top-0 p-1 px-2 rounded text-xs leading-6 -mt-9 bg-black text-white shadow opacity-70;
-              }
-            }
-          }
-
-          > .btn {
-            @apply w-full text-sm leading-6 py-1 px-3 rounded justify-start;
-
-            &.archive-btn {
-              @apply text-orange-600;
-            }
-          }
-        }
-      }
-
-      .btn {
-        @apply flex flex-row justify-center items-center px-2 leading-6 text-sm rounded hover:bg-gray-200;
-
-        &.more-action-btn {
-          @apply w-8 -mr-2 opacity-60 cursor-default hover:bg-transparent;
-
-          > .icon-img {
-            @apply w-4 h-auto;
-          }
-
-          &:hover {
-            & + .more-action-btns-wrapper {
-              display: flex;
-            }
-          }
-        }
-      }
+    >svg{
+      cursor:pointer;
     }
   }
 

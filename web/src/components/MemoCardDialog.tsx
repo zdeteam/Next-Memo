@@ -126,6 +126,74 @@ const MemoCardDialog: React.FC<Props> = (props: Props) => {
 
   return (
     <>
+      <div className="memo-card-container">
+
+        <div className="memo-container">
+          <div className="card-cover" />
+          <div className="header-container">
+            <p className="time-text">{utils.getDateTimeString(memo.createdTs)}</p>
+          </div>
+          <div
+            className="memo-content-text"
+            onClick={handleMemoContentClick}
+            dangerouslySetInnerHTML={{ __html: formatMemoContent(memo.content) }}
+          />
+        </div>
+        {/*<div className="layer-container"></div>*/}
+        {linkMemos.map((_, idx) => {
+          if (idx < 4) {
+            return (
+                <div
+                    className="background-layer-container"
+                    key={idx}
+                    style={{
+                      bottom: (idx + 1) * -3 + "px",
+                      left: (idx + 1) * 5 + "px",
+                      width: `calc(100% - ${(idx + 1) * 10}px)`,
+                      zIndex: -idx - 1,
+                    }}
+                ></div>
+            );
+          } else {
+            return null;
+          }
+        })}
+        {linkMemos.length > 0 ? (
+            <div className="linked-memos-wrapper">
+              <p className="normal-text">{linkMemos.length} related MEMO</p>
+              {linkMemos.map((memo, index) => {
+                const rawtext = parseHtmlToRawText(formatMemoContent(memo.content)).replaceAll("\n", " ");
+                return (
+                    <div className="linked-memo-container" key={`${index}-${memo.id}`} onClick={() => handleLinkedMemoClick(memo)}>
+                      <span className="time-text">{memo.dateStr} </span>
+                      {rawtext}
+                    </div>
+                );
+              })}
+            </div>
+        ) : null}
+        {linkedMemos.length > 0 ? (
+            <div className="linked-memos-wrapper">
+              <p className="normal-text">{linkedMemos.length} linked MEMO</p>
+              {linkedMemos.map((memo, index) => {
+                const rawtext = parseHtmlToRawText(formatMemoContent(memo.content)).replaceAll("\n", " ");
+                return (
+                    <div className="linked-memo-container" key={`${index}-${memo.id}`} onClick={() => handleLinkedMemoClick(memo)}>
+                      <span className="time-text">{memo.dateStr} </span>
+                      {rawtext}
+                    </div>
+                );
+              })}
+            </div>
+        ) : null}
+      </div>
+
+
+      <Only when={!userService.isVisitorMode()}>
+        <button className="btn edit-btn" onClick={handleEditMemoBtnClick}>
+          <Icon.Edit3 className="icon-img" />
+        </button>
+      </Only>
       <Only when={!userService.isVisitorMode()}>
         <div className="card-header-container">
           <div className="visibility-selector-container">
@@ -139,85 +207,6 @@ const MemoCardDialog: React.FC<Props> = (props: Props) => {
           </div>
         </div>
       </Only>
-      <div className="memo-card-container">
-        <div className="header-container">
-          <p className="time-text">{utils.getDateTimeString(memo.createdTs)}</p>
-          <div className="btns-container">
-            <Only when={!userService.isVisitorMode()}>
-              <>
-                <button className="btn edit-btn" onClick={handleEditMemoBtnClick}>
-                  <Icon.Edit3 className="icon-img" />
-                </button>
-                <span className="split-line">/</span>
-              </>
-            </Only>
-            <button className="btn close-btn" onClick={props.destroy}>
-              <Icon.X className="icon-img" />
-            </button>
-          </div>
-        </div>
-        <div className="memo-container">
-          <div
-            className="memo-content-text"
-            onClick={handleMemoContentClick}
-            dangerouslySetInnerHTML={{ __html: formatMemoContent(memo.content) }}
-          ></div>
-          <Only when={imageUrls.length > 0}>
-            <div className="images-wrapper">
-              {imageUrls.map((imgUrl, idx) => (
-                <Image className="memo-img" key={idx} imgUrl={imgUrl} />
-              ))}
-            </div>
-          </Only>
-        </div>
-        <div className="layer-container"></div>
-        {linkMemos.map((_, idx) => {
-          if (idx < 4) {
-            return (
-              <div
-                className="background-layer-container"
-                key={idx}
-                style={{
-                  bottom: (idx + 1) * -3 + "px",
-                  left: (idx + 1) * 5 + "px",
-                  width: `calc(100% - ${(idx + 1) * 10}px)`,
-                  zIndex: -idx - 1,
-                }}
-              ></div>
-            );
-          } else {
-            return null;
-          }
-        })}
-      </div>
-      {linkMemos.length > 0 ? (
-        <div className="linked-memos-wrapper">
-          <p className="normal-text">{linkMemos.length} related MEMO</p>
-          {linkMemos.map((memo, index) => {
-            const rawtext = parseHtmlToRawText(formatMemoContent(memo.content)).replaceAll("\n", " ");
-            return (
-              <div className="linked-memo-container" key={`${index}-${memo.id}`} onClick={() => handleLinkedMemoClick(memo)}>
-                <span className="time-text">{memo.dateStr} </span>
-                {rawtext}
-              </div>
-            );
-          })}
-        </div>
-      ) : null}
-      {linkedMemos.length > 0 ? (
-        <div className="linked-memos-wrapper">
-          <p className="normal-text">{linkedMemos.length} linked MEMO</p>
-          {linkedMemos.map((memo, index) => {
-            const rawtext = parseHtmlToRawText(formatMemoContent(memo.content)).replaceAll("\n", " ");
-            return (
-              <div className="linked-memo-container" key={`${index}-${memo.id}`} onClick={() => handleLinkedMemoClick(memo)}>
-                <span className="time-text">{memo.dateStr} </span>
-                {rawtext}
-              </div>
-            );
-          })}
-        </div>
-      ) : null}
     </>
   );
 };
