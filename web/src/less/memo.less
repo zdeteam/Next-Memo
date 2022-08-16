@@ -2,6 +2,7 @@
 @import "./memo-content.less";
 
 .memo-wrapper {
+  box-sizing: border-box;
   margin-bottom: 0.5rem;
   display: flex;
   width: 100%;
@@ -11,14 +12,15 @@
   justify-content: flex-start;
   border-radius: 0.5rem;
   background-color:#fff;
-  box-shadow: var(--box-shadow);
+  //box-shadow: var(--box-shadow);
   position:relative;
+  border:1px solid rgb(234, 234, 230);
   >.action-bar{
     position: absolute;
-    top: 0;
-    right:0px;
+    top: -1px;
+    right:0;
     width: 24px;
-    height: 100%;
+    height: calc(100% + 2px);
     overflow: hidden;
     z-index: -1;
     display: flex;
@@ -26,7 +28,7 @@
     justify-content: space-around;
     background-color:@primary-color-400;
     border-radius: 0 0.5rem 0.5rem 0 ;
-    box-shadow: var(--box-shadow);
+   //border: 1px solid;
     >svg{
       margin: 0 auto;
       fill: #fff;
@@ -99,9 +101,10 @@
     line-height:12px;
     > .time-text {
       font-size: 12px;
-      color: rgb(156, 163, 175);
+      color:rgba(28, 31, 35, 0.6);
     }
     >svg{
+      fill:rgba(28, 31, 35, 0.6);
       cursor:pointer;
     }
   }

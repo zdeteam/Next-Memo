@@ -2,7 +2,7 @@ import { createRoot } from "react-dom/client";
 import { Routes, Route, unstable_HistoryRouter as HistoryRouter } from "react-router-dom";
 import { createBrowserHistory } from "history";
 import { Provider } from "react-redux";
-import Signin from "./pages/Signin";
+import Signin from "./pages/Auth";
 import Home from "./pages/Home";
 import I18nProvider from "./labs/i18n/I18nProvider";
 import { ThemeProvider } from "@strapi/design-system/ThemeProvider";

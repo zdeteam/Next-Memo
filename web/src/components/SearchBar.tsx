@@ -3,6 +3,7 @@ import { locationService } from "../services";
 import { useAppSelector } from "../store";
 import { memoSpecialTypes } from "../helpers/filter";
 import Icon from "./Icon";
+import Input from "./common/Input"
 import "../less/search-bar.less";
 import { useEffect, useState } from "react";
 
@@ -31,7 +32,8 @@ const SearchBar: React.FC<Props> = () => {
 
   return (
     <div className="search-bar-container">
-      <Searchbar name="searchbar" value={keyword} clearLabel="" onClear={() => setKeyword("")} onChange={handleTextQueryInput} />
+      <Input />
+      {/*<Searchbar name="searchbar" value={keyword} clearLabel="" onClear={() => setKeyword("")} onChange={handleTextQueryInput} />*/}
       <div className="quickly-action-wrapper">
         <div className="quickly-action-container">
           <p className="title-text">QUICKLY FILTER</p>

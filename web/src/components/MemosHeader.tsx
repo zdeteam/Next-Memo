@@ -1,10 +1,11 @@
-import { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { memoService, shortcutService } from "../services";
 import { useAppSelector } from "../store";
 import Icon from "./Icon";
 import SearchBar from "./SearchBar";
 import { toggleSiderbar } from "./Sidebar";
 import "../less/memos-header.less";
+import {GoSearch} from "react-icons/go"
 
 let prevRequestTimestamp = Date.now();
 
@@ -13,11 +14,11 @@ interface Props {}
 const MemosHeader: React.FC<Props> = () => {
   const query = useAppSelector((state) => state.location.query);
   const shortcuts = useAppSelector((state) => state.shortcut.shortcuts);
-  const [titleText, setTitleText] = useState("MEMOS");
+  const [titleText, setTitleText] = useState("");
 
   useEffect(() => {
     if (!query?.shortcutId) {
-      setTitleText("MEMOS");
+      setTitleText("Good afternoon");
       return;
     }
 
@@ -47,7 +48,11 @@ const MemosHeader: React.FC<Props> = () => {
           {titleText}
         </span>
       </div>
-      <SearchBar />
+      <div className="search-wrapper">
+        <GoSearch />
+        <span>搜索</span>
+        <span>⌘K</span>
+      </div>
     </div>
   );
 };
