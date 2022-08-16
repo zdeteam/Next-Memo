@@ -100,7 +100,7 @@ const MemoList: React.FC<Props> = () => {
       ))}
       <div className="status-text-container">
         <p className="status-text">
-          {isFetching ? "Fetching data..." : sortedMemos.length === 0 ? "No memos 🌃" : showMemoFilter ? "" : "All memos are ready 🎉"}
+          {isFetching ? null : sortedMemos.length === 0 ? "没有数据啦" : showMemoFilter ? "" : "已全部加载完成"}
         </p>
       </div>
     </div>
