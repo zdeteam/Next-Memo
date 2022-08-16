@@ -6,6 +6,7 @@ import TaskItem from "@tiptap/extension-task-item";
 import TaskList from "@tiptap/extension-task-list";
 import BulletList from "@tiptap/extension-bullet-list";
 import ListItem from "@tiptap/extension-list-item";
+import Placeholder from "@tiptap/extension-placeholder";
 import OrderedList from "@tiptap/extension-ordered-list";
 import Bold from "@tiptap/extension-bold";
 
@@ -81,7 +82,7 @@ const ProseMirrorEditor = function (
   }, [editorState.markMemoId, editorState.editMemoId]);
 
   const editor = useEditor({
-    extensions: [Bold, Document, Paragraph, Text, TaskList, TaskItem, BulletList, OrderedList, ListItem],
+    extensions: [Bold, Document, Paragraph, Text, TaskList, TaskItem, BulletList, OrderedList, ListItem,Placeholder],
     content: props.content || "",
     editable: props.editable,
   });

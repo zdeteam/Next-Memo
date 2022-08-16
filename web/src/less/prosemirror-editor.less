@@ -19,6 +19,13 @@
   &.no-hover{
     border: none;
   }
+  p.is-editor-empty:first-child::before {
+    content: "你在想什么...";
+    float: left;
+    color: #ced4da;
+    pointer-events: none;
+    height: 0;
+  }
 
   .editor {
     flex: 1;
