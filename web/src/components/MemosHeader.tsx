@@ -5,7 +5,6 @@ import Icon from "./Icon";
 import SearchBar from "./SearchBar";
 import { toggleSiderbar } from "./Sidebar";
 import "../less/memos-header.less";
-import {GoSearch} from "react-icons/go"
 
 let prevRequestTimestamp = Date.now();
 
@@ -48,11 +47,7 @@ const MemosHeader: React.FC<Props> = () => {
           {titleText}
         </span>
       </div>
-      <div className="search-wrapper">
-        <GoSearch />
-        <span>搜索</span>
-        <span>⌘K</span>
-      </div>
+      <SearchBar />
     </div>
   );
 };
