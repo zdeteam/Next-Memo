@@ -1,5 +1,6 @@
 import { forwardRef, ReactNode, useCallback, useEffect, useImperativeHandle, useRef } from "react";
 import Write from "@strapi/icons/Write";
+
 import { Icon } from "@strapi/design-system/Icon";
 import useRefresh from "../../hooks/useRefresh";
 import Only from "../common/OnlyWhen";
@@ -139,14 +140,7 @@ const Editor = forwardRef((props: EditorProps, ref: React.ForwardedRef<EditorRef
             </button>
           </Only>
           <Only when={showConfirmBtn}>
-            <Icon
-              className="confirm-btn"
-              onClick={handleCommonConfirmBtnClick}
-              width="1.4rem"
-              height="1.4rem"
-
-              as={Write}
-            />
+            <Icon className="confirm-btn" onClick={handleCommonConfirmBtnClick} width="1.4rem" height="1.4rem" as={Write} />
           </Only>
         </div>
       </div>

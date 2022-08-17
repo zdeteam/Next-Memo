@@ -76,7 +76,7 @@ const TagList: React.FC<Props> = () => {
         ))}
         <Only when={!userService.isVisitorMode() && tags.length < 5}>
           <p className="tag-tip-container">
-            输入 <span className="code-text">#tag </span> 创建标签
+            输入 <span className="umo-tag">#tag </span> 创建标签
           </p>
         </Only>
       </div>
