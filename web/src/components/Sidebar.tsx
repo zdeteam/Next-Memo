@@ -56,9 +56,9 @@ const Sidebar: React.FC<Props> = () => {
           </button>
         </Only>
       </div>
-      <Only when={!userService.isVisitorMode()}>
-        <ShortcutList />
-      </Only>
+      {/*<Only when={!userService.isVisitorMode()}>*/}
+      {/*  <ShortcutList />*/}
+      {/*</Only>*/}
       <TagList />
     </aside>
   );
