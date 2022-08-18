@@ -23,30 +23,28 @@ export const Mention = Node.create<MentionOptions>({
       suggestion: {
         char: "#",
         pluginKey: MentionPluginKey,
-        command: ({ editor, range, props }) => {
+        command: (params?: any) => {
+          const { editor, range, props } = params;
           // increase range.to by one when the next node is of type "text"
           // and starts with a space character
           const nodeAfter = editor.view.state.selection.$to.nodeAfter;
           const overrideSpace = nodeAfter?.text?.startsWith(" ");
-
           if (overrideSpace) {
             range.to += 1;
           }
-
-          editor
-            .chain()
-            .focus()
-            .insertContentAt(range, [
-              {
-                type: this.name,
-                attrs: props,
-              },
-              {
-                type: "text",
-                text: " ",
-              },
-            ])
-            .run();
+          const content: any[] = [
+            {
+              type: this.name,
+              attrs: props,
+            },
+          ];
+          if (!props.isCustom) {
+            content.push({
+              type: "text",
+              text: " ",
+            });
+          }
+          editor.chain().focus().insertContentAt(range, content).run();
 
           window.getSelection()?.collapseToEnd();
         },
@@ -129,8 +127,8 @@ export const Mention = Node.create<MentionOptions>({
 
   addKeyboardShortcuts() {
     return {
-      Backspace: () =>
-        this.editor.commands.command(({ tr, state }) => {
+      Backspace: () => {
+        return this.editor.commands.command(({ tr, state }) => {
           let isMention = false;
           const { selection } = state;
           const { empty, anchor } = selection;
@@ -149,7 +147,8 @@ export const Mention = Node.create<MentionOptions>({
           });
 
           return isMention;
-        }),
+        });
+      },
     };
   },
 

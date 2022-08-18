@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { GoBold, GoListOrdered, GoListUnordered, GoTasklist } from "react-icons/go";
 import { EditorContent, ReactRenderer, useEditor } from "@tiptap/react";
 import Document from "@tiptap/extension-document";
@@ -61,6 +61,7 @@ const ProseMirrorEditor = function (
   const editorRef = useRef<EditorRefActions>(null);
   const prevGlobalStateRef = useRef(editorState);
 
+  let insertingTag = "";
 
   useEffect(() => {
     if (editorState.markMemoId && editorState.markMemoId !== UNKNOWN_ID && !props.cardMode) {
@@ -85,11 +86,6 @@ const ProseMirrorEditor = function (
   }, [editorState.markMemoId, editorState.editMemoId]);
 
   const suggestion = {
-    items: async({ query }: any) => {
-      console.log("tags", tags);
-      return tags.filter((item) => item.toLowerCase().startsWith(query.toLowerCase())).slice(0, 5);
-    },
-
     render: () => {
       let component: any;
       let popup: any;
@@ -128,16 +124,16 @@ const ProseMirrorEditor = function (
         },
 
         onKeyDown(props: any) {
+          if (props.event.key !== " ") insertingTag += props.event.key;
           if (props.event.key === "Escape") {
             popup[0].hide();
-
             return true;
           }
-
-          return component.ref?.onKeyDown(props);
+          return component.ref?.onKeyDown(props, insertingTag);
         },
 
         onExit() {
+          insertingTag = "";
           popup[0].destroy();
           component.destroy();
         },
@@ -170,7 +166,6 @@ const ProseMirrorEditor = function (
 
   useEffect(() => {
     editor?.setOptions({ editable: props.editable });
-
   }, [props.editable]);
 
   const onOk = async () => {
