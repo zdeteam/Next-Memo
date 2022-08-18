@@ -1,5 +1,6 @@
 import * as utils from "../helpers/utils";
 import { formatMemoContent } from "../helpers/marked";
+import ProseMirrorEditor from "./Editor/ProseMirrorEditor";
 import "../less/daily-memo.less";
 
 interface DailyMemo extends Memo {
@@ -25,14 +26,15 @@ const DailyMemo: React.FC<Props> = (props: Props) => {
         <span className="normal-text">{memo.timeStr}</span>
       </div>
       <div className="memo-content-container">
-        <div
-          className="memo-content-text"
-          dangerouslySetInnerHTML={{
-            __html: formatMemoContent(memo.content, {
-              inlineImage: true,
-            }),
-          }}
-        ></div>
+          <ProseMirrorEditor editable={false} cardMode content={memo.content} />
+        {/*<div*/}
+        {/*  className="memo-content-text"*/}
+        {/*  dangerouslySetInnerHTML={{*/}
+        {/*    __html: formatMemoContent(memo.content, {*/}
+        {/*      inlineImage: true,*/}
+        {/*    }),*/}
+        {/*  }}*/}
+        {/*></div>*/}
       </div>
       <div className="split-line"></div>
     </div>

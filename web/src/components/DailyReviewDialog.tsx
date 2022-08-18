@@ -8,6 +8,7 @@ import { generateDialog } from "./Dialog";
 import DatePicker from "./common/DatePicker";
 import Button from "./common/Button";
 import DailyMemo from "./DailyMemo";
+import ProseMirrorEditor from "./Editor/ProseMirrorEditor";
 import "../less/daily-review-dialog.less";
 
 interface Props extends DialogProps {
@@ -49,8 +50,7 @@ const DailyReviewDialog: React.FC<Props> = (props: Props) => {
         link.href = url;
         link.click();
       })
-      .catch(() => {
-      });
+      .catch(() => {});
   };
 
   const handleDataPickerChange = (datestamp: DateStamp): void => {
