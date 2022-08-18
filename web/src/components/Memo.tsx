@@ -212,7 +212,7 @@ const Memo: React.FC<Props> = (props: Props) => {
     >
       <div className="memo-top-wrapper">
         <span className="time-text">{createdAtStr}</span>
-        {!userService.isVisitorMode() && <GoKebabHorizontal onClick={moreActions} />}
+        {!userService.isVisitorMode() && !memo.editable && <GoKebabHorizontal onClick={moreActions} />}
       </div>
       <ProseMirrorEditor cardMode content={memo.content} editable={memo.editable} onCancel={() => setMemo({ ...memo, editable: false })} />
       {state.expandButtonStatus !== -1 && (
