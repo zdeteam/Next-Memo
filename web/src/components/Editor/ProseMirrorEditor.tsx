@@ -176,6 +176,7 @@ const ProseMirrorEditor = function (
 
   useEffect(() => {
     editor?.setOptions({ editable: props.editable });
+    if (props.content) editor?.commands.setContent(props.content);
     if (props.editable) setIsFold(false);
     else setIsFold(true);
   }, [props.editable]);
