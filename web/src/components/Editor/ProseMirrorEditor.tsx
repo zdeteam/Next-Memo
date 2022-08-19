@@ -64,6 +64,7 @@ const ProseMirrorEditor = function (
   const editorRef = useRef<any>(null);
   const [showFoldBtn, setShowFoldBtn] = useState(false);
   const [isFold, setIsFold] = useState(true);
+  const [prevContent, setPrevContent] = useState<any>("");
   const prevGlobalStateRef = useRef(editorState);
 
   useEffect(() => {
@@ -177,9 +178,9 @@ const ProseMirrorEditor = function (
   });
 
   useEffect(() => {
+    if (props.editable) setPrevContent(editor?.getHTML());
     editor?.setOptions({ editable: props.editable });
-    if (props.content) editor?.commands.setContent(props.content);
-    if (props.editable) setIsFold(false);
+    if (props?.editable) setIsFold(false);
     else setIsFold(true);
   }, [props.editable]);
 
@@ -225,7 +226,13 @@ const ProseMirrorEditor = function (
           <div className="toolbar">
             <MenuBar editor={editor} />
             {props.cardMode && props.editable && (
-              <button className="cancel" onClick={props.onCancel}>
+              <button
+                className="cancel"
+                onClick={() => {
+                  editor.commands.setContent(prevContent);
+                  if (props.onCancel) props.onCancel();
+                }}
+              >
                 取消
               </button>
             )}

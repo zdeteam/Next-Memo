@@ -187,7 +187,13 @@ const Memo: React.FC<Props> = (props: Props) => {
         <span className="time-text">{createdAtStr}</span>
         {!userService.isVisitorMode() && !memo.editable && <GoKebabHorizontal onClick={moreActions} />}
       </div>
-      <ProseMirrorEditor foldable cardMode content={memo.content} editable={memo.editable} onCancel={() => setMemo({ ...memo, editable: false })} />
+      <ProseMirrorEditor
+        foldable
+        cardMode
+        content={memo.content}
+        editable={memo.editable}
+        onCancel={() => setMemo({ ...memo, editable: false })}
+      />
       <Only when={imageUrls.length > 0}>
         <div className="images-wrapper">
           {imageUrls.map((imgUrl, idx) => (
