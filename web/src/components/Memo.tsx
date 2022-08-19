@@ -110,6 +110,7 @@ const Memo: React.FC<Props> = (props: Props) => {
         targetEl.classList.remove("memo-link-text");
       }
     } else if (targetEl.className === "umo-tag") {
+      if (memo.editable) return false;
       const tagName = targetEl.innerText.slice(1);
       const currTagQuery = locationService.getState().query?.tag;
       if (currTagQuery === tagName) {
