@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
-import { GoBold, GoListOrdered, GoListUnordered, GoTasklist } from "react-icons/go";
+import { GoBold, GoListOrdered, GoListUnordered, GoUnfold, GoFold, GoTasklist } from "react-icons/go";
+import { MdOutlineUnfoldMore, MdOutlineUnfoldLess } from "react-icons/md";
 import { EditorContent, ReactRenderer, useEditor } from "@tiptap/react";
 import Document from "@tiptap/extension-document";
 import TaskItem from "@tiptap/extension-task-item";
@@ -17,7 +18,6 @@ import { editorStateService, locationService, memoService } from "../../services
 import { UNKNOWN_ID } from "../../helpers/consts";
 import toastHelper from "../Toast";
 import { useAppSelector } from "../../store";
-import { EditorRefActions } from "./Editor";
 import Button from "../common/Button";
 import MentionList from "./MentionList";
 import "../../less/prosemirror-editor.less";
@@ -27,6 +27,7 @@ interface ProseMirrorEditorProps {
   editable: boolean;
   cardMode?: boolean;
   onCancel?: () => void;
+  clearWhenSave?: boolean;
 }
 const MenuBar = ({ editor }: { editor: any }) => {
   if (!editor) {
@@ -56,19 +57,21 @@ const ProseMirrorEditor = function (
     editable: true,
   }
 ) {
+  const MAX_MEMO_CONTAINER_HEIGHT = 160;
   const editorState = useAppSelector((state) => state.editor);
   const { memos, tags } = useAppSelector((state) => state.memo);
-  const editorRef = useRef<EditorRefActions>(null);
+  const editorRef = useRef<any>(null);
+  const [showFoldBtn, setShowFoldBtn] = useState(false);
+  const [isFold, setIsFold] = useState(true);
   const prevGlobalStateRef = useRef(editorState);
 
   useEffect(() => {
-    if (editorState.markMemoId && editorState.markMemoId !== UNKNOWN_ID && !props.cardMode) {
-      const editorCurrentValue = editorRef.current?.getContent();
-      const memoLinkText = `${editorCurrentValue ? "\n" : ""}Mark: @[MEMO](${editorState.markMemoId})`;
-      editor?.commands.setContent(memoLinkText);
-      editorStateService.clearMarkMemo();
-    }
-
+    // if (editorState.markMemoId && editorState.markMemoId !== UNKNOWN_ID && !props.cardMode) {
+    //   const editorCurrentValue = editorRef.current?.getContent();
+    //   const memoLinkText = `${editorCurrentValue ? "\n" : ""}Mark: @[MEMO](${editorState.markMemoId})`;
+    //   editor?.commands.setContent(memoLinkText);
+    //   editorStateService.clearMarkMemo();
+    // }
     // if (
     //   editorState.editMemoId &&
     //   editorState.editMemoId !== UNKNOWN_ID &&
@@ -79,8 +82,7 @@ const ProseMirrorEditor = function (
     //     editor?.commands.setContent(editMemo.content);
     //   }
     // }
-
-    prevGlobalStateRef.current = editorState;
+    // prevGlobalStateRef.current = editorState;
   }, [editorState.markMemoId, editorState.editMemoId]);
 
   const suggestion = {
@@ -160,8 +162,22 @@ const ProseMirrorEditor = function (
     editable: props.editable,
   });
 
+  editor?.on("create", () => {
+    if (Number(editorRef.current?.clientHeight) > MAX_MEMO_CONTAINER_HEIGHT) {
+      setShowFoldBtn(true);
+    }
+  });
+
+  editor?.on("update", () => {
+    if (Number(editorRef.current?.clientHeight) > MAX_MEMO_CONTAINER_HEIGHT) {
+      setShowFoldBtn(true);
+    }
+  });
+
   useEffect(() => {
     editor?.setOptions({ editable: props.editable });
+    if (props.editable) setIsFold(false);
+    else setIsFold(true);
   }, [props.editable]);
 
   const onOk = async () => {
@@ -183,17 +199,24 @@ const ProseMirrorEditor = function (
         if (content) await memoService.createMemo({ content });
         locationService.clearQuery();
       }
-      editor?.commands.clearContent();
+      if (props.clearWhenSave) editor?.commands.clearContent();
     } catch (error: any) {
       toastHelper.error(error.message);
     }
   };
-
+  const handleExpandBtnClick = () => {
+    setIsFold(!isFold);
+  };
   return (
     <div className={`prosemirror-editor ${props.cardMode && "no-hover"}`}>
-      <div className="editor">
+      <div className={`editor ${isFold && showFoldBtn && "fold"}`} ref={editorRef}>
         <EditorContent editor={editor} />
       </div>
+      {showFoldBtn && (
+        <span className="fold-btn" onClick={handleExpandBtnClick}>
+          {!isFold ? <MdOutlineUnfoldLess /> : <MdOutlineUnfoldMore />}
+        </span>
+      )}
       {editor && props.editable ? (
         <>
           <div className="toolbar">

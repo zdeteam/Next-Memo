@@ -18,8 +18,6 @@ import "../less/memo.less";
 
 dayjs.extend(relativeTime);
 
-const MAX_MEMO_CONTAINER_HEIGHT = 384;
-
 type ExpandButtonStatus = -1 | 0 | 1;
 
 interface Props {
@@ -40,9 +38,6 @@ export const getFormatedMemoCreatedAtStr = (createdTs: number): string => {
 
 const Memo: React.FC<Props> = (props: Props) => {
   const [memo, setMemo] = useState({ editable: false, ...props.memo });
-  const [state, setState] = useState<State>({
-    expandButtonStatus: -1,
-  });
   const [moreAction, setMoreAction] = useState(false);
   const [createdAtStr, setCreatedAtStr] = useState<string>(getFormatedMemoCreatedAtStr(memo.createdTs));
   const memoContainerRef = useRef<HTMLDivElement>(null);
@@ -52,13 +47,6 @@ const Memo: React.FC<Props> = (props: Props) => {
   useEffect(() => {
     if (!memoContainerRef) {
       return;
-    }
-
-    if (Number(memoContainerRef.current?.clientHeight) > MAX_MEMO_CONTAINER_HEIGHT) {
-      setState({
-        ...state,
-        expandButtonStatus: 0,
-      });
     }
 
     if (Date.now() - memo.createdTs < 1000 * 60 * 60 * 24) {
@@ -170,15 +158,6 @@ const Memo: React.FC<Props> = (props: Props) => {
     }
   };
 
-  const handleExpandBtnClick = () => {
-    setState({
-      expandButtonStatus: Number(Boolean(!state.expandButtonStatus)) as ExpandButtonStatus,
-    });
-  };
-
-  /**
-   *
-   */
   const moreActions = () => {
     setMoreAction(!moreAction);
   };
@@ -215,14 +194,6 @@ const Memo: React.FC<Props> = (props: Props) => {
         {!userService.isVisitorMode() && !memo.editable && <GoKebabHorizontal onClick={moreActions} />}
       </div>
       <ProseMirrorEditor cardMode content={memo.content} editable={memo.editable} onCancel={() => setMemo({ ...memo, editable: false })} />
-      {state.expandButtonStatus !== -1 && (
-        <div className="expand-btn-container">
-          <span className={`btn ${state.expandButtonStatus === 0 ? "expand-btn" : "fold-btn"}`} onClick={handleExpandBtnClick}>
-            {state.expandButtonStatus === 0 ? "Expand" : "Fold"}
-            <Icon.ChevronRight className="icon-img" />
-          </span>
-        </div>
-      )}
       <Only when={imageUrls.length > 0}>
         <div className="images-wrapper">
           {imageUrls.map((imgUrl, idx) => (
