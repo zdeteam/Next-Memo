@@ -60,12 +60,14 @@ const ProseMirrorEditor = function (
 ) {
   const MAX_MEMO_CONTAINER_HEIGHT = 160;
   const editorState = useAppSelector((state) => state.editor);
+  const query = useAppSelector((state) => state.location.query);
   const { memos, tags } = useAppSelector((state) => state.memo);
   const editorRef = useRef<any>(null);
   const [showFoldBtn, setShowFoldBtn] = useState(false);
   const [isFold, setIsFold] = useState(true);
   const [prevContent, setPrevContent] = useState<any>("");
   const prevGlobalStateRef = useRef(editorState);
+  const { tag: tagQuery, duration, type: memoType, text: textQuery, shortcutId } = query;
 
   useEffect(() => {
     // if (editorState.markMemoId && editorState.markMemoId !== UNKNOWN_ID && !props.cardMode) {
@@ -183,6 +185,29 @@ const ProseMirrorEditor = function (
     if (props?.editable) setIsFold(false);
     else setIsFold(true);
   }, [props.editable]);
+
+  // useEffect(() => {
+  //   if (!props.cardMode) {
+  //     if (editor && !editor.isDestroyed) {
+  //       if (prevContent) editor?.commands.setContent(prevContent);
+  //       // setPrevContent("");
+  //       const isEmpty = editor?.isEmpty;
+  //       const content = editor?.getHTML();
+  //       // editor?.commands.setContent(prevContent);
+  //       if (tagQuery) {
+  //         setPrevContent(content);
+  //         // editor?.commands.setContent(prevContent);
+  //         const string = ` <span data-type="hashtag" class="umo-tag" data-id="${tagQuery}" contenteditable="false">#${tagQuery}</span> `;
+  //         editor?.commands.insertContent(string);
+  //         // setPrevContent('')
+  //       } else {
+  //         // editor?.commands.clearContent();
+  //         editor?.commands.setContent(prevContent);
+  //       }
+  //     }
+  //   }
+  // }, [editor,tagQuery]);
+
 
   const onOk = async () => {
     const content = editor?.getHTML();
