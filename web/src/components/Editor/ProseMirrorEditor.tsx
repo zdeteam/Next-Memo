@@ -183,6 +183,7 @@ const ProseMirrorEditor = function (
         if (content) await memoService.createMemo({ content });
         locationService.clearQuery();
       }
+      editor?.commands.clearContent();
     } catch (error: any) {
       toastHelper.error(error.message);
     }
