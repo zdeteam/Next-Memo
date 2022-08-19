@@ -61,8 +61,6 @@ const ProseMirrorEditor = function (
   const editorRef = useRef<EditorRefActions>(null);
   const prevGlobalStateRef = useRef(editorState);
 
-  let insertingTag = "";
-
   useEffect(() => {
     if (editorState.markMemoId && editorState.markMemoId !== UNKNOWN_ID && !props.cardMode) {
       const editorCurrentValue = editorRef.current?.getContent();
@@ -124,16 +122,14 @@ const ProseMirrorEditor = function (
         },
 
         onKeyDown(props: any) {
-          if (props.event.key !== " ") insertingTag += props.event.key;
           if (props.event.key === "Escape") {
             popup[0].hide();
             return true;
           }
-          return component.ref?.onKeyDown(props, insertingTag);
+          return component.ref?.onKeyDown(props, props.view.state.mention$.query);
         },
 
         onExit() {
-          insertingTag = "";
           popup[0].destroy();
           component.destroy();
         },

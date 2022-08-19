@@ -48,7 +48,7 @@ export default forwardRef((props: Props, ref) => {
         return true;
       }
       if (event.key === " ") {
-        enterHandler(insertingTag);
+        if (insertingTag !== "") enterHandler(insertingTag);
       }
       return false;
     },
