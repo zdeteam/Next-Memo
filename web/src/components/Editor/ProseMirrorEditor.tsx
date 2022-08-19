@@ -25,6 +25,7 @@ import "../../less/prosemirror-editor.less";
 interface ProseMirrorEditorProps {
   content?: string;
   editable: boolean;
+  foldable?: boolean;
   cardMode?: boolean;
   onCancel?: () => void;
   clearWhenSave?: boolean;
@@ -124,6 +125,7 @@ const ProseMirrorEditor = function (
         },
 
         onKeyDown(props: any) {
+          console.log(props);
           if (props.event.key === "Escape") {
             popup[0].hide();
             return true;
@@ -213,7 +215,7 @@ const ProseMirrorEditor = function (
       <div className={`editor ${isFold && showFoldBtn && "fold"}`} ref={editorRef}>
         <EditorContent editor={editor} />
       </div>
-      {showFoldBtn && (
+      {showFoldBtn && props.foldable && (
         <span className="fold-btn" onClick={handleExpandBtnClick}>
           {!isFold ? <MdOutlineUnfoldLess /> : <MdOutlineUnfoldMore />}
         </span>

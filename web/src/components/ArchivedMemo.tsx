@@ -66,7 +66,7 @@ const ArchivedMemo: React.FC<Props> =
             <GoTrashcan className={`${showConfirmDeleteBtn ? "final-confirm" : ""}`} onClick={handleDeleteMemoClick} />
           </div>
         </div>
-        <ProseMirrorEditor editable={false} cardMode content={memo.content} />
+        <ProseMirrorEditor foldable editable={false} cardMode content={memo.content} />
         {/*<Only when={imageUrls.length > 0}>*/}
         {/*  <div className="images-wrapper">*/}
         {/*    {imageUrls.map((imgUrl, idx) => (*/}
