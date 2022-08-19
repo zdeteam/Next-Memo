@@ -109,7 +109,7 @@ const Memo: React.FC<Props> = (props: Props) => {
         toastHelper.error("MEMO Not Found");
         targetEl.classList.remove("memo-link-text");
       }
-    } else if (targetEl.className === "tag-span") {
+    } else if (targetEl.className === "umo-tag") {
       const tagName = targetEl.innerText.slice(1);
       const currTagQuery = locationService.getState().query?.tag;
       if (currTagQuery === tagName) {
@@ -177,6 +177,7 @@ const Memo: React.FC<Props> = (props: Props) => {
 
   return (
     <div
+      onClick={handleMemoContentClick}
       onDoubleClick={handleEditMemoClick}
       className={`memo-wrapper ${"memos-" + memo.id} ${memo.pinned && "pinned"} ${memo.editable && "editing"} ${
         moreAction && "more-actions"
@@ -186,7 +187,7 @@ const Memo: React.FC<Props> = (props: Props) => {
         <span className="time-text">{createdAtStr}</span>
         {!userService.isVisitorMode() && !memo.editable && <GoKebabHorizontal onClick={moreActions} />}
       </div>
-      <ProseMirrorEditor cardMode content={memo.content} editable={memo.editable} onCancel={() => setMemo({ ...memo, editable: false })} />
+      <ProseMirrorEditor foldable cardMode content={memo.content} editable={memo.editable} onCancel={() => setMemo({ ...memo, editable: false })} />
       <Only when={imageUrls.length > 0}>
         <div className="images-wrapper">
           {imageUrls.map((imgUrl, idx) => (
