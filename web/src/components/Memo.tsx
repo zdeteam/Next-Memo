@@ -7,7 +7,6 @@ import { HiAnnotation } from "react-icons/hi";
 import { IMAGE_URL_REG, UNKNOWN_ID } from "../helpers/consts";
 import { DONE_BLOCK_REG, TODO_BLOCK_REG } from "../helpers/marked";
 import { editorStateService, locationService, memoService, userService } from "../services";
-import Icon from "./Icon";
 import Only from "./common/OnlyWhen";
 import toastHelper from "./Toast";
 import Image from "./Image";
@@ -18,14 +17,8 @@ import "../less/memo.less";
 
 dayjs.extend(relativeTime);
 
-type ExpandButtonStatus = -1 | 0 | 1;
-
 interface Props {
   memo: Memo;
-}
-
-interface State {
-  expandButtonStatus: ExpandButtonStatus;
 }
 
 export const getFormatedMemoCreatedAtStr = (createdTs: number): string => {
