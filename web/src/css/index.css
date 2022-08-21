@@ -8,6 +8,10 @@
   /* --box-shadow:rgb(33 33 52 / 10%) 0px 1px 4px;*/
 }
 
+*{
+  color:#323232;
+}
+
 input:focus,
 button:focus {
   outline-width: 0;
@@ -22,3 +26,4 @@ span.umo-tag {
   background-color: #fff6e9;
   color: #ffab27;
 }
+@keyframes scale-in{from{transform:scale(0)}to{transform:scale(1)}}
