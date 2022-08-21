@@ -8,23 +8,35 @@
       > .archived-memos-container {
         width: 100%;
       }
+
+      > .tip-text-container {
+        margin: auto;
+        text-align: center;
+        padding: 1.5rem 0 3rem 0;
+        font-size: 14px;
+      }
     }
   }
+
   .archived-memo {
     position: relative;
     margin-bottom: 4px;
-    &:not(:last-of-type){
+
+    &:not(:last-of-type) {
 
       border-bottom: 1px dashed rgba(28, 31, 35, 0.6);
     }
-    .ProseMirror{
-      span.umo-tag{
+
+    .ProseMirror {
+      span.umo-tag {
         cursor: default;
       }
     }
+
     .memo-top-wrapper {
       display: flex;
       align-items: center;
+
       > .time-text {
         line-height: 1rem;
         display: block;
@@ -32,6 +44,7 @@
         color: #8f9193;
         text-decoration: none;
       }
+
       > .btns {
         right: 0;
         position: absolute;
@@ -40,12 +53,14 @@
           margin-left: 6px;
           display: inline-block;
           cursor: pointer;
-          fill:#8f9193;
-          &.final-confirm{
-            fill:#000;
+          fill: #8f9193;
+
+          &.final-confirm {
+            fill: #000;
           }
-          &:active{
-            fill:#000;
+
+          &:active {
+            fill: #000;
           }
         }
       }

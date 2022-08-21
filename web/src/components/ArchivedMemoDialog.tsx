@@ -39,7 +39,7 @@ const ArchivedMemoDialog: React.FC<Props> = (props: Props) => {
           </div>
         ) : archivedMemos.length === 0 ? (
           <div className="tip-text-container">
-            <p className="tip-text">空空如也</p>
+            <p className="tip-text">这里空空的</p>
           </div>
         ) : (
           <div className="archived-memos-container">
