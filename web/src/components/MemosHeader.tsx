@@ -15,9 +15,24 @@ const MemosHeader: React.FC<Props> = () => {
   const shortcuts = useAppSelector((state) => state.shortcut.shortcuts);
   const [titleText, setTitleText] = useState("");
 
+  const getGreetingMessage = () => {
+    const hour = new Date().getHours();
+    let msg: string;
+    const greetingsSchemaRaw = "早上好, 又是元气满满的一天;下午好, 喝杯奶茶吧;晚上好, 今天辛苦了;夜深了, 早点睡吧";
+    const greetingsSchema = greetingsSchemaRaw.split(";");
+
+    if (hour >= 18) msg = greetingsSchema[0];
+    else if (hour >= 12) msg = greetingsSchema[1];
+    else if (hour >= 6) msg = greetingsSchema[2];
+    else if (hour >= 0) msg = greetingsSchema[3];
+    else msg = "Hello";
+
+    return msg;
+  };
+
   useEffect(() => {
     if (!query?.shortcutId) {
-      setTitleText("Good afternoon");
+      setTitleText(getGreetingMessage());
       return;
     }
 
