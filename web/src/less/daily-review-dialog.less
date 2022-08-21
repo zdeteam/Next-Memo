@@ -1,27 +1,41 @@
 @import "./mixin.less";
 .daily-review-wrapper {
+  position: relative;
+  .day-change {
+    svg {
+      position: absolute;
+
+      top: 70px;
+      cursor: pointer;
+      &:last-of-type {
+        right: 20%;
+      }
+      &:first-of-type {
+        left: 20%;
+      }
+    }
+  }
+  .date-picker {
+    position: relative;
+    //top: 50%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 0.5rem;
+    border-width: 1px;
+    background: #fff;
+    z-index: 1;
+    box-shadow: var(--box-shadow);
+  }
   .button-wrapper {
     margin: 12px auto;
   }
   > div.content {
     padding: 8px;
     > .date-card-container {
-      position: relative;
+      //position: relative;
       margin: auto;
       width: 100%;
       user-select: none;
-
-      .date-picker {
-        position: absolute;
-        top: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        border-radius: 0.5rem;
-        border-width: 1px;
-        background: #fff;
-        z-index: 1;
-        box-shadow: var(--box-shadow);
-      }
 
       > .year-text {
         margin: auto;
@@ -41,7 +55,6 @@
         border-radius: 24px;
         box-shadow: var(--box-shadow);
         cursor: pointer;
-
         > .month-text,
         > .day-text {
           display: flex;
