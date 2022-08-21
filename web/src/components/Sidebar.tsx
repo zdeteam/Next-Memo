@@ -42,10 +42,10 @@ const Sidebar: React.FC<Props> = () => {
           <span>每日回顾</span>
         </button>
         <Only when={!userService.isVisitorMode()}>
-          <button className="btn action-btn" onClick={handleResourcesBtnClick}>
-            <GoFileMedia />
-            <span>我的文件</span>
-          </button>
+          {/*<button className="btn action-btn" onClick={handleResourcesBtnClick}>*/}
+          {/*  <GoFileMedia />*/}
+          {/*  <span>我的文件</span>*/}
+          {/*</button>*/}
           <button className="btn action-btn" onClick={handleMyAccountBtnClick}>
             <GoSettings />
             <span>系统设置</span>
