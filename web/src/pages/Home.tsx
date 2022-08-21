@@ -20,6 +20,7 @@ function Home() {
   const loadingState = useLoading();
 
   useEffect(() => {
+    console.log(1111);
     userService
       .initialState()
       .catch()
@@ -40,7 +41,7 @@ function Home() {
         }
         loadingState.setFinish();
       });
-  }, [location]);
+  }, []);
 
   return (
     <section className="page-wrapper home">
