@@ -3,7 +3,8 @@ import { useAppSelector } from "../store";
 import { memoSpecialTypes } from "../helpers/filter";
 import "../less/search-bar.less";
 import React, { useEffect, useState } from "react";
-import { GoSearch } from "_react-icons@4.4.0@react-icons/go";
+import Modal from "../components/common/Modal";
+import { GoSearch } from "react-icons/go";
 
 interface Props {}
 
@@ -58,20 +59,23 @@ const SearchBar: React.FC<Props> = () => {
         <span>搜索</span>
         <span>⌘K</span>
       </div>
-      {showCmdK && (
-        <div className="cmd-k">
+      <Modal visible={showCmdK}>
+        <div className="command-k">
+          <input autoFocus value={keyword} onChange={handleTextQueryInput} />
+          <div className="title">快速检索</div>
           <div>
-            <input autoFocus value={keyword} onChange={handleTextQueryInput} />
-            <div className="title">快速检索</div>
-            <div>
-              {memoSpecialTypes.map((t, idx) => (
-                <span className={`${memoType === t.value ? "active" : ""}`} onClick={() => handleMemoTypeItemClick(t.value as MemoSpecType)}>{t.text}</span>
-              ))}
-            </div>
-            {/*<Button fullWidth>创建快速检索</Button>*/}
+            {memoSpecialTypes.map((t, idx) => (
+              <span
+                key={idx}
+                className={`${memoType === t.value ? "active" : ""}`}
+                onClick={() => handleMemoTypeItemClick(t.value as MemoSpecType)}
+              >
+                {t.text}
+              </span>
+            ))}
           </div>
         </div>
-      )}
+      </Modal>
     </div>
   );
 };

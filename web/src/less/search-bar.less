@@ -1,10 +1,13 @@
 @import "./mixin.less";
 
 @keyframes modal-mask-keyframe-show {
-  0% {opacity: 0;}
-  100% {opacity:1;}
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
-
 
 @keyframes modal-content-keyframe-show {
   0% {
@@ -18,7 +21,7 @@
 }
 
 .search-bar-container {
-  >.search-wrapper{
+  > .search-wrapper {
     position: relative;
     border-radius: 40px;
     background-color: rgba(46, 50, 56, 0.05);
@@ -26,76 +29,53 @@
     padding: 10px 13px;
     font-size: 14px;
     line-height: 20px;
-    display:flex;
-    align-items: center;
-    >span{
-      margin: 0 2px;
-      font-weight: 600;
-      font-size:14px;
-      color: rgba(28, 31, 35, 0.6);
-    }
-    >svg{
-      margin-right: 6px;
-      cursor: pointer;
-      display:inline-block;
-      fill:rgba(28, 31, 35, 0.6)
-    }
-  }
-  >.cmd-k{
-    height: 100vh;
-    width:100vw;
-    position: fixed;
-    top: 0;
-    left: 0;
-    background-color:rgba(22, 22, 26, 0.6);
-    z-index:9999;
-    animation:90ms modal-mask-keyframe-show ease forwards;
     display: flex;
     align-items: center;
-    justify-content:center;
-    >div{
-      background-color:#fff;
-      width:380px;
-      //height: 100px;
-      border-radius: 12px;
-      padding: 16px;
-      animation:120ms modal-content-keyframe-show cubic-bezier(0, 0, 0.26, 1.38) forwards;
-      >input{
-        //border:1px solid;
-        width:100%;
-        height:40px;
-        background-color:rgba(46, 50, 56, 0.05);
-        border-radius:40px;
-        padding:0 18px;
-        margin-bottom: 12px;
+    > span {
+      margin: 0 2px;
+      font-weight: 600;
+      font-size: 14px;
+      color: rgba(28, 31, 35, 0.6);
+    }
+    > svg {
+      margin-right: 6px;
+      cursor: pointer;
+      display: inline-block;
+      fill: rgba(28, 31, 35, 0.6);
+    }
+  }
+  div.command-k {
+    > input {
+      //border:1px solid;
+      width: 100%;
+      height: 40px;
+      background-color: rgba(46, 50, 56, 0.05);
+      border-radius: 40px;
+      padding: 0 18px;
+      margin-bottom: 12px;
 
-        //border-radius:
+      //border-radius:
+    }
+    > div {
+      font-size: 14px;
+      margin-bottom: 12px;
+      &.title {
+        margin-bottom: 8px;
       }
-      >div{
-        font-size:14px;
-        margin-bottom: 12px;
-        &.title{
-          margin-bottom: 8px;
-        }
-        >span{
-          display: inline-block;
-          margin-right:12px;
-          font-size:12px;
-          cursor: pointer;
-          //width:100%;
-          padding:4px 8px;
-          border-radius: 10px;
-          background-color:rgba(46, 50, 56, 0.05);
-        }
-        >span.active{
-          color:#fff;
-          background-color:@primary-color-400;
-        }
-
+      > span {
+        display: inline-block;
+        margin-right: 12px;
+        font-size: 12px;
+        cursor: pointer;
+        //width:100%;
+        padding: 4px 8px;
+        border-radius: 10px;
+        background-color: rgba(46, 50, 56, 0.05);
       }
-
-
+      > span.active {
+        color: #fff;
+        background-color: @primary-color-400;
+      }
     }
   }
 }
-
