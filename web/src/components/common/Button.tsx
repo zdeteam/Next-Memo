@@ -7,6 +7,7 @@ interface ButtonProps {
   className?: string;
   disabled?: boolean;
   fullWidth?: boolean;
+  size?: "L" | "M";
 }
 
 const Button = (props: ButtonProps) => {
@@ -14,10 +15,14 @@ const Button = (props: ButtonProps) => {
     if (props.disabled) return false;
     props.onClick();
   };
-  let styles = {};
+  let styles: any = {};
   if (props.fullWidth) {
     styles = { width: "100%" };
   }
+  if (props.size === "L") {
+    styles["height"] = "36px";
+  }
+
   return (
     <button style={styles} disabled={props.disabled} className={`button-wrapper ${props.className}`} onClick={onClick}>
       {props.children}
