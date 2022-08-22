@@ -2,6 +2,7 @@ import { createRoot } from "react-dom/client";
 import { Routes, Route, unstable_HistoryRouter as HistoryRouter } from "react-router-dom";
 import { createBrowserHistory } from "history";
 import { Provider } from "react-redux";
+import App from "./App";
 import Signin from "./pages/Auth";
 import Home from "./pages/Home";
 import I18nProvider from "./labs/i18n/I18nProvider";
@@ -22,11 +23,13 @@ root.render(
     <Provider store={store}>
       <ThemeProvider theme={lightTheme}>
         <HistoryRouter history={history}>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/u/*" element={<Home />} />
-            <Route path="/signin" element={<Signin />} />
-          </Routes>
+          <App>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/u/*" element={<Home />} />
+              <Route path="/signin" element={<Signin />} />
+            </Routes>
+          </App>
         </HistoryRouter>
       </ThemeProvider>
     </Provider>

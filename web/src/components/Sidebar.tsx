@@ -1,7 +1,6 @@
 import { userService } from "../services";
 import useI18n from "../hooks/useI18n";
-import { GoCalendar, GoSettings, GoTrashcan, GoFileMedia } from "react-icons/go";
-import Icon from "./Icon";
+import { GoCalendar, GoSettings, GoTrashcan, GoFileMedia, GoX } from "react-icons/go";
 import Only from "./common/OnlyWhen";
 import showDailyReviewDialog from "./DailyReviewDialog";
 import showSettingDialog from "./SettingDialog";
@@ -18,6 +17,7 @@ interface Props {}
 const Sidebar: React.FC<Props> = () => {
   const { t } = useI18n();
 
+  console.log(t("sidebar.setting"));
   const handleMyAccountBtnClick = () => {
     showSettingDialog();
   };
@@ -34,24 +34,24 @@ const Sidebar: React.FC<Props> = () => {
     <aside className="sidebar-wrapper">
       <div className="close-container">
         <span className="action-btn" onClick={toggleSiderbar}>
-          <Icon.X className="icon-img" />
+          <GoX />
         </span>
       </div>
       <UserBanner />
       <UsageHeatMap />
       <div className="action-btns-container">
         <button className="btn action-btn" onClick={() => showDailyReviewDialog()}>
-          <Icon.Calendar className="icon" /> {t("sidebar.daily-review")}
+          <GoCalendar /> {t("sidebar.daily-review")}
         </button>
         <Only when={!userService.isVisitorMode()}>
-          <button className="btn action-btn" onClick={handleResourcesBtnClick}>
-            <Icon.Image className="icon" />{t("sidebar.resources")}
-          </button>
+          {/*<button className="btn action-btn" onClick={handleResourcesBtnClick}>*/}
+          {/*  <GoFileMedia /> {t("sidebar.resources")}*/}
+          {/*</button>*/}
           <button className="btn action-btn" onClick={handleMyAccountBtnClick}>
-            <Icon.Settings className="icon" /> {t("sidebar.setting")}
+            <GoSettings /> {t("sidebar.setting")}
           </button>
           <button className="btn action-btn" onClick={handleArchivedBtnClick}>
-            <Icon.Archive className="icon" /> {t("sidebar.archived")}
+            <GoTrashcan /> {t("sidebar.archived")}
           </button>
         </Only>
       </div>

@@ -5,7 +5,6 @@ import { GoPerson, GoBeaker, GoHubot, GoOrganization } from "react-icons/go";
 
 import { useAppSelector } from "../store";
 import useI18n from "../hooks/useI18n";
-import Icon from "./Icon";
 import { generateDialog } from "./Dialog";
 import MyAccountSection from "./Settings/MyAccountSection";
 import PreferencesSection from "./Settings/PreferencesSection";

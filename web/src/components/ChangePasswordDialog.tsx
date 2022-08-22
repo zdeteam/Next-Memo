@@ -11,6 +11,7 @@ const validateConfig: ValidatorConfig = {
   minLength: 4,
   maxLength: 24,
   noSpace: true,
+  notEmpty: true,
   noChinese: true,
 };
 

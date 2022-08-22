@@ -15,11 +15,13 @@ const globalService = {
     };
 
     const { locale: storageLocale } = storage.get(["locale"]);
+    console.log('storageLocale',storageLocale)
     if (storageLocale) {
       defaultGlobalState.locale = storageLocale;
     }
     try {
       const { data } = (await api.getMyselfUser()).data;
+      console.log('data',data)
       if (data) {
         const user = convertResponseModelUser(data);
         if (user.setting.locale) {

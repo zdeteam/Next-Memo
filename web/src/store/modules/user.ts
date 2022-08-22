@@ -26,6 +26,7 @@ const userSlice = createSlice({
       };
     },
     setUser: (state, action: PayloadAction<User | undefined>) => {
+      console.log('user',action.payload)
       return {
         ...state,
         user: action.payload,

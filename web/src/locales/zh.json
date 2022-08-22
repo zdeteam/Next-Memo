@@ -33,9 +33,9 @@
   },
   "sidebar": {
     "daily-review": "每日回顾",
-    "resources": "资源库",
+    "resources": "我的资源",
     "setting": "设置",
-    "archived": "已归档"
+    "archived": "回收站"
   },
   "editor": {
     "save": "记下",

@@ -23,6 +23,7 @@ const useI18n = () => {
 
   const translate = (key: string) => {
     const keys = key.split(".");
+    console.log(locale)
     let value = resources[locale];
     for (const k of keys) {
       if (value) {
