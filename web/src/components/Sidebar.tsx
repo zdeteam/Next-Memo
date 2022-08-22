@@ -1,4 +1,5 @@
 import { userService } from "../services";
+import useI18n from "../hooks/useI18n";
 import { GoCalendar, GoSettings, GoTrashcan, GoFileMedia } from "react-icons/go";
 import Icon from "./Icon";
 import Only from "./common/OnlyWhen";
@@ -15,6 +16,8 @@ import "../less/siderbar.less";
 interface Props {}
 
 const Sidebar: React.FC<Props> = () => {
+  const { t } = useI18n();
+
   const handleMyAccountBtnClick = () => {
     showSettingDialog();
   };
@@ -38,21 +41,17 @@ const Sidebar: React.FC<Props> = () => {
       <UsageHeatMap />
       <div className="action-btns-container">
         <button className="btn action-btn" onClick={() => showDailyReviewDialog()}>
-          <GoCalendar className="icon" />
-          <span>每日回顾</span>
+          <Icon.Calendar className="icon" /> {t("sidebar.daily-review")}
         </button>
         <Only when={!userService.isVisitorMode()}>
-          {/*<button className="btn action-btn" onClick={handleResourcesBtnClick}>*/}
-          {/*  <GoFileMedia />*/}
-          {/*  <span>我的文件</span>*/}
-          {/*</button>*/}
+          <button className="btn action-btn" onClick={handleResourcesBtnClick}>
+            <Icon.Image className="icon" />{t("sidebar.resources")}
+          </button>
           <button className="btn action-btn" onClick={handleMyAccountBtnClick}>
-            <GoSettings />
-            <span>系统设置</span>
+            <Icon.Settings className="icon" /> {t("sidebar.setting")}
           </button>
           <button className="btn action-btn" onClick={handleArchivedBtnClick}>
-            <GoTrashcan />
-            <span>回收站</span>
+            <Icon.Archive className="icon" /> {t("sidebar.archived")}
           </button>
         </Only>
       </div>
