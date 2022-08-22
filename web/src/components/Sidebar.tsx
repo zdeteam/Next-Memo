@@ -1,4 +1,5 @@
 import { userService } from "../services";
+import useI18n from "../hooks/useI18n";
 import Icon from "./Icon";
 import Only from "./common/OnlyWhen";
 import showDailyReviewDialog from "./DailyReviewDialog";
@@ -14,14 +15,14 @@ import "../less/siderbar.less";
 interface Props {}
 
 const Sidebar: React.FC<Props> = () => {
+  const { t } = useI18n();
+
   const handleMyAccountBtnClick = () => {
     showSettingDialog();
   };
-
   const handleResourcesBtnClick = () => {
     showResourcesDialog();
   };
-
   const handleArchivedBtnClick = () => {
     showArchivedMemoDialog();
   };
@@ -37,17 +38,17 @@ const Sidebar: React.FC<Props> = () => {
       <UsageHeatMap />
       <div className="action-btns-container">
         <button className="btn action-btn" onClick={() => showDailyReviewDialog()}>
-          <Icon.Calendar className="icon" /> Daily Review
+          <span className="icon">📅</span> {t("sidebar.daily-review")}
         </button>
         <Only when={!userService.isVisitorMode()}>
           <button className="btn action-btn" onClick={handleResourcesBtnClick}>
-            <Icon.Image className="icon" /> Resources
+            <span className="icon">🌄</span> {t("sidebar.resources")}
           </button>
           <button className="btn action-btn" onClick={handleMyAccountBtnClick}>
-            <Icon.Settings className="icon" /> Setting
+            <span className="icon">⚙️</span> {t("sidebar.setting")}
           </button>
           <button className="btn action-btn" onClick={handleArchivedBtnClick}>
-            <Icon.Archive className="icon" /> Archived
+            <span className="icon">🗂</span> {t("sidebar.archived")}
           </button>
         </Only>
       </div>

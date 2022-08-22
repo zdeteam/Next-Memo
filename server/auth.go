@@ -88,13 +88,15 @@ func (s *Server) registerAuthRoutes(g *echo.Group) {
 			return echo.NewHTTPError(http.StatusBadRequest, "Site Host existed, please contact the site host to signin account firstly.").SetInternal(err)
 		}
 
-		// Validate signup form.
-		// We can do stricter checks later.
-		if len(signup.Email) < 6 {
-			return echo.NewHTTPError(http.StatusBadRequest, "Email is too short, minimum length is 6.")
+		userCreate := &api.UserCreate{
+			Email:    signup.Email,
+			Role:     api.Role(signup.Role),
+			Name:     signup.Name,
+			Password: signup.Password,
+			OpenID:   common.GenUUID(),
 		}
-		if len(signup.Password) < 6 {
-			return echo.NewHTTPError(http.StatusBadRequest, "Password is too short, minimum length is 6.")
+		if err := userCreate.Validate(); err != nil {
+			return echo.NewHTTPError(http.StatusBadRequest, "Invalid user create format.").SetInternal(err)
 		}
 
 		passwordHash, err := bcrypt.GenerateFromPassword([]byte(signup.Password), bcrypt.DefaultCost)
@@ -102,13 +104,8 @@ func (s *Server) registerAuthRoutes(g *echo.Group) {
 			return echo.NewHTTPError(http.StatusInternalServerError, "Failed to generate password hash").SetInternal(err)
 		}
 
-		userCreate := &api.UserCreate{
-			Email:        signup.Email,
-			Role:         api.Role(signup.Role),
-			Name:         signup.Name,
-			PasswordHash: string(passwordHash),
-			OpenID:       common.GenUUID(),
-		}
+		userCreate.PasswordHash = string(passwordHash)
+
 		user, err := s.Store.CreateUser(ctx, userCreate)
 		if err != nil {
 			return echo.NewHTTPError(http.StatusInternalServerError, "Failed to create user").SetInternal(err)
@@ -162,7 +159,7 @@ func (s *Server) registerAuthRoutes(g *echo.Group) {
 		userFind := &api.UserFind{
 			Email: &params.Email,
 		}
-		user, _ := s.Store.FindUser(ctx,userFind)
+		user, _ := s.Store.FindUser(ctx, userFind)
 		if user == nil {
 			return c.JSON(http.StatusOK, false)
 		}

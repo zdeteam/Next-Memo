@@ -32,7 +32,9 @@ func NewServer(profile *profile.Profile) *Server {
 	e.HidePort = true
 
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
-		Format: "${method} ${uri} ${status}\n",
+		Format: `{"time":"${time_rfc3339}",` +
+			`"method":"${method}","uri":"${uri}",` +
+			`"status":${status},"error":"${error}"}` + "\n",
 	}))
 
 	e.Use(middleware.CORS())

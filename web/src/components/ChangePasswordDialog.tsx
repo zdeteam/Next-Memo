@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-import { Button } from "@strapi/design-system/Button";
-import { TextInput } from "@strapi/design-system/TextInput";
 import { validate, ValidatorConfig } from "../helpers/validator";
+import useI18n from "../hooks/useI18n";
 import { userService } from "../services";
 import Icon from "./Icon";
 import { generateDialog } from "./Dialog";
@@ -9,7 +8,6 @@ import toastHelper from "./Toast";
 import "../less/change-password-dialog.less";
 
 const validateConfig: ValidatorConfig = {
-  notEmpty: true,
   minLength: 4,
   maxLength: 24,
   noSpace: true,
@@ -19,6 +17,7 @@ const validateConfig: ValidatorConfig = {
 interface Props extends DialogProps {}
 
 const ChangePasswordDialog: React.FC<Props> = ({ destroy }: Props) => {
+  const { t } = useI18n();
   const [newPassword, setNewPassword] = useState("");
   const [newPasswordAgain, setNewPasswordAgain] = useState("");
 
@@ -67,7 +66,8 @@ const ChangePasswordDialog: React.FC<Props> = ({ destroy }: Props) => {
       toastHelper.info("Password changed.");
       handleCloseBtnClick();
     } catch (error: any) {
-      toastHelper.error(error);
+      console.error(error);
+      toastHelper.error(error.response.data.message);
     }
   };
 
@@ -80,13 +80,19 @@ const ChangePasswordDialog: React.FC<Props> = ({ destroy }: Props) => {
         </button>
       </div>
       <div className="dialog-content-container">
-        <TextInput label="New passworld" type="password" value={newPassword} onChange={handleNewPasswordChanged} />
-        <TextInput label="Repeat the new password" type="password" value={newPasswordAgain} onChange={handleNewPasswordAgainChanged} />
+        <label className="form-label input-form-label">
+          <input type="password" placeholder="New passworld" value={newPassword} onChange={handleNewPasswordChanged} />
+        </label>
+        <label className="form-label input-form-label">
+          <input type="password" placeholder="Repeat the new password" value={newPasswordAgain} onChange={handleNewPasswordAgainChanged} />
+        </label>
         <div className="btns-container">
-          <Button variant="ghost" onClick={handleCloseBtnClick}>
-            Cancel
-          </Button>
-          <Button onClick={handleSaveBtnClick}>Save</Button>
+          <span className="btn cancel-btn" onClick={handleCloseBtnClick}>
+            {t("common.cancel")}
+          </span>
+          <span className="btn confirm-btn" onClick={handleSaveBtnClick}>
+            {t("common.save")}
+          </span>
         </div>
       </div>
     </>

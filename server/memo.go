@@ -22,14 +22,32 @@ func (s *Server) registerMemoRoutes(g *echo.Group) {
 		}
 		memoCreate := &api.MemoCreate{
 			CreatorID: userID,
+			// Private is the default memo visibility.
+			Visibility: api.Privite,
 		}
 		if err := json.NewDecoder(c.Request().Body).Decode(memoCreate); err != nil {
 			return echo.NewHTTPError(http.StatusBadRequest, "Malformatted post memo request").SetInternal(err)
 		}
 
-		if memoCreate.Visibility == nil || *memoCreate.Visibility == "" {
-			private := api.Privite
-			memoCreate.Visibility = &private
+		if memoCreate.Content == "" {
+			return echo.NewHTTPError(http.StatusBadRequest, "Memo content shouldn't be empty")
+		}
+
+		userSettingMemoVisibilityKey := api.UserSettingMemoVisibilityKey
+		userMemoVisibilitySetting, err := s.Store.FindUserSetting(ctx, &api.UserSettingFind{
+			UserID: userID,
+			Key:    &userSettingMemoVisibilityKey,
+		})
+		if err != nil {
+			return echo.NewHTTPError(http.StatusInternalServerError, "Failed to find user setting").SetInternal(err)
+		}
+		if userMemoVisibilitySetting != nil {
+			memoVisibility := api.Privite
+			err := json.Unmarshal([]byte(userMemoVisibilitySetting.Value), &memoVisibility)
+			if err != nil {
+				return echo.NewHTTPError(http.StatusInternalServerError, "Failed to unmarshal user setting value").SetInternal(err)
+			}
+			memoCreate.Visibility = memoVisibility
 		}
 
 		memo, err := s.Store.CreateMemo(ctx, memoCreate)

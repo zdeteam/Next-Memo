@@ -1,20 +1,19 @@
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { Button } from "@strapi/design-system/Button";
-import { userService } from "../services";
+import { locationService, userService } from "../services";
 import { useAppSelector } from "../store";
+import useI18n from "../hooks/useI18n";
 import useLoading from "../hooks/useLoading";
 import Only from "../components/common/OnlyWhen";
 import Sidebar from "../components/Sidebar";
 import MemosHeader from "../components/MemosHeader";
-import ProseMirrorEditor from "../components/Editor/ProseMirrorEditor";
+import MemoEditor from "../components/MemoEditor";
 import MemoFilter from "../components/MemoFilter";
 import MemoList from "../components/MemoList";
 import toastHelper from "../components/Toast";
 import "../less/home.less";
 
 function Home() {
-  const navigate = useNavigate();
+  const { t } = useI18n();
   const user = useAppSelector((state) => state.user.user);
   const location = useAppSelector((state) => state.location);
   const loadingState = useLoading();
@@ -26,16 +25,17 @@ function Home() {
       .finally(async () => {
         const { host, owner, user } = userService.getState();
         if (!host) {
-          return navigate(`/signin`);
+          locationService.replaceHistory("/auth");
+          return;
         }
+
         if (userService.isVisitorMode()) {
           if (!owner) {
             toastHelper.error("User not found");
           }
         } else {
           if (!user) {
-            // locationService.replaceHistory();
-            navigate(`/u/${host.id}`);
+            locationService.replaceHistory(`/u/${host.id}`);
           }
         }
         loadingState.setFinish();
@@ -51,7 +51,7 @@ function Home() {
             <div className="memos-editor-wrapper">
               <MemosHeader />
               <Only when={!userService.isVisitorMode()}>
-                <ProseMirrorEditor />
+                <MemoEditor />
               </Only>
               <MemoFilter />
             </div>
@@ -59,13 +59,13 @@ function Home() {
             <Only when={userService.isVisitorMode()}>
               <div className="addtion-btn-container">
                 {user ? (
-                  <Button size="L" onClick={() => (window.location.href = "/")}>
-                    Back to Home
-                  </Button>
+                  <button className="btn" onClick={() => (window.location.href = "/")}>
+                    <span className="icon">🏠</span> {t("common.back-to-home")}
+                  </button>
                 ) : (
-                  <Button size="L" onClick={() => (window.location.href = "/signin")}>
-                    Welcome to OpenFlomo, go to login
-                  </Button>
+                  <button className="btn" onClick={() => (window.location.href = "/auth")}>
+                    <span className="icon">👉</span> {t("common.sign-in")}
+                  </button>
                 )}
               </div>
             </Only>

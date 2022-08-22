@@ -1,16 +1,11 @@
 @import "../mixin.less";
 
 .preferences-section-container {
-  > .btns-container {
-    >button{
-     display: inline-block;
-      margin-right: 4px;
+  > .form-label {
+    @apply mb-2;
+
+    > .normal-text {
+      @apply mr-2 text-sm;
     }
-    //.flex(row, flex-start, center);
-    //@apply w-full;
-    //
-    //> .btn {
-    //  @apply border text-sm py-1 px-3 mr-2 rounded leading-6 shadow hover:opacity-80;
-    //}
   }
 }

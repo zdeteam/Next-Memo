@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import * as utils from "../helpers/utils";
+import useI18n from "../hooks/useI18n";
 import useLoading from "../hooks/useLoading";
 import { resourceService } from "../services";
 import Dropdown from "./common/Dropdown";
@@ -18,6 +19,7 @@ interface State {
 
 const ResourcesDialog: React.FC<Props> = (props: Props) => {
   const { destroy } = props;
+  const { t } = useI18n();
   const loadingState = useLoading();
   const [state, setState] = useState<State>({
     resources: [],
@@ -27,7 +29,8 @@ const ResourcesDialog: React.FC<Props> = (props: Props) => {
   useEffect(() => {
     fetchResources()
       .catch((error) => {
-        toastHelper.error("Failed to fetch archived memos: ", error);
+        console.error(error);
+        toastHelper.error(error.response.data.message);
       })
       .finally(() => {
         loadingState.setFinish();
@@ -65,7 +68,8 @@ const ResourcesDialog: React.FC<Props> = (props: Props) => {
       try {
         await resourceService.upload(file);
       } catch (error: any) {
-        toastHelper.error("Failed to upload resource\n" + JSON.stringify(error, null, 4));
+        console.error(error);
+        toastHelper.error(error.response.data.message);
       } finally {
         setState({
           ...state,
@@ -98,7 +102,8 @@ const ResourcesDialog: React.FC<Props> = (props: Props) => {
     <>
       <div className="dialog-header-container">
         <p className="title-text">
-          Resources
+          <span className="icon-text">🌄</span>
+          {t("sidebar.resources")}
         </p>
         <button className="btn close-btn" onClick={destroy}>
           <Icon.X className="icon-img" />

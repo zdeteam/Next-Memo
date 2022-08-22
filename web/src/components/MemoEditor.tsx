@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { UNKNOWN_ID } from "../helpers/consts";
 import { editorStateService, locationService, memoService, resourceService } from "../services";
+import useI18n from "../hooks/useI18n";
 import { useAppSelector } from "../store";
 import * as storage from "../helpers/storage";
 import Icon from "./Icon";
@@ -16,6 +17,7 @@ interface State {
 }
 
 const MemoEditor: React.FC<Props> = () => {
+  const { t, locale } = useI18n();
   const editorState = useAppSelector((state) => state.editor);
   const tags = useAppSelector((state) => state.memo.tags);
   const [state, setState] = useState<State>({
@@ -117,7 +119,8 @@ const MemoEditor: React.FC<Props> = () => {
         const url = `/h/r/${image.id}/${image.filename}`;
         return url;
       } catch (error: any) {
-        toastHelper.error("Failed to upload image\n" + JSON.stringify(error, null, 4));
+        console.error(error);
+        toastHelper.error(error.response.data.message);
       } finally {
         setState({
           ...state,
@@ -153,7 +156,8 @@ const MemoEditor: React.FC<Props> = () => {
         locationService.clearQuery();
       }
     } catch (error: any) {
-      toastHelper.error(error.message);
+      console.error(error);
+      toastHelper.error(error.response.data.message);
     }
 
     setState({
@@ -212,7 +216,7 @@ const MemoEditor: React.FC<Props> = () => {
     () => ({
       className: "memo-editor",
       initialContent: getEditorContentCache(),
-      placeholder: "Any thoughts...",
+      placeholder: t("editor.placeholder"),
       fullscreen: state.fullscreen,
       showConfirmBtn: true,
       showCancelBtn: isEditing,
@@ -220,7 +224,7 @@ const MemoEditor: React.FC<Props> = () => {
       onCancelBtnClick: handleCancelBtnClick,
       onContentChange: handleContentChange,
     }),
-    [isEditing, state.fullscreen]
+    [isEditing, state.fullscreen, locale]
   );
 
   return (
