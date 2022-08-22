@@ -13,6 +13,7 @@ interface Props {}
 const MemoList: React.FC<Props> = () => {
   const query = useAppSelector((state) => state.location.query);
   const memos = useAppSelector((state) => state.memo.memos);
+  const user = useAppSelector((state) => state.user.user);
   const [isFetching, setFetchStatus] = useState(true);
   const wrapperElement = useRef<HTMLDivElement>(null);
 
@@ -87,7 +88,7 @@ const MemoList: React.FC<Props> = () => {
       .catch(() => {
         toastHelper.error("😭 Fetching failed, please try again later.");
       });
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     wrapperElement.current?.scrollTo({ top: 0 });

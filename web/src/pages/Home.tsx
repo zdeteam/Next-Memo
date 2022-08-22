@@ -1,6 +1,7 @@
-import { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button } from "@strapi/design-system/Button";
+import Button from "../components/common/Button";
+import Input from "../components/common/Input";
 import { userService } from "../services";
 import { useAppSelector } from "../store";
 import useLoading from "../hooks/useLoading";
@@ -11,16 +12,64 @@ import ProseMirrorEditor from "../components/Editor/ProseMirrorEditor";
 import MemoFilter from "../components/MemoFilter";
 import MemoList from "../components/MemoList";
 import toastHelper from "../components/Toast";
+import Modal from "../components/common/Modal";
 import "../less/home.less";
+import { validate, ValidatorConfig } from "../helpers/validator";
+import * as api from "../helpers/api";
+
+const validateConfig: ValidatorConfig = {
+  notEmpty: true,
+  minLength: 4,
+  maxLength: 24,
+  noSpace: true,
+  noChinese: true,
+};
 
 function Home() {
+  const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
   const navigate = useNavigate();
+  const [showLoginForm, setShowLoginForm] = useState(false);
   const user = useAppSelector((state) => state.user.user);
   const location = useAppSelector((state) => state.location);
   const loadingState = useLoading();
 
+  const handleSigninBtnsClick = async () => {
+    const emailValidResult = validate(email, { isEmail: true, ...validateConfig });
+    if (!emailValidResult.result) {
+      setEmailError(emailValidResult.reason);
+      return;
+    }
+
+    const passwordValidResult = validate(password, validateConfig);
+    if (!passwordValidResult.result) {
+      setPasswordError(passwordValidResult.reason);
+      return;
+    }
+
+    try {
+      await api.signin(email, password);
+      const user = await userService.doSignIn();
+      if (user) {
+        navigate("/");
+        setShowLoginForm(false);
+      } else {
+        toastHelper.error("😟 Login failed");
+      }
+    } catch (error: any) {
+      const data = error.response.data;
+      if (data.message.match("User")) {
+        setEmailError(data.message);
+      }
+      if (data.message.match("password")) {
+        setPasswordError(data.message);
+      }
+    }
+  };
+
   useEffect(() => {
-    console.log(1111);
     userService
       .initialState()
       .catch()
@@ -61,11 +110,11 @@ function Home() {
               <div className="addtion-btn-container">
                 {user ? (
                   <Button size="L" onClick={() => (window.location.href = "/")}>
-                    Back to Home
+                    返回我的主页
                   </Button>
                 ) : (
-                  <Button size="L" onClick={() => (window.location.href = "/signin")}>
-                    Welcome to OpenFlomo, go to login
+                  <Button size="L" onClick={() => setShowLoginForm(true)}>
+                    欢迎使用有墨轻笔记, 点击注册/登录
                   </Button>
                 )}
               </div>
@@ -73,6 +122,31 @@ function Home() {
           </main>
         </div>
       )}
+      <Modal visible={showLoginForm} closeable onClose={() => setShowLoginForm(false)}>
+        <div className="login-form">
+          <Input
+            label="用户名"
+            message={emailError}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              const text = e.target.value as string;
+              setEmail(text);
+            }}
+          />
+          <Input
+            type="password"
+            message={passwordError}
+            label="密码"
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              const text = e.target.value as string;
+              setPassword(text);
+            }}
+          />
+          <Button fullWidth onClick={handleSigninBtnsClick}>
+            登录
+          </Button>
+          <a>没有账号，我要注册</a>
+        </div>
+      </Modal>
     </section>
   );
 }

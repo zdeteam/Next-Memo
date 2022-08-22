@@ -72,10 +72,11 @@ const MyAccountSection: React.FC<Props> = () => {
   };
 
   const handleSignOutBtnClick = async () => {
+    const { host, owner, user } = userService.getState();
     userService.doSignOut().catch(() => {
       // do nth
     });
-    window.location.href = "/signin";
+    if (host) window.location.href = `/u/${host.id}`;
   };
 
   return (
