@@ -70,6 +70,7 @@ const Memo: React.FC<Props> = (props: Props) => {
   };
 
   const handleEditMemoClick = () => {
+    if (userService.isVisitorMode()) return false;
     // editorStateService.setEditMemoWithId(memo.id);
     setMoreAction(false);
     memo.editable = true;
