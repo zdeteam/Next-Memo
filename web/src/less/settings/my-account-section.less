@@ -5,40 +5,23 @@
     min-height: 28px;
 
     > .normal-text {
-      @apply first:mr-2 text-sm;
-    }
-
-    &.username-label {
-      @apply w-full flex-wrap;
-
-      > input {
-        @apply grow-0 w-32 shadow-inner px-2 mr-2 text-sm border rounded leading-7 bg-transparent focus:border-black;
-      }
-
-      > .btns-container {
-        margin-left: 4px;
-        button{
-          display: inline-block;
-          margin: 0 4px
-        }
-      }
-    }
-
-    &.password-label {
-      > .btn {
-        @apply text-blue-600 text-sm ml-1 cursor-pointer hover:opacity-80;
-      }
+      margin-right: 0.5rem;
+      font-size: 0.875rem;
     }
   }
 }
 
 .openapi-section-container {
-  > .value-text {
-    @apply w-full font-mono text-sm shadow-inner border py-2 px-3 rounded leading-6 break-all whitespace-pre-wrap;
+  .value-text {
+    background-color: #2e32380d;
+    width: 100%;
+    padding: 12px;
+    color: rgba(28, 31, 35, 0.6);
+    font-size: 13px;
   }
 
   > .reset-btn {
-    @apply mt-2 py-1 px-2 text-sm shadow bg-red-50 border border-red-500 text-red-600 rounded cursor-pointer select-none hover:opacity-80;
+    margin-top: 4px;
   }
 
   > .usage-guide-container {
@@ -46,12 +29,7 @@
     @apply mt-2 w-full;
 
     > .title-text {
-
       @apply my-2 text-sm;
-    }
-
-    > pre {
-      @apply w-full bg-gray-100 shadow-inner py-2 px-3 text-sm rounded font-mono break-all whitespace-pre-wrap;
     }
   }
 }

@@ -100,17 +100,7 @@ const ResourcesDialog: React.FC<Props> = (props: Props) => {
 
   return (
     <>
-      <div className="dialog-header-container">
-        <p className="title-text">
-          <span className="icon-text">🌄</span>
-          {t("sidebar.resources")}
-        </p>
-        <button className="btn close-btn" onClick={destroy}>
-          <Icon.X className="icon-img" />
-        </button>
-      </div>
       <div className="dialog-content-container">
-        <div className="tip-text-container">(👨‍💻WIP) View your static resources in memos. e.g. images</div>
         <div className="upload-resource-container" onClick={() => handleUploadFileBtnClick()}>
           <div className="upload-resource-btn">
             <Icon.File className="icon-img" />
@@ -159,6 +149,7 @@ export default function showResourcesDialog() {
   generateDialog(
     {
       className: "resources-dialog",
+      title: "回收站",
     },
     ResourcesDialog,
     {}

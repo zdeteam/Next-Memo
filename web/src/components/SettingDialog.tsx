@@ -1,12 +1,17 @@
 import { useState } from "react";
+import Crown from "@strapi/icons/Crown";
+// import { Icon } from "@strapi/design-system/Icon";
+import { GoPerson, GoBeaker, GoHubot, GoOrganization } from "react-icons/go";
+
 import { useAppSelector } from "../store";
 import useI18n from "../hooks/useI18n";
-import Icon from "./Icon";
 import { generateDialog } from "./Dialog";
 import MyAccountSection from "./Settings/MyAccountSection";
 import PreferencesSection from "./Settings/PreferencesSection";
 import MemberSection from "./Settings/MemberSection";
+import AboutSection from "./Settings/AboutSection";
 import "../less/setting-dialog.less";
+import Icon from "./Icon";
 
 interface Props extends DialogProps {}
 
@@ -32,9 +37,6 @@ const SettingDialog: React.FC<Props> = (props: Props) => {
 
   return (
     <div className="dialog-content-container">
-      <button className="btn close-btn" onClick={destroy}>
-        <Icon.X className="icon-img" />
-      </button>
       <div className="section-selector-container">
         <span className="section-title">{t("common.basic")}</span>
         <div className="section-items-container">
@@ -42,13 +44,13 @@ const SettingDialog: React.FC<Props> = (props: Props) => {
             onClick={() => handleSectionSelectorItemClick("my-account")}
             className={`section-item ${state.selectedSection === "my-account" ? "selected" : ""}`}
           >
-            <span className="icon-text">🤠</span> {t("setting.my-account")}
+            {t("setting.my-account")}
           </span>
           <span
             onClick={() => handleSectionSelectorItemClick("preferences")}
             className={`section-item ${state.selectedSection === "preferences" ? "selected" : ""}`}
           >
-            <span className="icon-text">🏟</span> {t("setting.preference")}
+            {t("setting.preference")}
           </span>
         </div>
         {user?.role === "HOST" ? (
@@ -59,7 +61,7 @@ const SettingDialog: React.FC<Props> = (props: Props) => {
                 onClick={() => handleSectionSelectorItemClick("member")}
                 className={`section-item ${state.selectedSection === "member" ? "selected" : ""}`}
               >
-                <span className="icon-text">👤</span> {t("setting.member")}
+                {t("setting.member")}
               </span>
             </div>
           </>

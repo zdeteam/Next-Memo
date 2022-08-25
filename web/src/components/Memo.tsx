@@ -2,48 +2,37 @@ import { memo, useEffect, useRef, useState } from "react";
 import { indexOf } from "lodash-es";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import "dayjs/locale/zh";
-import useI18n from "../hooks/useI18n";
+import { GoKebabHorizontal, GoCloudDownload, GoBook, GoBroadcast, GoTrashcan, GoPin } from "react-icons/go";
+import { HiAnnotation } from "react-icons/hi";
 import { IMAGE_URL_REG, UNKNOWN_ID } from "../helpers/consts";
-import { DONE_BLOCK_REG, formatMemoContent, TODO_BLOCK_REG } from "../helpers/marked";
+import { DONE_BLOCK_REG, TODO_BLOCK_REG } from "../helpers/marked";
 import { editorStateService, locationService, memoService, userService } from "../services";
-import Icon from "./Icon";
 import Only from "./common/OnlyWhen";
 import toastHelper from "./Toast";
 import Image from "./Image";
 import showMemoCardDialog from "./MemoCardDialog";
 import showShareMemoImageDialog from "./ShareMemoImageDialog";
+import ProseMirrorEditor from "./Editor/ProseMirrorEditor";
 import "../less/memo.less";
 
 dayjs.extend(relativeTime);
-
-const MAX_MEMO_CONTAINER_HEIGHT = 384;
-
-type ExpandButtonStatus = -1 | 0 | 1;
 
 interface Props {
   memo: Memo;
 }
 
-interface State {
-  expandButtonStatus: ExpandButtonStatus;
-}
-
-export const getFormatedMemoCreatedAtStr = (createdTs: number, locale = "en"): string => {
+export const getFormatedMemoCreatedAtStr = (createdTs: number): string => {
   if (Date.now() - createdTs < 1000 * 60 * 60 * 24) {
-    return dayjs(createdTs).locale(locale).fromNow();
+    return dayjs(createdTs).fromNow();
   } else {
-    return dayjs(createdTs).locale(locale).format("YYYY/MM/DD HH:mm:ss");
+    return dayjs(createdTs).format("YYYY/MM/DD HH:mm:ss");
   }
 };
 
 const Memo: React.FC<Props> = (props: Props) => {
-  const memo = props.memo;
-  const { t, locale } = useI18n();
-  const [state, setState] = useState<State>({
-    expandButtonStatus: -1,
-  });
-  const [createdAtStr, setCreatedAtStr] = useState<string>(getFormatedMemoCreatedAtStr(memo.createdTs, locale));
+  const [memo, setMemo] = useState({ editable: false, ...props.memo });
+  const [moreAction, setMoreAction] = useState(false);
+  const [createdAtStr, setCreatedAtStr] = useState<string>(getFormatedMemoCreatedAtStr(memo.createdTs));
   const memoContainerRef = useRef<HTMLDivElement>(null);
   const imageUrls = Array.from(memo.content.match(IMAGE_URL_REG) ?? []).map((s) => s.replace(IMAGE_URL_REG, "$1"));
   const isVisitorMode = userService.isVisitorMode();
@@ -53,24 +42,12 @@ const Memo: React.FC<Props> = (props: Props) => {
       return;
     }
 
-    if (Number(memoContainerRef.current?.clientHeight) > MAX_MEMO_CONTAINER_HEIGHT) {
-      setState({
-        ...state,
-        expandButtonStatus: 0,
-      });
-    }
-
-    let intervalFlag = -1;
     if (Date.now() - memo.createdTs < 1000 * 60 * 60 * 24) {
-      intervalFlag = setInterval(() => {
-        setCreatedAtStr(getFormatedMemoCreatedAtStr(memo.createdTs, locale));
+      setInterval(() => {
+        setCreatedAtStr(dayjs(memo.createdTs).fromNow());
       }, 1000 * 1);
     }
-
-    return () => {
-      clearInterval(intervalFlag);
-    };
-  }, [locale]);
+  }, []);
 
   const handleShowMemoStoryDialog = () => {
     showMemoCardDialog(memo);
@@ -93,6 +70,11 @@ const Memo: React.FC<Props> = (props: Props) => {
   };
 
   const handleEditMemoClick = () => {
+    if (userService.isVisitorMode()) return false;
+    // editorStateService.setEditMemoWithId(memo.id);
+    setMoreAction(false);
+    memo.editable = true;
+    setMemo({ ...memo });
     editorStateService.setEditMemoWithId(memo.id);
   };
 
@@ -103,8 +85,7 @@ const Memo: React.FC<Props> = (props: Props) => {
         rowStatus: "ARCHIVED",
       });
     } catch (error: any) {
-      console.error(error);
-      toastHelper.error(error.response.data.message);
+      toastHelper.error(error.message);
     }
 
     if (editorStateService.getState().editMemoId === memo.id) {
@@ -126,10 +107,11 @@ const Memo: React.FC<Props> = (props: Props) => {
       if (memoTemp) {
         showMemoCardDialog(memoTemp);
       } else {
-        toastHelper.error("Memo Not Found");
+        toastHelper.error("MEMO Not Found");
         targetEl.classList.remove("memo-link-text");
       }
-    } else if (targetEl.className === "tag-span") {
+    } else if (targetEl.className === "umo-tag") {
+      if (memo.editable) return false;
       const tagName = targetEl.innerText.slice(1);
       const currTagQuery = locationService.getState().query?.tag;
       if (currTagQuery === tagName) {
@@ -171,68 +153,49 @@ const Memo: React.FC<Props> = (props: Props) => {
     }
   };
 
-  const handleExpandBtnClick = () => {
-    setState({
-      expandButtonStatus: Number(Boolean(!state.expandButtonStatus)) as ExpandButtonStatus,
+  const moreActions = () => {
+    setMoreAction(!moreAction);
+  };
+
+  const clickCardMoreAction = (callback: () => void) => {
+    setMoreAction(false);
+    callback();
+  };
+
+  const handleVisibilitySelectorChange = async (visibility: Visibility) => {
+    if (memo.visibility === visibility) {
+      return;
+    }
+
+    await memoService.patchMemo({
+      id: memo.id,
+      visibility: visibility,
+    });
+    setMemo({
+      ...memo,
+      visibility: visibility,
     });
   };
 
   return (
-    <div className={`memo-wrapper ${"memos-" + memo.id} ${memo.pinned ? "pinned" : ""}`}>
+    <div
+      onClick={handleMemoContentClick}
+      onDoubleClick={handleEditMemoClick}
+      className={`memo-wrapper ${"memos-" + memo.id} ${memo.pinned && "pinned"} ${memo.editable && "editing"} ${
+        moreAction && "more-actions"
+      }`}
+    >
       <div className="memo-top-wrapper">
-        <div className="status-text-container" onClick={handleShowMemoStoryDialog}>
-          <span className="time-text">{createdAtStr}</span>
-          <Only when={memo.visibility !== "PRIVATE" && !isVisitorMode}>
-            <span className={`status-text ${memo.visibility.toLocaleLowerCase()}`}>{memo.visibility}</span>
-          </Only>
-        </div>
-        <div className={`btns-container ${userService.isVisitorMode() ? "!hidden" : ""}`}>
-          <span className="btn more-action-btn">
-            <Icon.MoreHorizontal className="icon-img" />
-          </span>
-          <div className="more-action-btns-wrapper">
-            <div className="more-action-btns-container">
-              <div className="btns-container">
-                <div className="btn" onClick={handleTogglePinMemoBtnClick}>
-                  <Icon.MapPin className={`icon-img ${memo.pinned ? "" : "opacity-20"}`} />
-                  <span className="tip-text">{memo.pinned ? t("common.unpin") : t("common.pin")}</span>
-                </div>
-                <div className="btn" onClick={handleEditMemoClick}>
-                  <Icon.Edit3 className="icon-img" />
-                  <span className="tip-text">{t("common.edit")}</span>
-                </div>
-                <div className="btn" onClick={handleGenMemoImageBtnClick}>
-                  <Icon.Share className="icon-img" />
-                  <span className="tip-text">{t("common.share")}</span>
-                </div>
-              </div>
-              <span className="btn" onClick={handleMarkMemoClick}>
-                {t("common.mark")}
-              </span>
-              <span className="btn" onClick={handleShowMemoStoryDialog}>
-                {t("memo.view-story")}
-              </span>
-              <span className="btn archive-btn" onClick={handleArchiveMemoClick}>
-                {t("common.archive")}
-              </span>
-            </div>
-          </div>
-        </div>
+        <span className="time-text">{createdAtStr}</span>
+        {!userService.isVisitorMode() && !memo.editable && <GoKebabHorizontal onClick={moreActions} />}
       </div>
-      <div
-        ref={memoContainerRef}
-        className={`memo-content-text ${state.expandButtonStatus === 0 ? "expanded" : ""}`}
-        onClick={handleMemoContentClick}
-        dangerouslySetInnerHTML={{ __html: memo.content }}
-      ></div>
-      {state.expandButtonStatus !== -1 && (
-        <div className="expand-btn-container">
-          <span className={`btn ${state.expandButtonStatus === 0 ? "expand-btn" : "fold-btn"}`} onClick={handleExpandBtnClick}>
-            {state.expandButtonStatus === 0 ? "Expand" : "Fold"}
-            <Icon.ChevronRight className="icon-img" />
-          </span>
-        </div>
-      )}
+      <ProseMirrorEditor
+        foldable
+        cardMode
+        content={memo.content}
+        editable={memo.editable}
+        onCancel={() => setMemo({ ...memo, editable: false })}
+      />
       <Only when={imageUrls.length > 0}>
         <div className="images-wrapper">
           {imageUrls.map((imgUrl, idx) => (
@@ -240,6 +203,28 @@ const Memo: React.FC<Props> = (props: Props) => {
           ))}
         </div>
       </Only>
+      <Only when={moreAction}>
+        <span className="double-click-tip">双击编辑轻笔记</span>
+      </Only>
+      <div className="card-status">
+        <Only when={memo.pinned}>
+          <GoPin />
+        </Only>
+        <Only when={memo.visibility === "PUBLIC"}>
+          <GoBroadcast />
+        </Only>
+      </div>
+      <div className="action-bar">
+        <GoBook onClick={() => clickCardMoreAction(handleShowMemoStoryDialog)} />
+        <HiAnnotation />
+        <GoPin onClick={() => clickCardMoreAction(handleTogglePinMemoBtnClick)} />
+        {/*<GoPencil />*/}
+        <GoCloudDownload onClick={() => clickCardMoreAction(handleGenMemoImageBtnClick)} />
+        <GoBroadcast
+          onClick={() => clickCardMoreAction(() => handleVisibilitySelectorChange(memo.visibility === "PUBLIC" ? "PRIVATE" : "PUBLIC"))}
+        />
+        <GoTrashcan onClick={() => clickCardMoreAction(handleArchiveMemoClick)} />
+      </div>
     </div>
   );
 };

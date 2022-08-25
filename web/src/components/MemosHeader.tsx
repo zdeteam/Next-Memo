@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { memoService, shortcutService } from "../services";
 import { useAppSelector } from "../store";
 import Icon from "./Icon";
@@ -13,11 +13,30 @@ interface Props {}
 const MemosHeader: React.FC<Props> = () => {
   const query = useAppSelector((state) => state.location.query);
   const shortcuts = useAppSelector((state) => state.shortcut.shortcuts);
-  const [titleText, setTitleText] = useState("MEMOS");
+  const [titleText, setTitleText] = useState("");
+
+  const getGreetingMessage = () => {
+    const hour = new Date().getHours();
+    let msg = "";
+
+    const EarlyMorning = "早上好"; // 5~8
+    const LateMorning = "上午好"; //11 ~ 12
+    const EarlyAfternoon = "下午好"; // 13~15
+    const Evening = "晚上好"; // 17~21
+    const Night = "夜深了，早点休息"; //21~4
+
+    if (hour >= 5 && hour < 9) msg = EarlyMorning;
+    if (hour >= 9 && hour < 13) msg = LateMorning;
+    if (hour >= 13 && hour < 17) msg = EarlyAfternoon;
+    if (hour >= 17 && hour < 22) msg = Evening;
+    if (hour >= 23 && hour < 5) msg = Night;
+
+    return msg;
+  };
 
   useEffect(() => {
     if (!query?.shortcutId) {
-      setTitleText("MEMOS");
+      setTitleText(getGreetingMessage());
       return;
     }
 

@@ -34,7 +34,8 @@
     "daily-review": "Daily Review",
     "resources": "Resources",
     "setting": "Setting",
-    "archived": "Archived"
+    "archived": "Trash",
+    "umo": "UMO More"
   },
   "editor": {
     "save": "Save",

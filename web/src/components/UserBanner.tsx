@@ -6,6 +6,7 @@ import userService from "../services/userService";
 import { locationService } from "../services";
 import { useAppSelector } from "../store";
 import "../less/user-banner.less";
+import * as api from "../helpers/api";
 
 interface Props {}
 
@@ -14,6 +15,7 @@ const UserBanner: React.FC<Props> = () => {
   const { memos, tags } = useAppSelector((state) => state.memo);
   const [shouldShowPopupBtns, setShouldShowPopupBtns] = useState(false);
   const [username, setUsername] = useState("Memos");
+  const [profile, setProfile] = useState<Profile>();
   const [createdDays, setCreatedDays] = useState(0);
   const isVisitorMode = userService.isVisitorMode();
 
@@ -34,6 +36,22 @@ const UserBanner: React.FC<Props> = () => {
     locationService.clearQuery();
   }, []);
 
+  useEffect(() => {
+    try {
+      api.getSystemStatus().then(({ data }) => {
+        const {
+          data: { profile },
+        } = data;
+        setProfile(profile);
+      });
+    } catch (error) {
+      setProfile({
+        mode: "dev",
+        version: "0.0.0",
+      });
+    }
+  }, []);
+
   const handlePopupBtnClick = () => {
     setShouldShowPopupBtns(true);
   };
@@ -43,6 +61,7 @@ const UserBanner: React.FC<Props> = () => {
       <div className="user-banner-container">
         <div className="username-container" onClick={handleUsernameClick}>
           <span className="username-text">{username}</span>
+          <span className="version">内测中 {profile?.version}</span>
         </div>
       </div>
       <div className="amount-text-container">

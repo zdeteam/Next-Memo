@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { GoPlus, GoSettings, GoTrashcan, GoFileMedia } from "react-icons/go";
 import { locationService, shortcutService } from "../services";
 import { useAppSelector } from "../store";
 import useI18n from "../hooks/useI18n";
@@ -39,9 +40,9 @@ const ShortcutList: React.FC<Props> = () => {
   return (
     <div className="shortcuts-wrapper">
       <p className="title-text">
-        <span className="normal-text">Shortcuts</span>
+        <span className="normal-text">快捷检索</span>
         <button className="btn" onClick={() => showCreateShortcutDialog()}>
-          <Icon.Plus className="icon-img" />
+          <GoPlus className="icon-img" />
         </button>
       </p>
       <div className="shortcuts-container">

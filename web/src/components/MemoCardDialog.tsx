@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { editorStateService, memoService, userService } from "../services";
-import { IMAGE_URL_REG, MEMO_LINK_REG, UNKNOWN_ID, VISIBILITY_SELECTOR_ITEMS } from "../helpers/consts";
+import { IMAGE_URL_REG, MEMO_LINK_REG, UNKNOWN_ID } from "../helpers/consts";
 import * as utils from "../helpers/utils";
 import { formatMemoContent, parseHtmlToRawText } from "../helpers/marked";
 import Only from "./common/OnlyWhen";
@@ -27,6 +27,11 @@ const MemoCardDialog: React.FC<Props> = (props: Props) => {
   const [linkMemos, setLinkMemos] = useState<LinkedMemo[]>([]);
   const [linkedMemos, setLinkedMemos] = useState<LinkedMemo[]>([]);
   const imageUrls = Array.from(memo.content.match(IMAGE_URL_REG) ?? []).map((s) => s.replace(IMAGE_URL_REG, "$1"));
+  const visibilityList = [
+    { text: "PUBLIC", value: "PUBLIC" },
+    { text: "PROTECTED", value: "PROTECTED" },
+    { text: "PRIVATE", value: "PRIVATE" },
+  ];
 
   useEffect(() => {
     const fetchLinkedMemos = async () => {
@@ -87,7 +92,7 @@ const MemoCardDialog: React.FC<Props> = (props: Props) => {
         setLinkedMemos([]);
         setMemo(nextMemo);
       } else {
-        toastHelper.error("Memo Not Found");
+        toastHelper.error("MEMO Not Found");
         targetEl.classList.remove("memo-link-text");
       }
     }
@@ -121,98 +126,87 @@ const MemoCardDialog: React.FC<Props> = (props: Props) => {
 
   return (
     <>
+      <div className="memo-card-container">
+
+        <div className="memo-container">
+          <div className="card-cover" />
+          <div className="header-container">
+            <p className="time-text">{utils.getDateTimeString(memo.createdTs)}</p>
+          </div>
+          <div
+            className="memo-content-text"
+            onClick={handleMemoContentClick}
+            dangerouslySetInnerHTML={{ __html: formatMemoContent(memo.content) }}
+          />
+        </div>
+        {/*<div className="layer-container"></div>*/}
+        {linkMemos.map((_, idx) => {
+          if (idx < 4) {
+            return (
+                <div
+                    className="background-layer-container"
+                    key={idx}
+                    style={{
+                      bottom: (idx + 1) * -3 + "px",
+                      left: (idx + 1) * 5 + "px",
+                      width: `calc(100% - ${(idx + 1) * 10}px)`,
+                      zIndex: -idx - 1,
+                    }}
+                ></div>
+            );
+          } else {
+            return null;
+          }
+        })}
+        {linkMemos.length > 0 ? (
+            <div className="linked-memos-wrapper">
+              <p className="normal-text">{linkMemos.length} related MEMO</p>
+              {linkMemos.map((memo, index) => {
+                const rawtext = parseHtmlToRawText(formatMemoContent(memo.content)).replaceAll("\n", " ");
+                return (
+                    <div className="linked-memo-container" key={`${index}-${memo.id}`} onClick={() => handleLinkedMemoClick(memo)}>
+                      <span className="time-text">{memo.dateStr} </span>
+                      {rawtext}
+                    </div>
+                );
+              })}
+            </div>
+        ) : null}
+        {linkedMemos.length > 0 ? (
+            <div className="linked-memos-wrapper">
+              <p className="normal-text">{linkedMemos.length} linked MEMO</p>
+              {linkedMemos.map((memo, index) => {
+                const rawtext = parseHtmlToRawText(formatMemoContent(memo.content)).replaceAll("\n", " ");
+                return (
+                    <div className="linked-memo-container" key={`${index}-${memo.id}`} onClick={() => handleLinkedMemoClick(memo)}>
+                      <span className="time-text">{memo.dateStr} </span>
+                      {rawtext}
+                    </div>
+                );
+              })}
+            </div>
+        ) : null}
+      </div>
+
+
+      <Only when={!userService.isVisitorMode()}>
+        <button className="btn edit-btn" onClick={handleEditMemoBtnClick}>
+          <Icon.Edit3 className="icon-img" />
+        </button>
+      </Only>
       <Only when={!userService.isVisitorMode()}>
         <div className="card-header-container">
           <div className="visibility-selector-container">
             <Icon.Eye className="icon-img" />
             <Selector
               className="visibility-selector"
-              dataSource={VISIBILITY_SELECTOR_ITEMS}
+              dataSource={visibilityList}
               value={memo.visibility}
               handleValueChanged={(value) => handleVisibilitySelectorChange(value as Visibility)}
             />
           </div>
         </div>
       </Only>
-      <div className="memo-card-container">
-        <div className="header-container">
-          <p className="time-text">{utils.getDateTimeString(memo.createdTs)}</p>
-          <div className="btns-container">
-            <Only when={!userService.isVisitorMode()}>
-              <>
-                <button className="btn edit-btn" onClick={handleEditMemoBtnClick}>
-                  <Icon.Edit3 className="icon-img" />
-                </button>
-                <span className="split-line">/</span>
-              </>
-            </Only>
-            <button className="btn close-btn" onClick={props.destroy}>
-              <Icon.X className="icon-img" />
-            </button>
-          </div>
-        </div>
-        <div className="memo-container">
-          <div
-            className="memo-content-text"
-            onClick={handleMemoContentClick}
-            dangerouslySetInnerHTML={{ __html: formatMemoContent(memo.content) }}
-          ></div>
-          <Only when={imageUrls.length > 0}>
-            <div className="images-wrapper">
-              {imageUrls.map((imgUrl, idx) => (
-                <Image className="memo-img" key={idx} imgUrl={imgUrl} />
-              ))}
-            </div>
-          </Only>
-        </div>
-        <div className="layer-container"></div>
-        {linkMemos.map((_, idx) => {
-          if (idx < 4) {
-            return (
-              <div
-                className="background-layer-container"
-                key={idx}
-                style={{
-                  bottom: (idx + 1) * -3 + "px",
-                  left: (idx + 1) * 5 + "px",
-                  width: `calc(100% - ${(idx + 1) * 10}px)`,
-                  zIndex: -idx - 1,
-                }}
-              ></div>
-            );
-          } else {
-            return null;
-          }
-        })}
-      </div>
-      {linkMemos.length > 0 ? (
-        <div className="linked-memos-wrapper">
-          <p className="normal-text">{linkMemos.length} related MEMO</p>
-          {linkMemos.map((memo, index) => {
-            const rawtext = parseHtmlToRawText(formatMemoContent(memo.content)).replaceAll("\n", " ");
-            return (
-              <div className="linked-memo-container" key={`${index}-${memo.id}`} onClick={() => handleLinkedMemoClick(memo)}>
-                <span className="time-text">{memo.dateStr} </span>
-                {rawtext}
-              </div>
-            );
-          })}
-        </div>
-      ) : null}
-      {linkedMemos.length > 0 ? (
-        <div className="linked-memos-wrapper">
-          <p className="normal-text">{linkedMemos.length} linked MEMO</p>
-          {linkedMemos.map((memo, index) => {
-            const rawtext = parseHtmlToRawText(formatMemoContent(memo.content)).replaceAll("\n", " ");
-            return (
-              <div className="linked-memo-container" key={`${index}-${memo.id}`} onClick={() => handleLinkedMemoClick(memo)}>
-                <span className="time-text">{memo.dateStr} </span>
-                {rawtext}
-              </div>
-            );
-          })}
-        </div>
-      ) : null}
     </>
   );
 };

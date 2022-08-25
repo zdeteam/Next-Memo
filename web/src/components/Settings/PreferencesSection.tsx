@@ -37,17 +37,17 @@ const PreferencesSection: React.FC<Props> = () => {
       <label className="form-label">
         <span className="normal-text">{t("common.language")}:</span>
         <Selector className="ml-2 w-28" value={setting.locale} dataSource={localeSelectorItems} handleValueChanged={handleLocaleChanged} />
-        <BetaBadge className="ml-2" />
+        {/*<BetaBadge className="ml-2" />*/}
       </label>
-      <label className="form-label">
-        <span className="normal-text">{t("setting.preference-section.default-memo-visibility")}:</span>
-        <Selector
-          className="ml-2 w-32"
-          value={setting.memoVisibility}
-          dataSource={VISIBILITY_SELECTOR_ITEMS}
-          handleValueChanged={handleDefaultMemoVisibilityChanged}
-        />
-      </label>
+      {/*<label className="form-label">*/}
+      {/*  <span className="normal-text">{t("setting.preference-section.default-memo-visibility")}:</span>*/}
+      {/*  <Selector*/}
+      {/*    className="ml-2 w-32"*/}
+      {/*    value={setting.memoVisibility}*/}
+      {/*    dataSource={VISIBILITY_SELECTOR_ITEMS}*/}
+      {/*    handleValueChanged={handleDefaultMemoVisibilityChanged}*/}
+      {/*  />*/}
+      {/*</label>*/}
     </div>
   );
 };

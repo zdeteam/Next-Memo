@@ -13,6 +13,7 @@ interface Props {}
 const MemoList: React.FC<Props> = () => {
   const query = useAppSelector((state) => state.location.query);
   const memos = useAppSelector((state) => state.memo.memos);
+  const user = useAppSelector((state) => state.user.user);
   const [isFetching, setFetchStatus] = useState(true);
   const wrapperElement = useRef<HTMLDivElement>(null);
 
@@ -88,7 +89,7 @@ const MemoList: React.FC<Props> = () => {
         console.error(error);
         toastHelper.error(error.response.data.message);
       });
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     wrapperElement.current?.scrollTo({ top: 0 });
@@ -101,7 +102,7 @@ const MemoList: React.FC<Props> = () => {
       ))}
       <div className="status-text-container">
         <p className="status-text">
-          {isFetching ? "Fetching data..." : sortedMemos.length === 0 ? "No memos 🌃" : showMemoFilter ? "" : "All memos are ready 🎉"}
+          {isFetching ? null : sortedMemos.length === 0 ? "没有数据啦" : showMemoFilter ? "" : "已全部加载完成"}
         </p>
       </div>
     </div>

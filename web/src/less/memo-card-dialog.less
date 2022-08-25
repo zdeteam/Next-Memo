@@ -1,66 +1,52 @@
 @import "./mixin.less";
 
 .dialog-wrapper.memo-card-dialog {
-  @apply px-4;
-
+  //@apply px-4;
+  //border: 1px solid red;
   > .dialog-container {
-    @apply w-full p-0 bg-transparent flex flex-col justify-start items-center;
-
-    > .card-header-container {
-      @apply z-10 w-128 max-w-full flex flex-row justify-start items-center mb-2;
-
-      > .visibility-selector-container {
-        @apply bg-white px-2 pl-3 py-1 rounded-lg flex flex-row justify-start items-center;
-
-        > .icon-img {
-          @apply mr-1 w-4 h-auto;
-        }
-
-        > .visibility-selector {
-          @apply w-32;
-
-          > .current-value-container {
-            @apply border-none;
-          }
-        }
-      }
+    padding: 0 12px;
+    background-image: url(https://images.unsplash.com/photo-1566738780863-f9608f88f3a9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2378&q=80);
+    .dialog-header-container{
+      color: rgba(255,255,255,0.8);
+      height: 8px;
     }
 
     > .memo-card-container {
-      @apply flex flex-col justify-start items-start relative w-128 max-w-full py-3 px-6 mb-3 rounded-lg bg-yellow-200;
-
-      > * {
-        z-index: 1;
-      }
-
-      > .header-container {
-        @apply flex flex-row justify-between items-center w-full h-auto pb-0 my-0;
-
-        > .time-text {
-          @apply text-sm text-gray-500 font-mono;
-        }
-
-        > .btns-container {
-          .flex(row, flex-end, center);
-
-          > .btn {
-            .flex(row, center, center);
-            @apply w-6 h-6 p-1 ml-2 rounded text-gray-600 hover:bg-white;
-          }
-
-          > .split-line {
-            @apply font-mono text-gray-300 ml-2;
-          }
-        }
-      }
-
+      background-color: #fff;
+      //@apply flex flex-col justify-start items-start relative w-128 max-w-full py-3 px-6 mb-3 rounded-lg ;
+      padding:8px;
+      position: relative;
+      margin-top: 16px;
+      box-shadow:0 0 0 8px rgb(255 255 255 / 20%);
       > .memo-container {
-        .flex(column, flex-start, flex-start);
-        @apply w-full pt-2;
-
-        > .memo-content-text {
-          @apply w-full text-base;
+        //border: 1px solid;
+        position:relative;
+        > .header-container {
+          z-index:1;
+          //width: 100%;
+          > .time-text {
+            //width: 100%;
+            //text-align: center;
+            font-weight: 700;
+           font-size:19px;
+          }
         }
+        >.card-cover{
+          background-image: url(https://images.unsplash.com/photo-1549068106-b024baf5062d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80);
+          filter: blur(100px);
+          background-color:#fff;
+          //border: 1px solid red;
+          width: 100%;
+          height:100%;
+          will-change: top;
+          background-size: cover;
+          background-position: center;
+          //transform: scale(1.2);
+          position: absolute;
+          top:0;
+          left:0;
+        }
+        z-index:1;
 
         > .images-wrapper {
           .flex(row, flex-start, flex-start);
@@ -80,50 +66,49 @@
         }
       }
 
-      > .normal-text {
-        @apply mt-2 text-sm text-gray-500;
-      }
+      > .linked-memos-wrapper {
+        position:relative;
+        margin-top:8px;
+        z-index:1;
 
-      > .layer-container,
-      > .background-layer-container {
-        position: absolute;
-        bottom: -3px;
-        left: 3px;
-        width: calc(100% - 6px);
-        height: 100%;
-        border-radius: 8px;
-        z-index: -1;
-        background-color: @bg-paper-yellow;
-        border-bottom: 1px solid lightgray;
-      }
 
-      > .layer-container {
-        z-index: 0;
-        background-color: @bg-paper-yellow;
-        border: 1px solid lightgray;
-        width: 100%;
-        height: 100%;
-        position: absolute;
-        top: 0;
-        left: 0;
-      }
-    }
+        > .normal-text {
+          font-size:13px;
+          font-weight:700;
+        }
 
-    > .linked-memos-wrapper {
-      .flex(column, flex-start, flex-start);
-      @apply w-128 max-w-full mt-2 py-3 px-6 rounded-lg bg-white last:mb-8;
+        > .linked-memo-container {
 
-      > .normal-text {
-        @apply text-sm;
-      }
-
-      > .linked-memo-container {
-        @apply text-sm leading-6 mt-2 cursor-pointer max-w-full truncate hover:opacity-80;
-
-        > .time-text {
+          > .time-text {
           @apply font-mono text-gray-500;
+          }
         }
       }
     }
-  }
+      //> .layer-container,
+      //> .background-layer-container {
+      //  position: absolute;
+      //  bottom: -3px;
+      //  left: 3px;
+      //  width: calc(100% - 6px);
+      //  height: 100%;
+      //  border-radius: 8px;
+      //  z-index: -1;
+      //  background-color: @bg-paper-yellow;
+      //  border-bottom: 1px solid lightgray;
+      //}
+
+      //> .layer-container {
+      //  z-index: 0;
+      //  background-color: @bg-paper-yellow;
+      //  border: 1px solid lightgray;
+      //  width: 100%;
+      //  height: 100%;
+      //  position: absolute;
+      //  top: 0;
+      //  left: 0;
+      //}
+    }
+
+
 }

@@ -33,9 +33,10 @@
   },
   "sidebar": {
     "daily-review": "每日回顾",
-    "resources": "资源库",
+    "resources": "我的资源",
     "setting": "设置",
-    "archived": "已归档"
+    "archived": "回收站",
+    "umo": "有墨更多"
   },
   "editor": {
     "save": "记下",
@@ -46,7 +47,7 @@
     "view-story": "查看详情"
   },
   "tag-list": {
-    "tip-text": "输入`#tag `来创建标签"
+    "tip-text": "输入 #tag 创建标签"
   },
   "setting": {
     "my-account": "我的账号",
@@ -56,7 +57,7 @@
       "title": "账号信息"
     },
     "preference-section": {
-      "default-memo-visibility": "默认 Memo 可见性"
+      "default-memo-visibility": "笔记默认可见性"
     },
     "member-section": {
       "create-a-member": "创建成员"

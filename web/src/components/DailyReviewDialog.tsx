@@ -1,14 +1,13 @@
 import { useRef, useState } from "react";
+import { GoChevronLeft, GoChevronRight } from "react-icons/go";
 import { useAppSelector } from "../store";
 import toImage from "../labs/html2image";
-import useI18n from "../hooks/useI18n";
 import useToggle from "../hooks/useToggle";
 import { DAILY_TIMESTAMP } from "../helpers/consts";
 import * as utils from "../helpers/utils";
-import Icon from "./Icon";
 import { generateDialog } from "./Dialog";
 import DatePicker from "./common/DatePicker";
-import showPreviewImageDialog from "./PreviewImageDialog";
+import Button from "./common/Button";
 import DailyMemo from "./DailyMemo";
 import "../less/daily-review-dialog.less";
 
@@ -20,9 +19,9 @@ const monthChineseStrArray = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "
 const weekdayChineseStrArray = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 const DailyReviewDialog: React.FC<Props> = (props: Props) => {
-  const { t } = useI18n();
+  const todayStamp = utils.getDateStampByDate(utils.getDateString(props.currentDateStamp));
   const memos = useAppSelector((state) => state.memo.memos);
-  const [currentDateStamp, setCurrentDateStamp] = useState(utils.getDateStampByDate(utils.getDateString(props.currentDateStamp)));
+  const [currentDateStamp, setCurrentDateStamp] = useState(todayStamp);
   const [showDatePicker, toggleShowDatePicker] = useToggle(false);
   const memosElRef = useRef<HTMLDivElement>(null);
   const currentDate = new Date(currentDateStamp);
@@ -47,11 +46,12 @@ const DailyReviewDialog: React.FC<Props> = (props: Props) => {
       pixelRatio: window.devicePixelRatio * 2,
     })
       .then((url) => {
-        showPreviewImageDialog(url);
+        const link = document.createElement("a");
+        link.download = "每日回顾";
+        link.href = url;
+        link.click();
       })
-      .catch(() => {
-        // do nth
-      });
+      .catch(() => {});
   };
 
   const handleDataPickerChange = (datestamp: DateStamp): void => {
@@ -60,60 +60,50 @@ const DailyReviewDialog: React.FC<Props> = (props: Props) => {
   };
 
   return (
-    <>
-      <div className="dialog-header-container">
-        <p className="title-text" onClick={() => toggleShowDatePicker()}>
-          <span className="icon-text">📅</span> {t("sidebar.daily-review")}
-        </p>
-        <div className="btns-container">
-          <button className="btn-text" onClick={() => setCurrentDateStamp(currentDateStamp - DAILY_TIMESTAMP)}>
-            <Icon.ChevronLeft className="icon-img" />
-          </button>
-          <button className="btn-text" onClick={() => setCurrentDateStamp(currentDateStamp + DAILY_TIMESTAMP)}>
-            <Icon.ChevronRight className="icon-img" />
-          </button>
-          <button className="btn-text share" onClick={handleShareBtnClick}>
-            <Icon.Share className="icon-img" />
-          </button>
-          <span className="split-line">/</span>
-          <button className="btn-text" onClick={() => props.destroy()}>
-            <Icon.X className="icon-img" />
-          </button>
-        </div>
-        <DatePicker
-          className={`date-picker ${showDatePicker ? "" : "!hidden"}`}
-          datestamp={currentDateStamp}
-          handleDateStampChange={handleDataPickerChange}
-        />
-      </div>
-      <div className="dialog-content-container" ref={memosElRef}>
-        <div className="date-card-container">
-          <div className="year-text">{currentDate.getFullYear()}</div>
-          <div className="date-container">
-            <div className="month-text">{monthChineseStrArray[currentDate.getMonth()]}</div>
-            <div className="date-text">{currentDate.getDate()}</div>
-            <div className="day-text">{weekdayChineseStrArray[currentDate.getDay()]}</div>
+    <div className="daily-review-wrapper">
+      {showDatePicker ? (
+        <>
+          <DatePicker className={`date-picker`} datestamp={currentDateStamp} handleDateStampChange={handleDataPickerChange} />
+          <Button onClick={() => handleDataPickerChange(todayStamp)}>回到今天</Button>
+        </>
+      ) : (
+        <>
+          <div className="day-change">
+            <GoChevronLeft onClick={() => setCurrentDateStamp(currentDateStamp - DAILY_TIMESTAMP)} />
+            <GoChevronRight onClick={() => setCurrentDateStamp(currentDateStamp + DAILY_TIMESTAMP)} />
           </div>
-        </div>
-        {dailyMemos.length === 0 ? (
-          <div className="tip-container">
-            <p className="tip-text">Oops, there is nothing.</p>
+          <div className="content" ref={memosElRef}>
+            <div className="date-card-container" onClick={() => toggleShowDatePicker()}>
+              <div className="year-text">{currentDate.getFullYear()}</div>
+              <div className="date-container">
+                <div className="month-text">{monthChineseStrArray[currentDate.getMonth()]}</div>
+                <div className="date-text">{currentDate.getDate()}</div>
+                <div className="day-text">{weekdayChineseStrArray[currentDate.getDay()]}</div>
+              </div>
+            </div>
+            {dailyMemos.length === 0 ? (
+              <div className="tip-container">
+                <p className="tip-text">今天休息啦</p>
+              </div>
+            ) : (
+              <div className="dailymemos-wrapper">
+                {dailyMemos.map((memo) => (
+                  <DailyMemo key={`${memo.id}-${memo.updatedTs}`} memo={memo} />
+                ))}
+              </div>
+            )}
           </div>
-        ) : (
-          <div className="dailymemos-wrapper">
-            {dailyMemos.map((memo) => (
-              <DailyMemo key={`${memo.id}-${memo.updatedTs}`} memo={memo} />
-            ))}
-          </div>
-        )}
-      </div>
-    </>
+          {dailyMemos.length !== 0 && <Button fullWidth onClick={handleShareBtnClick}>分享卡片</Button>}
+        </>
+      )}
+    </div>
   );
 };
 
 export default function showDailyReviewDialog(datestamp: DateStamp = Date.now()): void {
   generateDialog(
     {
+      title: "每日回顾",
       className: "daily-review-dialog",
     },
     DailyReviewDialog,

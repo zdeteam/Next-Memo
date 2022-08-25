@@ -1,7 +1,8 @@
 import Icon from "../Icon";
 import { generateDialog } from "./BaseDialog";
+import Button from "../common/Button";
 import "../../less/common-dialog.less";
-import {Button} from "@strapi/design-system/Button";
+// import {Button} from "@strapi/design-system/Button";
 
 type DialogStyle = "info" | "warning";
 
@@ -43,19 +44,10 @@ const CommonDialog: React.FC<Props> = (props: Props) => {
 
   return (
     <>
-      <div className="dialog-header-container">
-        <p className="title-text">{title}</p>
-        <button className="btn close-btn" onClick={handleCloseBtnClick}>
-          <Icon.X />
-        </button>
-      </div>
       <div className="dialog-content-container">
         <p className="content-text">{content}</p>
         <div className="btns-container">
-          <Button variant="ghost" onClick={handleCloseBtnClick}>
-            {closeBtnText}
-          </Button>
-          <Button onClick={handleConfirmBtnClick}>{confirmBtnText}</Button>
+          <Button fullWidth onClick={handleConfirmBtnClick}>{confirmBtnText}</Button>
         </div>
       </div>
     </>
@@ -76,6 +68,7 @@ interface CommonDialogProps {
 export const showCommonDialog = (props: CommonDialogProps) => {
   generateDialog(
     {
+      title: props.title,
       className: `common-dialog ${props?.className ?? ""}`,
     },
     CommonDialog,

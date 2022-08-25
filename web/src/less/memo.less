@@ -2,101 +2,119 @@
 @import "./memo-content.less";
 
 .memo-wrapper {
-  @apply flex flex-col justify-start items-start w-full max-w-full p-4 pt-3 mt-2 bg-white rounded-lg border border-white hover:border-gray-200;
+  box-sizing: border-box;
+  margin-bottom: 0.5rem;
+  display: flex;
+  width: 100%;
+  max-width: 100%;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  border-radius: 0.5rem;
+  background-color:#fff;
+  //box-shadow: var(--box-shadow);
+  position:relative;
+  border:1px solid rgb(234, 234, 230);
+  //padding-bottom:12px;
+  >.action-bar{
+    position: absolute;
+    top: -1px;
+    right:0;
+    width: 24px;
+    height: calc(100% + 2px);
+    overflow: hidden;
+    z-index: -1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    //background-color:@primary-color-400;
+    background-color:rgba(28, 31, 35, 0.6);
 
-  &.archived-memo {
-    @apply border-gray-200;
+    border-radius: 0 0.5rem 0.5rem 0 ;
+
+   //border: 1px solid;
+    >svg{
+      margin: 0 auto;
+      fill: #fff;
+      width:16px;
+      height:16px;
+      cursor: pointer;
+      &:active{
+        fill: @primary-color-100;
+      }
+    }
+
+
+  }
+  &.more-actions{
+    //border: 1px solid;
+    //left: -20px;
+    border-radius:0.5rem 0 0 0.5rem;
+    transform: translateX(-24px);
+    transition-property: all;
+    transition-timing-function: cubic-bezier(.4, 0, .2, 1);
+    transition-duration: .15s;
+  >.action-bar{
+    transform: translateX(24px);
+  }
+    //transition:transformX(-20px);
+  }
+  >.card-status{
+    position: absolute;
+    right:0;
+    bottom:0;
+    //border: 1px solid;
+    height:24px;
+    //width:100px;
+    //background-color: @primary-color-200;
+    color:@primary-color-400;
+    //padding: 4px 6px;
+    border-radius:10px 0 0 0;
+    display:flex;
+    align-items: center;
+    justify-content:space-between;
+    >svg{
+      margin: 0 6px;
+    }
+  }
+  >span.double-click-tip{
+    //position: absolute;
+    //left:8px;
+    //bottom:4px;
+    font-size:12px;
+    color: #9ca3af;
+    margin: 0 0 0.5rem 0.5rem;
   }
 
-  &.pinned {
-    @apply border-gray-200 border-2;
+  &.editing:hover{
+    border: 2px solid #FFAB27;
+  }
+
+  &.editing{
+    border: 2px solid #FFF6E9;
+    .umo-tag{
+      cursor: default;
+    }
   }
 
   > .memo-top-wrapper {
-    @apply flex flex-row justify-between items-center w-full h-6 mb-1;
-
-    > .status-text-container {
-      @apply flex flex-row justify-start items-center;
-
-      > .time-text {
-        @apply text-xs text-gray-400 cursor-pointer;
-        font-size: 13px;
-      }
-
-      > .status-text {
-        @apply text-xs cursor-pointer ml-2 rounded border px-1;
-
-        &.public {
-          @apply border-green-600 text-green-600;
-        }
-
-        &.protected {
-          @apply border-gray-400 text-gray-400;
-        }
-      }
-    }
-
+    margin-top: 4px;
+    //padding:0 16px;
+    padding:0 0.5rem;
+    display: flex;
+    height: 1.5rem;
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    line-height:12px;
     > .time-text {
-      @apply text-xs text-gray-400 cursor-pointer;
+      font-size: 12px;
+      color:rgba(28, 31, 35, 0.6);
     }
-
-    > .btns-container {
-      @apply flex flex-row justify-end items-center relative flex-shrink-0;
-
-      > .more-action-btns-wrapper {
-        @apply hidden flex-col justify-start items-center absolute top-2 -right-4 flex-nowrap hover:flex p-3;
-
-        > .more-action-btns-container {
-          @apply w-28 h-auto p-1 z-1 whitespace-nowrap rounded-lg bg-white;
-          box-shadow: 0 0 8px 0 rgb(0 0 0 / 20%);
-
-          > .btns-container {
-            @apply w-full flex flex-row justify-around items-center border-b border-gray-100 p-1 mb-1;
-
-            > .btn {
-              @apply relative w-6 h-6 p-1 text-gray-600;
-
-              &:hover > .tip-text {
-                @apply block;
-              }
-
-              > .icon-img {
-                @apply w-5 h-auto;
-              }
-
-              > .tip-text {
-                @apply hidden absolute top-0 p-1 px-2 rounded text-xs leading-6 -mt-9 bg-black text-white shadow opacity-70;
-              }
-            }
-          }
-
-          > .btn {
-            @apply w-full text-sm leading-6 py-1 px-3 rounded justify-start;
-
-            &.archive-btn {
-              @apply text-orange-600;
-            }
-          }
-        }
-      }
-
-      .btn {
-        @apply flex flex-row justify-center items-center px-2 leading-6 text-sm rounded hover:bg-gray-200;
-
-        &.more-action-btn {
-          @apply w-8 -mr-2 opacity-60 cursor-default hover:bg-transparent;
-
-          > .icon-img {
-            @apply w-4 h-auto;
-          }
-
-          &:hover {
-            & + .more-action-btns-wrapper {
-              display: flex;
-            }
-          }
-        }
-      }
+    >svg{
+      fill:rgba(28, 31, 35, 0.6);
+      cursor:pointer;
     }
   }
 

@@ -61,7 +61,7 @@ const userService = {
 
   getUserIdFromPath: () => {
     const userIdRegex = /^\/u\/(\d+).*/;
-    const result = locationService.getState().pathname.match(userIdRegex);
+    const result = location.pathname.match(userIdRegex);
     if (result && result.length === 2) {
       return Number(result[1]);
     }

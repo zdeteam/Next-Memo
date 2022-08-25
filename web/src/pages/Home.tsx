@@ -1,22 +1,73 @@
-import { useEffect } from "react";
-import { locationService, userService } from "../services";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Button from "../components/common/Button";
+import Input from "../components/common/Input";
+import { userService } from "../services";
 import { useAppSelector } from "../store";
-import useI18n from "../hooks/useI18n";
 import useLoading from "../hooks/useLoading";
 import Only from "../components/common/OnlyWhen";
 import Sidebar from "../components/Sidebar";
 import MemosHeader from "../components/MemosHeader";
-import MemoEditor from "../components/MemoEditor";
+import ProseMirrorEditor from "../components/Editor/ProseMirrorEditor";
 import MemoFilter from "../components/MemoFilter";
 import MemoList from "../components/MemoList";
 import toastHelper from "../components/Toast";
+import Modal from "../components/common/Modal";
 import "../less/home.less";
+import { validate, ValidatorConfig } from "../helpers/validator";
+import * as api from "../helpers/api";
+
+const validateConfig: ValidatorConfig = {
+  notEmpty: true,
+  minLength: 4,
+  maxLength: 24,
+  noSpace: true,
+  noChinese: true,
+};
 
 function Home() {
-  const { t } = useI18n();
+  const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const navigate = useNavigate();
+  const [showLoginForm, setShowLoginForm] = useState(false);
   const user = useAppSelector((state) => state.user.user);
   const location = useAppSelector((state) => state.location);
   const loadingState = useLoading();
+
+  const handleSigninBtnsClick = async () => {
+    const emailValidResult = validate(email, { isEmail: true, ...validateConfig });
+    if (!emailValidResult.result) {
+      setEmailError(emailValidResult.reason);
+      return;
+    }
+
+    const passwordValidResult = validate(password, validateConfig);
+    if (!passwordValidResult.result) {
+      setPasswordError(passwordValidResult.reason);
+      return;
+    }
+
+    try {
+      await api.signin(email, password);
+      const user = await userService.doSignIn();
+      if (user) {
+        navigate("/");
+        setShowLoginForm(false);
+      } else {
+        toastHelper.error("😟 Login failed");
+      }
+    } catch (error: any) {
+      const data = error.response.data;
+      if (data.message.match("User")) {
+        setEmailError(data.message);
+      }
+      if (data.message.match("password")) {
+        setPasswordError(data.message);
+      }
+    }
+  };
 
   useEffect(() => {
     userService
@@ -25,22 +76,21 @@ function Home() {
       .finally(async () => {
         const { host, owner, user } = userService.getState();
         if (!host) {
-          locationService.replaceHistory("/auth");
-          return;
+          return navigate(`/signin`);
         }
-
         if (userService.isVisitorMode()) {
           if (!owner) {
             toastHelper.error("User not found");
           }
         } else {
           if (!user) {
-            locationService.replaceHistory(`/u/${host.id}`);
+            // locationService.replaceHistory();
+            navigate(`/u/${host.id}`);
           }
         }
         loadingState.setFinish();
       });
-  }, [location]);
+  }, []);
 
   return (
     <section className="page-wrapper home">
@@ -51,7 +101,7 @@ function Home() {
             <div className="memos-editor-wrapper">
               <MemosHeader />
               <Only when={!userService.isVisitorMode()}>
-                <MemoEditor />
+                <ProseMirrorEditor editable clearWhenSave />
               </Only>
               <MemoFilter />
             </div>
@@ -59,19 +109,47 @@ function Home() {
             <Only when={userService.isVisitorMode()}>
               <div className="addtion-btn-container">
                 {user ? (
-                  <button className="btn" onClick={() => (window.location.href = "/")}>
-                    <span className="icon">🏠</span> {t("common.back-to-home")}
-                  </button>
+                  <Button size="L" onClick={() => (window.location.href = "/")}>
+                    返回我的主页
+                  </Button>
                 ) : (
-                  <button className="btn" onClick={() => (window.location.href = "/auth")}>
-                    <span className="icon">👉</span> {t("common.sign-in")}
-                  </button>
+                  <Button size="L" onClick={() => setShowLoginForm(true)}>
+                    欢迎使用有墨轻笔记, 点击注册/登录
+                  </Button>
                 )}
               </div>
             </Only>
           </main>
         </div>
       )}
+      <Modal visible={showLoginForm} closeable onClose={() => setShowLoginForm(false)}>
+        <div className="login-form">
+          <Input
+            fullWidth
+            label="用户名"
+            message={emailError}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              const text = e.target.value as string;
+              setEmail(text);
+            }}
+          />
+          <Input
+            fullWidth
+            type="password"
+            message={passwordError}
+            label="密码"
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              const text = e.target.value as string;
+              setPassword(text);
+            }}
+          />
+          <Button fullWidth onClick={handleSigninBtnsClick}>
+            登录
+          </Button>
+          {/*<a></a>*/}
+          <span>版本内测中, 暂未开放注册</span>
+        </div>
+      </Modal>
     </section>
   );
 }

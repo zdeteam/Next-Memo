@@ -1,14 +1,33 @@
 @import "./mixin.less";
 
 .user-banner-container {
-  //border: 1px solid;
-  @apply flex flex-row justify-between items-center relative w-full h-auto px-6 flex-nowrap mb-1;
 
+  //border: 1px solid;
+  width: 224px;
+  position: relative;
   > .username-container {
     @apply shrink flex flex-row justify-start items-center flex-nowrap truncate;
+    //border: 1px solid;
+    width: 100%;
 
     > .username-text {
-      @apply font-bold text-lg pr-1 text-slate-800 cursor-pointer shrink truncate;
+      font-size: 18px;
+      font-weight: 700;
+      color: #5f5f5f;
+    }
+    >.version {
+      //border: 1px solid;
+      font-size:12px;
+      position: absolute;
+      right:0;
+      background-color: @primary-color-400;
+      border-radius: 99px;
+      color: #fff;
+      padding: 2px 8px;
+      font-weight: 700;
+      //color: @primary-color-400;
+      //float: right;
+
     }
 
     > .tag {
@@ -18,18 +37,29 @@
 }
 
 .amount-text-container {
-  @apply flex flex-row justify-between items-start w-full px-6 select-none shrink-0 pb-4;
-
+  //border: 1px solid;
+  width:100%;
+  display: flex;
+  margin: 12px 0 4px 0;
   > .status-text {
-    .flex(column, flex-start, flex-start);
+    flex:1;
 
     > .amount-text {
-      @apply font-bold text-2xl opacity-80 leading-10;
-      color: #9d9d9d;
+      width:100%;
+      display: block;
+      //border: 1px solid;
+      font-size: 1.5rem;
+      line-height: 2.5rem;
+      opacity: 0.8;
+      text-align: center;
+      color: #333;
     }
 
     > .type-text {
-      @apply text-gray-400 text-xs font-mono;
+      display:block;
+      text-align: center;
+      font-size: .75rem;
+      color: rgb(156 163 175);
     }
   }
 }

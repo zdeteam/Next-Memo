@@ -1,0 +1,32 @@
+@import "../mixin.less";
+
+.modal-wrapper {
+  border: 1px solid;
+  height: 100vh;
+  width: 100vw;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgba(22, 22, 26, 0.6);
+  z-index: 9999;
+  animation: 90ms modal-mask-keyframe-show ease forwards;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  > div {
+    background-color: #fff;
+    width: 380px;
+    border-radius: 12px;
+    padding: 16px;
+    animation: 120ms modal-content-keyframe-show cubic-bezier(0, 0, 0.26, 1.38) forwards;
+    >.header{
+      height:18px;
+      position:relative;
+      >svg{
+        position: absolute;
+        right: 0;
+        cursor:pointer;
+      }
+    }
+  }
+}
