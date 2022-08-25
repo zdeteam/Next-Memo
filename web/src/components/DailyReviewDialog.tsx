@@ -93,7 +93,7 @@ const DailyReviewDialog: React.FC<Props> = (props: Props) => {
               </div>
             )}
           </div>
-          {dailyMemos.length !== 0 && <Button onClick={handleShareBtnClick}>分享卡片</Button>}
+          {dailyMemos.length !== 0 && <Button fullWidth onClick={handleShareBtnClick}>分享卡片</Button>}
         </>
       )}
     </div>

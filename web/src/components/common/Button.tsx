@@ -8,6 +8,7 @@ interface ButtonProps {
   disabled?: boolean;
   fullWidth?: boolean;
   size?: "L" | "M";
+  type?: "text" | "danger";
 }
 
 const Button = (props: ButtonProps) => {
@@ -21,6 +22,16 @@ const Button = (props: ButtonProps) => {
   }
   if (props.size === "L") {
     styles["height"] = "36px";
+  }
+  if (props.type === "text") {
+    styles["color"] = "#000";
+    styles["padding"] = "0 4px";
+    styles["fontWeight"] = "400";
+    styles["backgroundColor"] = "#fff";
+  }
+  if(props.type==='danger'){
+    styles["color"] = "rgb(220, 38, 38)";
+    styles["backgroundColor"] = "rgb(254, 242, 242)";
   }
 
   return (

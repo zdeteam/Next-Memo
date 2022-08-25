@@ -1,6 +1,6 @@
 import { userService } from "../services";
 import useI18n from "../hooks/useI18n";
-import { GoCalendar, GoSettings, GoTrashcan, GoFileMedia, GoX } from "react-icons/go";
+import { GoCalendar, GoSettings, GoTrashcan, GoFileMedia, GoX, GoHome } from "react-icons/go";
 import Only from "./common/OnlyWhen";
 import showDailyReviewDialog from "./DailyReviewDialog";
 import showSettingDialog from "./SettingDialog";
@@ -11,11 +11,14 @@ import UsageHeatMap from "./UsageHeatMap";
 import ShortcutList from "./ShortcutList";
 import TagList from "./TagList";
 import "../less/siderbar.less";
+import { useAppSelector } from "../store";
 
 interface Props {}
 
 const Sidebar: React.FC<Props> = () => {
   const { t } = useI18n();
+  const user = useAppSelector((state) => state.user.user as User);
+  console.log("user", user);
 
   console.log(t("sidebar.setting"));
   const handleMyAccountBtnClick = () => {
@@ -44,14 +47,16 @@ const Sidebar: React.FC<Props> = () => {
           <GoCalendar /> {t("sidebar.daily-review")}
         </button>
         <Only when={!userService.isVisitorMode()}>
-          {/*<button className="btn action-btn" onClick={handleResourcesBtnClick}>*/}
-          {/*  <GoFileMedia /> {t("sidebar.resources")}*/}
-          {/*</button>*/}
           <button className="btn action-btn" onClick={handleMyAccountBtnClick}>
             <GoSettings /> {t("sidebar.setting")}
           </button>
           <button className="btn action-btn" onClick={handleArchivedBtnClick}>
             <GoTrashcan /> {t("sidebar.archived")}
+          </button>
+        </Only>
+        <Only when={user.id !== 101}>
+          <button className="btn action-btn" onClick={() => (location.href = "/u/101")}>
+            <GoHome /> {t("sidebar.umo")}
           </button>
         </Only>
       </div>

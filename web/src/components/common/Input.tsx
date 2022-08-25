@@ -5,12 +5,19 @@ interface InputProps {
   message?: string;
   onChange: (e: any) => void;
   type?: "password" | "text";
+  value?: string;
+  placeholder?: string;
+  fullWidth?: boolean;
 }
 const Input = (props: InputProps) => {
+  const styles:any = {};
+  if (props.fullWidth) {
+    styles["width"] = "100%";
+  }
   return (
-    <div className="input-wrapper">
+    <div className="input-wrapper" style={styles}>
       {props.label && <label>{props.label}</label>}
-      <input type={props.type || "text"} onChange={props.onChange} />
+      <input placeholder={props.placeholder} value={props.value} type={props.type || "text"} onChange={props.onChange} />
       <span className="message">{props.message}</span>
     </div>
   );

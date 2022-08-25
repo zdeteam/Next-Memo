@@ -3,6 +3,8 @@ import { validate, ValidatorConfig } from "../helpers/validator";
 import useI18n from "../hooks/useI18n";
 import { userService } from "../services";
 import Icon from "./Icon";
+import Input from "./common/Input";
+import Button from "./common/Button";
 import { generateDialog } from "./Dialog";
 import toastHelper from "./Toast";
 import "../less/change-password-dialog.less";
@@ -74,26 +76,19 @@ const ChangePasswordDialog: React.FC<Props> = ({ destroy }: Props) => {
 
   return (
     <>
-      <div className="dialog-header-container">
-        <p className="title-text">Change Password</p>
-        <button className="btn close-btn" onClick={handleCloseBtnClick}>
-          <Icon.X />
-        </button>
-      </div>
       <div className="dialog-content-container">
-        <label className="form-label input-form-label">
-          <input type="password" placeholder="New passworld" value={newPassword} onChange={handleNewPasswordChanged} />
-        </label>
-        <label className="form-label input-form-label">
-          <input type="password" placeholder="Repeat the new password" value={newPasswordAgain} onChange={handleNewPasswordAgainChanged} />
-        </label>
+        <Input fullWidth type="password" placeholder="New passworld" value={newPassword} onChange={handleNewPasswordChanged} />
+        <Input
+          fullWidth
+          type="password"
+          placeholder="Repeat the new password"
+          value={newPasswordAgain}
+          onChange={handleNewPasswordAgainChanged}
+        />
         <div className="btns-container">
-          <span className="btn cancel-btn" onClick={handleCloseBtnClick}>
-            {t("common.cancel")}
-          </span>
-          <span className="btn confirm-btn" onClick={handleSaveBtnClick}>
+          <Button fullWidth onClick={handleSaveBtnClick}>
             {t("common.save")}
-          </span>
+          </Button>
         </div>
       </div>
     </>
@@ -103,6 +98,7 @@ const ChangePasswordDialog: React.FC<Props> = ({ destroy }: Props) => {
 function showChangePasswordDialog() {
   generateDialog(
     {
+      title: "Change Password",
       className: "change-password-dialog",
     },
     ChangePasswordDialog

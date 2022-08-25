@@ -125,6 +125,7 @@ function Home() {
       <Modal visible={showLoginForm} closeable onClose={() => setShowLoginForm(false)}>
         <div className="login-form">
           <Input
+            fullWidth
             label="用户名"
             message={emailError}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -133,6 +134,7 @@ function Home() {
             }}
           />
           <Input
+            fullWidth
             type="password"
             message={passwordError}
             label="密码"
@@ -144,7 +146,8 @@ function Home() {
           <Button fullWidth onClick={handleSigninBtnsClick}>
             登录
           </Button>
-          <a>没有账号，我要注册</a>
+          {/*<a></a>*/}
+          <span>版本内测中, 暂未开放注册</span>
         </div>
       </Modal>
     </section>

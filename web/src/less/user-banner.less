@@ -2,13 +2,32 @@
 
 .user-banner-container {
 
+  //border: 1px solid;
+  width: 224px;
+  position: relative;
   > .username-container {
     @apply shrink flex flex-row justify-start items-center flex-nowrap truncate;
+    //border: 1px solid;
+    width: 100%;
 
     > .username-text {
       font-size: 18px;
       font-weight: 700;
       color: #5f5f5f;
+    }
+    >.version {
+      //border: 1px solid;
+      font-size:12px;
+      position: absolute;
+      right:0;
+      background-color: @primary-color-400;
+      border-radius: 99px;
+      color: #fff;
+      padding: 2px 8px;
+      font-weight: 700;
+      //color: @primary-color-400;
+      //float: right;
+
     }
 
     > .tag {

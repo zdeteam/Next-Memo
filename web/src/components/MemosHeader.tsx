@@ -17,15 +17,19 @@ const MemosHeader: React.FC<Props> = () => {
 
   const getGreetingMessage = () => {
     const hour = new Date().getHours();
-    let msg: string;
-    const greetingsSchemaRaw = "早上好, 又是元气满满的一天;下午好, 喝杯奶茶吧;晚上好, 今天辛苦了;夜深了, 早点睡吧";
-    const greetingsSchema = greetingsSchemaRaw.split(";");
+    let msg = "";
 
-    if (hour >= 18) msg = greetingsSchema[0];
-    else if (hour >= 12) msg = greetingsSchema[1];
-    else if (hour >= 6) msg = greetingsSchema[2];
-    else if (hour >= 0) msg = greetingsSchema[3];
-    else msg = "Hello";
+    const EarlyMorning = "早上好"; // 5~8
+    const LateMorning = "上午好"; //11 ~ 12
+    const EarlyAfternoon = "下午好"; // 13~15
+    const Evening = "晚上好"; // 17~21
+    const Night = "夜深了，早点休息"; //21~4
+
+    if (hour >= 5 && hour < 9) msg = EarlyMorning;
+    if (hour >= 9 && hour < 13) msg = LateMorning;
+    if (hour >= 13 && hour < 17) msg = EarlyAfternoon;
+    if (hour >= 17 && hour < 22) msg = Evening;
+    if (hour >= 23 && hour < 5) msg = Night;
 
     return msg;
   };

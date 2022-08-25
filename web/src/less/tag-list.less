@@ -9,7 +9,19 @@
   }
 
   > .tags-container {
-    @apply flex flex-col justify-start items-start relative w-full h-auto flex-nowrap mb-2 mt-1;
+    //border: 1px solid;
+    //padding-left: 1rem;
+    position: relative;
+    margin-bottom: 0.5rem;
+    margin-top: 0.25rem;
+    display: flex;
+    height: auto;
+    width: 100%;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    justify-content: flex-start;
+
     .subtags-container {
       margin-left: 1.25rem;
       display: flex;
@@ -34,74 +46,30 @@
       align-items: center;
       justify-content: space-between;
       font-size: 14px;
-      border:1px solid transparent;
+      border: 1px solid transparent;
       width: calc(100% - 1.5rem);
-      border-radius:21px;
-      padding:0 8px;
-      height:34px;
-      margin-bottom:2px;
+      border-radius: 21px;
+      padding: 0 8px;
+      height: 34px;
+      margin-bottom: 2px;
       transition: all .2s ease-in-out;
+
       &.active {
         > .tag-text-container {
           color: @primary-color-400;
         }
       }
+
       &:hover {
         background-color: @primary-color-100;
-        color:@primary-color-400;
+        color: @primary-color-400;
         border-color: @primary-color-400;
       }
-
-
-      > .tag-text-container {
-        @apply flex flex-row justify-start items-center overflow-hidden shrink-0 leading-5;
-        max-width: calc(100% - 24px);
-
-        > .icon-text {
-          @apply block w-4 shrink-0;
-        }
-
-        > .tag-text {
-          @apply truncate;
-        }
-      }
-
-      > .btns-container {
-        @apply flex flex-row justify-end items-center;
-
-        > .action-btn {
-          @apply flex flex-row justify-center items-center w-6 h-6 shrink-0 transition-all rotate-0;
-
-          > .icon-img {
-            @apply w-5 h-5 opacity-80;
-          }
-
-          &.shown {
-            @apply rotate-90;
-          }
-        }
-      }
     }
-
-    > .tag-tip-container {
-      //@apply w-full mt-2 pl-4 text-sm text-gray-400;
-      margin-top: 0.5rem;
-      width: 100%;
-      padding-left: 1rem;
-      //font-size: .875rem;
-      font-size:12px;
-      color: rgb(156,163,175);
-
-      > .code-text {
-        display: inline-block;
-        padding: 0.25rem;
-        border-radius:12px;
-        //height:14px;
-        width:48px ;
-        text-align: center;
-        background-color:@primary-color-200;
-        color: @primary-color-400;
-      }
-    }
+  }
+  .tip-text{
+    margin-left: 1rem;
+    font-size:12px;
+    color: rgb(156,163,175);
   }
 }

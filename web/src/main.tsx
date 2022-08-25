@@ -27,7 +27,6 @@ root.render(
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/u/*" element={<Home />} />
-              <Route path="/signin" element={<Signin />} />
             </Routes>
           </App>
         </HistoryRouter>
