@@ -54,7 +54,7 @@ const SearchBar: React.FC<Props> = () => {
 
   return (
     <div className="search-bar-container">
-      <div className="search-wrapper">
+      <div className="search-wrapper" onClick={() => setShowCmdK(true)}>
         <GoSearch />
         <span>搜索</span>
         <span>⌘K</span>
