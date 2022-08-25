@@ -26,7 +26,7 @@ const DailyMemo: React.FC<Props> = (props: Props) => {
         <span className="normal-text">{memo.timeStr}</span>
       </div>
       <div className="memo-content-container">
-        <ProseMirrorEditor foldable editable={false} cardMode content={memo.content} />
+        <ProseMirrorEditor editable={false} cardMode content={memo.content} />
         {/*<div*/}
         {/*  className="memo-content-text"*/}
         {/*  dangerouslySetInnerHTML={{*/}

@@ -34,22 +34,22 @@ export const filterConsts = {
       },
     ],
     values: [
+      // {
+      //   text: "Connected",
+      //   value: "CONNECTED",
+      // },
       {
-        text: "Connected",
-        value: "CONNECTED",
-      },
-      {
-        text: "No tags",
+        text: "没有标签",
         value: "NOT_TAGGED",
       },
-      {
-        text: "Has links",
-        value: "LINKED",
-      },
-      {
-        text: "Has images",
-        value: "IMAGED",
-      },
+      // {
+      //   text: "Has links",
+      //   value: "LINKED",
+      // },
+      // {
+      //   text: "Has images",
+      //   value: "IMAGED",
+      // },
     ],
   },
   TEXT: {

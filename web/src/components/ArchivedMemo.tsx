@@ -62,7 +62,7 @@ const ArchivedMemo: React.FC<Props> =
         <div className="memo-top-wrapper">
           <span className="time-text">删除于 {memo.archivedAtStr}</span>
           <div className="btns">
-            <GoReply />
+            <GoReply onClick={handleRestoreMemoClick} />
             <GoTrashcan className={`${showConfirmDeleteBtn ? "final-confirm" : ""}`} onClick={handleDeleteMemoClick} />
           </div>
         </div>

@@ -59,7 +59,7 @@ const SearchBar: React.FC<Props> = () => {
         <span>搜索</span>
         <span>⌘K</span>
       </div>
-      <Modal visible={showCmdK}>
+      <Modal visible={showCmdK} closeable title="快捷方式" onClose={()=>setShowCmdK(false)}>
         <div className="command-k">
           <input autoFocus value={keyword} onChange={handleTextQueryInput} />
           <div className="title">快速检索</div>

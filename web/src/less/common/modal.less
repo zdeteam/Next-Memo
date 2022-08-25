@@ -17,12 +17,20 @@
     background-color: #fff;
     width: 380px;
     border-radius: 12px;
-    padding: 16px;
+    padding: 8px 16px 16px 16px;
     animation: 120ms modal-content-keyframe-show cubic-bezier(0, 0, 0.26, 1.38) forwards;
     >.header{
       height:18px;
       position:relative;
+      display:flex;
+      font-size: 13px;
+      >span{
+        font-weight: 600;
+        display: inline-block;
+        //border: 1px solid;
+      }
       >svg{
+        //border: 1px solid;
         position: absolute;
         right: 0;
         cursor:pointer;

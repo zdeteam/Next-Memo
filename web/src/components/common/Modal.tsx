@@ -7,6 +7,7 @@ interface ModalProps {
   onClose?: () => void;
   closeable?: boolean;
   visible: boolean;
+  title?: string;
 }
 
 const Modal = (props: ModalProps) => {
@@ -22,15 +23,16 @@ const Modal = (props: ModalProps) => {
   return (
     <div className="modal-wrapper">
       <div>
-        {props.closeable && (
-          <div className="header">
+        <div className="header">
+          {props.title && <span>{props.title}</span>}
+          {props.closeable && (
             <GoX
               onClick={() => {
                 props.onClose && props.onClose();
               }}
             />
-          </div>
-        )}
+          )}
+        </div>
         <div className="modal">{props.children}</div>
       </div>
     </div>

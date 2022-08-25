@@ -54,7 +54,7 @@ const Sidebar: React.FC<Props> = () => {
             <GoTrashcan /> {t("sidebar.archived")}
           </button>
         </Only>
-        <Only when={user?.id !== 101}>
+        <Only when={user && user?.id !== 101}>
           <button className="btn action-btn" onClick={() => (location.href = "/u/101")}>
             <GoHome /> {t("sidebar.umo")}
           </button>

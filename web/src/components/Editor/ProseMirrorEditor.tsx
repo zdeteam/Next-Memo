@@ -64,7 +64,7 @@ const ProseMirrorEditor = function (
   const { memos, tags } = useAppSelector((state) => state.memo);
   const editorRef = useRef<any>(null);
   const [showFoldBtn, setShowFoldBtn] = useState(false);
-  const [isFold, setIsFold] = useState(true);
+  const [isFold, setIsFold] = useState(false);
   const [prevContent, setPrevContent] = useState<any>("");
   const prevGlobalStateRef = useRef(editorState);
   const { tag: tagQuery, duration, type: memoType, text: textQuery, shortcutId } = query;
@@ -183,7 +183,6 @@ const ProseMirrorEditor = function (
     if (props.editable) setPrevContent(editor?.getHTML());
     editor?.setOptions({ editable: props.editable });
     if (props?.editable) setIsFold(false);
-    else setIsFold(true);
   }, [props.editable]);
 
   // useEffect(() => {

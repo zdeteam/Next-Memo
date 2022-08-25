@@ -206,14 +206,16 @@ const Memo: React.FC<Props> = (props: Props) => {
       <Only when={moreAction}>
         <span className="double-click-tip">双击编辑轻笔记</span>
       </Only>
-      <div className="card-status">
-        <Only when={memo.pinned}>
-          <GoPin />
-        </Only>
-        <Only when={memo.visibility === "PUBLIC"}>
-          <GoBroadcast />
-        </Only>
-      </div>
+      {!memo.editable && (
+        <div className="card-status">
+          <Only when={memo.pinned}>
+            <GoPin />
+          </Only>
+          <Only when={memo.visibility === "PUBLIC"}>
+            <GoBroadcast />
+          </Only>
+        </div>
+      )}
       <div className="action-bar">
         <GoBook onClick={() => clickCardMoreAction(handleShowMemoStoryDialog)} />
         <HiAnnotation />
