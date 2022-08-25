@@ -61,7 +61,7 @@ const UserBanner: React.FC<Props> = () => {
       <div className="user-banner-container">
         <div className="username-container" onClick={handleUsernameClick}>
           <span className="username-text">{username}</span>
-          <span className="version">内测中 {profile?.version}</span>
+          <span className="version">内测中 V{profile?.version}</span>
         </div>
       </div>
       <div className="amount-text-container">
