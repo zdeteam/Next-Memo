@@ -6,10 +6,10 @@ import showDailyReviewDialog from "../DailyReviewDialog";
 import showSettingDialog from "../SettingDialog";
 import showArchivedMemoDialog from "../ArchivedMemoDialog";
 import showResourcesDialog from "../ResourcesDialog";
-import Index from "../UserBanner";
-import Index from "../HeatMap";
-import Index from "../ShortcutList/ShortcutList";
-import Index from "../TagList";
+import UserBanner from "../UserBanner";
+import HeatMap from "../HeatMap";
+import ShortcutList from "../ShortcutList";
+import TagList from "../TagList";
 import "./index.less";
 import { useAppSelector } from "../../../../store";
 
@@ -40,8 +40,8 @@ const Index: React.FC<Props> = () => {
           <GoX />
         </span>
       </div>
-      <Index />
-      <Index />
+      <UserBanner />
+      <HeatMap />
       <div className="action-btns-container">
         <button className="btn action-btn" onClick={() => showDailyReviewDialog()}>
           <GoCalendar /> {t("sidebar.daily-review")}
@@ -63,7 +63,7 @@ const Index: React.FC<Props> = () => {
       {/*<Only when={!userService.isVisitorMode()}>*/}
       {/*  <ShortcutList />*/}
       {/*</Only>*/}
-      <Index />
+      <TagList />
     </aside>
   );
 };
