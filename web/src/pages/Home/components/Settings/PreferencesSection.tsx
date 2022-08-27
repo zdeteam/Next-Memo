@@ -2,7 +2,7 @@ import { globalService, userService } from "../../../../services";
 import { useAppSelector } from "../../../../store";
 import { VISIBILITY_SELECTOR_ITEMS } from "../../../../helpers/consts";
 import useI18n from "../../../../hooks/useI18n";
-import Selector from "../../../../components/Selector/Selector";
+import Selector from "../../../../components/Selector";
 import "./preferences-section.less";
 
 interface Props {}

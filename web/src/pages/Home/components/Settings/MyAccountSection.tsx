@@ -1,17 +1,15 @@
 import { useState } from "react";
-import { TextInput } from "@strapi/design-system/TextInput";
-import { TextButton } from "@strapi/design-system/TextButton";
 // import { Button } from "@strapi/design-system/Button";
-import Input from "../../../../components/Input/Input";
-import Button from "../../../../components/Button/Button";
-import Only from "../../../../components/OnlyWhen/OnlyWhen";
+import Input from "../../../../components/Input";
+import Button from "../../../../components/Button";
+import Only from "../../../../components/OnlyWhen";
 import useI18n from "../../../../hooks/useI18n";
 import { useAppSelector } from "../../../../store";
 import { userService } from "../../../../services";
 import { validate, ValidatorConfig } from "../../../../helpers/validator";
-import toastHelper from "../../../../components/Toast/Toast";
+import toastHelper from "../../../../components/Toast";
 import { showCommonDialog } from "../../../../components/Dialog/CommonDialog";
-import showChangePasswordDialog from "../ChangePasswordDialog/ChangePasswordDialog";
+import showChangePasswordDialog from "../ChangePasswordDialog";
 
 import "./my-account-section.less";
 

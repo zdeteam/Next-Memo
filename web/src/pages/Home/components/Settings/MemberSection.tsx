@@ -4,8 +4,8 @@ import useI18n from "../../../../hooks/useI18n";
 import { userService } from "../../../../services";
 import { useAppSelector } from "../../../../store";
 import * as api from "../../../../helpers/api";
-import toastHelper from "../../../../components/Toast/Toast";
-import Dropdown from "../../../../components/Dropdown/Dropdown";
+import toastHelper from "../../../../components/Toast";
+import Dropdown from "../../../../components/Dropdown";
 import { showCommonDialog } from "../../../../components/Dialog/CommonDialog";
 import "./member-section.less";
 

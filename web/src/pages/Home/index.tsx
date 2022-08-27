@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Button from "../../components/Button/Button";
-import Input from "../../components/Input/Input";
+import Button from "../../components/Button";
+import Input from "../../components/Input";
 import { userService } from "../../services";
 import { useAppSelector } from "../../store";
 import useLoading from "../../hooks/useLoading";
-import Only from "../../components/OnlyWhen/OnlyWhen";
-import Sidebar from "./components/Sidebar/Sidebar";
-import MemosHeader from "./components/MemosHeader/MemosHeader";
-import ProseMirrorEditor from "../../components/Editor/ProseMirrorEditor";
-import MemoFilter from "./components/MemoFilter/MemoFilter";
-import MemoList from "./components/MemoList/MemoList";
-import toastHelper from "../../components/Toast/Toast";
-import Modal from "../../components/Modal/Modal";
+import Only from "../../components/OnlyWhen";
+import Sidebar from "./components/Sidebar";
+import MemosHeader from "./components/MemosHeader";
+import Editor from "../../components/Editor";
+import MemoFilter from "./components/MemoFilter";
+import MemoList from "./components/MemoList";
+import toastHelper from "../../components/Toast";
+import Modal from "../../components/Modal";
 import "./index.less";
 import { validate, ValidatorConfig } from "../../helpers/validator";
 import * as api from "../../helpers/api";
@@ -101,7 +101,7 @@ function Index() {
             <div className="memos-editor-wrapper">
               <MemosHeader />
               <Only when={!userService.isVisitorMode()}>
-                <ProseMirrorEditor editable clearWhenSave />
+                <Editor editable clearWhenSave />
               </Only>
               <MemoFilter />
             </div>

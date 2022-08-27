@@ -4,7 +4,7 @@ import { validate, ValidatorConfig } from "../../helpers/validator";
 import useI18n from "../../hooks/useI18n";
 import useLoading from "../../hooks/useLoading";
 import { globalService, locationService, userService } from "../../services";
-import toastHelper from "../../components/Toast/Toast";
+import toastHelper from "../../components/Toast";
 import "./index.less";
 
 interface Props {}

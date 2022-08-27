@@ -1,5 +1,5 @@
 import { generateDialog } from "./BaseDialog";
-import Button from "../Button/Button";
+import Button from "../Button";
 import "./common-dialog.less";
 // import {Button} from "@strapi/design-system/Button";
 
