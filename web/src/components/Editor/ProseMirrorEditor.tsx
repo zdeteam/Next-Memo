@@ -16,11 +16,11 @@ import Paragraph from "@tiptap/extension-paragraph";
 import tippy from "tippy.js";
 import { editorStateService, locationService, memoService } from "../../services";
 import { UNKNOWN_ID } from "../../helpers/consts";
-import toastHelper from "../Toast";
+import toastHelper from "../Toast/Toast";
 import { useAppSelector } from "../../store";
-import Button from "../common/Button";
+import Button from "../Button/Button";
 import MentionList from "./MentionList";
-import "../../less/prosemirror-editor.less";
+import "./prosemirror-editor.less";
 
 interface ProseMirrorEditorProps {
   content?: string;
@@ -206,7 +206,6 @@ const ProseMirrorEditor = function (
   //     }
   //   }
   // }, [editor,tagQuery]);
-
 
   const onOk = async () => {
     const content = editor?.getHTML();

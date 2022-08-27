@@ -3,7 +3,7 @@ import { Provider } from "react-redux";
 import { GoX } from "react-icons/go";
 import { ANIMATION_DURATION, DAILY_TIMESTAMP } from "../../helpers/consts";
 import store from "../../store";
-import "../../less/base-dialog.less";
+import "./base-dialog.less";
 import { ThemeProvider } from "@strapi/design-system/ThemeProvider";
 import { lightTheme } from "@strapi/design-system/themes";
 
@@ -19,7 +19,7 @@ interface Props extends DialogConfig, DialogProps {
 
 const BaseDialog: React.FC<Props> = (props: Props) => {
   const { children, className, clickSpaceDestroy, destroy, title } = props;
-  console.log('props',props)
+  console.log("props", props);
   const handleSpaceClicked = () => {
     if (clickSpaceDestroy) {
       destroy();

@@ -1,0 +1,38 @@
+@import "../../../../less/mixin.less";
+
+.section-header-container,
+.memos-header-container {
+  display:flex;
+  justify-content:space-between;
+  align-items: center;
+  width: 100%;
+  margin: 4px 0;
+
+
+  > .title-container {
+    padding: 12px 0;
+    display:flex;
+    align-items:center;
+    > .action-btn {
+      @apply flex sm:hidden flex-row justify-center items-center w-6 h-6 mr-1 shrink-0 bg-transparent;
+
+      > .icon-img {
+        @apply w-5 h-auto;
+      }
+    }
+
+    > .title-text {
+      //@apply font-bold text-lg leading-10 mr-2 text-ellipsis shrink-0 cursor-pointer overflow-hidden text-gray-700;
+      font-size: 18px;
+      font-weight: 700;
+      color: #5f5f5f;
+    }
+  }
+
+  > .btns-container {
+    @apply flex flex-row justify-end items-center;
+  }
+
+
+}
+

@@ -1,7 +1,6 @@
-import Icon from "../Icon";
 import { generateDialog } from "./BaseDialog";
-import Button from "../common/Button";
-import "../../less/common-dialog.less";
+import Button from "../Button/Button";
+import "./common-dialog.less";
 // import {Button} from "@strapi/design-system/Button";
 
 type DialogStyle = "info" | "warning";
@@ -47,7 +46,9 @@ const CommonDialog: React.FC<Props> = (props: Props) => {
       <div className="dialog-content-container">
         <p className="content-text">{content}</p>
         <div className="btns-container">
-          <Button fullWidth onClick={handleConfirmBtnClick}>{confirmBtnText}</Button>
+          <Button fullWidth onClick={handleConfirmBtnClick}>
+            {confirmBtnText}
+          </Button>
         </div>
       </div>
     </>

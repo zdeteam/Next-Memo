@@ -1,0 +1,75 @@
+@import "../../../../less/mixin.less";
+
+.tags-wrapper {
+  @apply flex flex-col justify-start items-start px-2 w-full h-auto flex-nowrap pb-4 mt-2 grow;
+  .hide-scroll-bar();
+
+  > .title-text {
+    @apply w-full px-4 text-sm leading-6 font-mono text-gray-400;
+  }
+
+  > .tags-container {
+    //border: 1px solid;
+    //padding-left: 1rem;
+    position: relative;
+    margin-bottom: 0.5rem;
+    margin-top: 0.25rem;
+    display: flex;
+    height: auto;
+    width: 100%;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    justify-content: flex-start;
+
+    .subtags-container {
+      margin-left: 1.25rem;
+      display: flex;
+      height: auto;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+      padding-left: 0.25rem;
+      width: calc(100% - 18px);
+      min-width: 80px;
+      border-left: 2px solid @bg-gray;
+      > .tag-item-container {
+        @apply first:mt-0;
+      }
+    }
+
+    .tag-item-container {
+      //@apply flex flex-row justify-between items-center w-full h-10 py-0 px-4 rounded-lg text-base shrink-0 select-none cursor-pointer hover:bg-white;
+      display: flex;
+      cursor: pointer;
+      user-select: none;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 14px;
+      border: 1px solid transparent;
+      width: calc(100% - 1.5rem);
+      border-radius: 21px;
+      padding: 0 8px;
+      height: 34px;
+      margin-bottom: 2px;
+      transition: all .2s ease-in-out;
+
+      &.active {
+        > .tag-text-container {
+          color: @primary-color-400;
+        }
+      }
+
+      &:hover {
+        background-color: @primary-color-100;
+        color: @primary-color-400;
+        border-color: @primary-color-400;
+      }
+    }
+  }
+  .tip-text{
+    margin-left: 1rem;
+    font-size:12px;
+    color: rgb(156,163,175);
+  }
+}

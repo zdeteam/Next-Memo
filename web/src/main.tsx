@@ -4,7 +4,7 @@ import { createBrowserHistory } from "history";
 import { Provider } from "react-redux";
 import App from "./App";
 import Signin from "./pages/Auth";
-import Home from "./pages/Home";
+import Index from "./pages/Home";
 import I18nProvider from "./labs/i18n/I18nProvider";
 import { ThemeProvider } from "@strapi/design-system/ThemeProvider";
 import { lightTheme } from "@strapi/design-system/themes";
@@ -25,8 +25,8 @@ root.render(
         <HistoryRouter history={history}>
           <App>
             <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/u/*" element={<Home />} />
+              <Route path="/" element={<Index />} />
+              <Route path="/u/*" element={<Index />} />
             </Routes>
           </App>
         </HistoryRouter>

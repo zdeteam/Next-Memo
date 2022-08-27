@@ -1,0 +1,106 @@
+@import "../../../../less/mixin.less";
+
+@stat-day-L1-bg: @primary-color-100;
+@stat-day-L2-bg: @primary-color-200;
+@stat-day-L3-bg: @primary-color-300;
+@stat-day-L4-bg: @primary-color-400;
+
+.usage-heat-map-wrapper {
+
+
+  @apply flex flex-row justify-start items-center w-full h-32 flex-wrap pr-6 pb-3;
+
+  > .day-tip-text-container {
+    @apply w-6 h-full grid grid-rows-7;
+
+    > .tip-text {
+      @apply pr-1 w-full h-full text-right font-mono text-gray-400;
+      font-size: 10px;
+    }
+  }
+
+  > .usage-heat-map {
+    @apply h-full grid grid-rows-7;
+    width: 200px;
+    grid-template-columns: repeat(12, 1fr);
+    grid-auto-flow: column;
+
+    > .stat-container {
+      cursor: pointer;
+      display: block;
+      width: 14px;
+      height: 14px;
+      background-color: rgba(46, 50, 56, 0.05);
+      //background-color: red;
+      margin-bottom: 2px;
+      border-radius: 7px;
+
+      &.null {
+        @apply bg-transparent;
+      }
+
+      &.stat-day-L1-bg {
+        background-color: @stat-day-L1-bg !important;
+      }
+
+      &.stat-day-L2-bg {
+        background-color: @stat-day-L2-bg !important;
+      }
+
+      &.stat-day-L3-bg {
+        background-color: @stat-day-L3-bg !important;
+      }
+
+      &.stat-day-L4-bg {
+        background-color: @stat-day-L4-bg !important;
+      }
+
+      &.today{
+        position: relative;
+      }
+      &.today:after {
+        content: '';
+        display: block;
+        width: 160%;
+        height: 160%;
+        border-radius: 50%;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        background-color: rgba(#e73a35, 0.8);
+        animation: today-circle-fill-animate 2s ease-in-out infinite;
+      };
+      @keyframes today-circle-fill-animate {
+        0%,
+        100% {
+          transform: translate(-50%, -50%) rotate(0) scale(0.7);
+          opacity: 0.2;
+        }
+        50% {
+          transform: translate(-50%, -50%) rotate(0) scale(1.1);
+          opacity: 0.2;
+        }
+      }
+    }
+  }
+}
+
+.usage-detail-container {
+  @apply fixed left-0 top-0 ml-2 -mt-9 p-2 z-100 -translate-x-1/2 select-none text-white text-xs rounded whitespace-nowrap;
+  background-color: rgba(0, 0, 0, 0.8);
+
+  > .date-text {
+    @apply text-gray-300;
+  }
+
+  &::before {
+    content: "";
+    position: absolute;
+    bottom: -4px;
+    left: calc(50% - 5px);
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 4px solid rgba(0, 0, 0, 0.8);
+  }
+}

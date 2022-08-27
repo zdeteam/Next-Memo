@@ -1,9 +1,9 @@
-import Home from "../pages/Home";
-import Auth from "../pages/Auth";
+import Index from "../pages/Home";
+import Index from "../pages/Auth";
 
 const appRouter = {
-  "/auth": <Auth />,
-  "*": <Home />,
+  "/auth": <Index />,
+  "*": <Index />,
 };
 
 export default appRouter;

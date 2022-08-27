@@ -1,0 +1,37 @@
+@import "../../../../less/mixin.less";
+
+.account-section-container {
+  > .form-label {
+    min-height: 28px;
+
+    > .normal-text {
+      margin-right: 0.5rem;
+      font-size: 0.875rem;
+      //word-wrap: break-word;
+    }
+  }
+}
+
+.openapi-section-container {
+  .value-text {
+    background-color: #2e32380d;
+    width: 100%;
+    padding: 12px;
+    color: rgba(28, 31, 35, 0.6);
+    font-size: 13px;
+    white-space: break-spaces;
+  }
+
+  > .reset-btn {
+    margin-top: 4px;
+  }
+
+  > .usage-guide-container {
+    .flex(column, flex-start, flex-start);
+    @apply mt-2 w-full;
+
+    > .title-text {
+      @apply my-2 text-sm;
+    }
+  }
+}

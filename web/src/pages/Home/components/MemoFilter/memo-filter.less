@@ -1,0 +1,44 @@
+@import "../../../../less/mixin.less";
+
+.filter-query-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 100%;
+  flex-wrap: wrap;
+  margin-top: 12px;
+  font-size: 12px;
+  line-height: 24px;
+
+  > .tip-text {
+
+    margin-right: 8px;
+    font-weight: bold;
+    opacity:0.4;
+    //@apply mr-2;
+  }
+
+  > .filter-item-container {
+    display: flex;
+    align-items: center;
+    max-width: 256px;
+    margin-right: 0.5rem;
+    cursor: pointer;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    border-radius: 1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    background:@primary-color-200;
+
+    color:@primary-color-400;
+    svg{
+      margin-right:4px;
+      display:inline-block;
+      width:16px;
+      height:16px;
+    }
+  }
+}

@@ -1,0 +1,23 @@
+@import "../../../../less/mixin.less";
+
+.memo-list-container {
+  position:relative;
+  @apply flex flex-col justify-start items-start w-full max-w-full ;
+  .hide-scroll-bar();
+
+  > .status-text-container {
+    @apply flex flex-col justify-start items-center w-full my-6;
+
+    &.completed {
+      @apply mb-16;
+    }
+
+    > .status-text {
+      @apply text-sm text-gray-400 ;
+    }
+  }
+
+  &.completed {
+    @apply pb-16;
+  }
+}
