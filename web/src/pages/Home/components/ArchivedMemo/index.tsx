@@ -1,10 +1,10 @@
 import { GoTrashcan, GoReply } from "react-icons/go";
-import { IMAGE_URL_REG } from "../../../../helpers/consts";
-import * as utils from "../../../../helpers/utils";
-import useToggle from "../../../../hooks/useToggle";
-import { memoService } from "../../../../services";
-import Editor from "../../../../components/Editor";
-import toastHelper from "../../../../components/Toast";
+import { IMAGE_URL_REG } from "@/helpers/consts";
+import * as utils from "@/helpers/utils";
+import useToggle from "@/hooks/useToggle";
+import { memoService } from "@/services";
+import Editor from "@/components/Editor";
+import toastHelper from "@/components/Toast";
 
 interface Props {
   memo: Memo;

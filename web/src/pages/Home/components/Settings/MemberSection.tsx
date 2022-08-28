@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { isEmpty } from "lodash-es";
-import useI18n from "../../../../hooks/useI18n";
-import { userService } from "../../../../services";
-import { useAppSelector } from "../../../../store";
-import * as api from "../../../../helpers/api";
-import toastHelper from "../../../../components/Toast";
-import Dropdown from "../../../../components/Dropdown";
-import { showCommonDialog } from "../../../../components/Dialog/CommonDialog";
+import useI18n from "@/hooks/useI18n";
+import { userService } from "@/services";
+import { useAppSelector } from "@/store";
+import * as api from "@/helpers/api";
+import { Toast } from "@/components";
+import Dropdown from "@/components/Dropdown";
+import { showCommonDialog } from "@/components/Dialog/CommonDialog";
 import "./member-section.less";
 
 interface Props {}
@@ -50,7 +50,7 @@ const PreferencesSection: React.FC<Props> = () => {
 
   const handleCreateUserBtnClick = async () => {
     if (isEmpty(state.createUserEmail) || isEmpty(state.createUserPassword)) {
-      toastHelper.error("Please fill out this form");
+      Toast.info("Please fill out this form");
       return;
     }
 
@@ -65,7 +65,7 @@ const PreferencesSection: React.FC<Props> = () => {
       await api.createUser(userCreate);
     } catch (error: any) {
       console.error(error);
-      toastHelper.error(error.response.data.message);
+      Toast.info(error.response.data.message);
     }
     await fetchUserList();
     setState({

@@ -16,6 +16,7 @@ import Modal from "../../components/Modal";
 import "./index.less";
 import { validate, ValidatorConfig } from "../../helpers/validator";
 import * as api from "../../helpers/api";
+import { Dialog } from "react-vant";
 
 const validateConfig: ValidatorConfig = {
   notEmpty: true,

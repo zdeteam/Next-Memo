@@ -4,8 +4,6 @@ import { GoX } from "react-icons/go";
 import { ANIMATION_DURATION, DAILY_TIMESTAMP } from "../../helpers/consts";
 import store from "../../store";
 import "./base-dialog.less";
-import { ThemeProvider } from "@strapi/design-system/ThemeProvider";
-import { lightTheme } from "@strapi/design-system/themes";
 
 interface DialogConfig {
   className: string;
@@ -70,11 +68,9 @@ export function generateDialog<T extends DialogProps>(
 
   const Fragment = (
     <Provider store={store}>
-      <ThemeProvider theme={lightTheme}>
         <BaseDialog destroy={cbs.destroy} clickSpaceDestroy={true} {...config}>
           <DialogComponent {...dialogProps} />
         </BaseDialog>
-      </ThemeProvider>
     </Provider>
   );
 
