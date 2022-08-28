@@ -3,7 +3,7 @@ import useLoading from "../../../../hooks/useLoading";
 import { memoService } from "../../../../services";
 import { useAppSelector } from "../../../../store";
 import { generateDialog } from "../../../../components/Dialog";
-import toastHelper from "../../../../components/Toast";
+import {Toast} from "@/components"
 import ArchivedMemo from "../ArchivedMemo";
 import "./index.less";
 
@@ -23,7 +23,7 @@ const Index: React.FC<Props> = (props: Props) => {
       })
       .catch((error) => {
         console.error(error);
-        toastHelper.error(error.response.data.message);
+        Toast.info(error.response.data.message);
       })
       .finally(() => {
         loadingState.setFinish();

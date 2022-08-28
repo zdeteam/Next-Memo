@@ -4,7 +4,7 @@ import * as utils from "@/helpers/utils";
 import useToggle from "@/hooks/useToggle";
 import { memoService } from "@/services";
 import Editor from "@/components/Editor";
-import toastHelper from "@/components/Toast";
+import { Toast } from "@/components";
 
 interface Props {
   memo: Memo;
@@ -30,7 +30,7 @@ const Index: React.FC<Props> =
           await memoService.deleteMemoById(memo.id);
           await memoService.fetchAllMemos();
         } catch (error: any) {
-          toastHelper.error(error.message);
+          Toast.info(error.message);
         }
       } else {
         toggleConfirmDeleteBtn();
@@ -44,9 +44,9 @@ const Index: React.FC<Props> =
           rowStatus: "NORMAL",
         });
         await memoService.fetchAllMemos();
-        toastHelper.info("Restored successfully");
+        Toast.info("Restored successfully")
       } catch (error: any) {
-        toastHelper.error(error.message);
+        Toast.info(error.message);
       }
     };
 

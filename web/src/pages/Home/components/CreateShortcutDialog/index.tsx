@@ -3,7 +3,7 @@ import { memoService, shortcutService } from "../../../../services";
 import { checkShouldShowMemoWithFilters, filterConsts, getDefaultFilter, relationConsts } from "../../../../helpers/filter";
 import useLoading from "../../../../hooks/useLoading";
 import { generateDialog } from "../../../../components/Dialog";
-import toastHelper from "../../../../components/Toast";
+import { Toast } from "@/components";
 import Selector from "../../../../components/Selector";
 import "./index.less";
 
@@ -42,7 +42,7 @@ const Index: React.FC<Props> = (props: Props) => {
 
   const handleSaveBtnClick = async () => {
     if (!title) {
-      toastHelper.error("Title is required");
+      Toast.info("Title is required");
       return;
     }
 
@@ -61,7 +61,7 @@ const Index: React.FC<Props> = (props: Props) => {
       }
     } catch (error: any) {
       console.error(error);
-      toastHelper.error(error.response.data.message);
+      Toast.info(error.response.data.message);
     }
     destroy();
   };
@@ -70,7 +70,7 @@ const Index: React.FC<Props> = (props: Props) => {
     if (filters.length > 0) {
       const lastFilter = filters[filters.length - 1];
       if (lastFilter.value.value === "") {
-        toastHelper.info("Please fill in previous filter value");
+        Toast.info("Please fill in previous filter value");
         return;
       }
     }

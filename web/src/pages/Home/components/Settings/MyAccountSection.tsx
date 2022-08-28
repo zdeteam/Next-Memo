@@ -7,8 +7,8 @@ import useI18n from "../../../../hooks/useI18n";
 import { useAppSelector } from "../../../../store";
 import { userService } from "../../../../services";
 import { validate, ValidatorConfig } from "../../../../helpers/validator";
-import toastHelper from "../../../../components/Toast";
 import { showCommonDialog } from "../../../../components/Dialog/CommonDialog";
+import { Toast } from "@/components";
 import showChangePasswordDialog from "../ChangePasswordDialog";
 
 import "./my-account-section.less";
@@ -41,7 +41,7 @@ const MyAccountSection: React.FC<Props> = () => {
 
     const usernameValidResult = validate(username, { ...validateConfig, noChinese: false });
     if (!usernameValidResult.result) {
-      toastHelper.error("Username " + usernameValidResult.reason);
+      Toast.info("Username " + usernameValidResult.reason);
       return;
     }
 
@@ -50,10 +50,10 @@ const MyAccountSection: React.FC<Props> = () => {
         id: user.id,
         name: username,
       });
-      toastHelper.info("Username changed");
+      Toast.info("Username changed");
     } catch (error: any) {
       console.error(error);
-      toastHelper.error(error.response.data.message);
+      Toast.info(error.response.data.message);
     }
   };
 

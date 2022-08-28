@@ -1,12 +1,12 @@
 import { useEffect } from "react";
 import { GoPlus, GoSettings, GoTrashcan, GoFileMedia } from "react-icons/go";
 import { locationService, shortcutService } from "../../../../services";
-import { useAppSelector } from "../../../../store";
-import useI18n from "../../../../hooks/useI18n";
-import * as utils from "../../../../helpers/utils";
-import useToggle from "../../../../hooks/useToggle";
-import useLoading from "../../../../hooks/useLoading";
-import toastHelper from "../../../../components/Toast";
+import { useAppSelector } from "@/store";
+import useI18n from "@/hooks/useI18n";
+import * as utils from "@/helpers/utils";
+import useToggle from "@/hooks/useToggle";
+import useLoading from "@/hooks/useLoading";
+import { Toast } from "@/components";
 import showCreateShortcutDialog from "../CreateShortcutDialog";
 import "./index.less";
 
@@ -79,7 +79,7 @@ const ShortcutContainer: React.FC<ShortcutContainerProps> = (props: ShortcutCont
         await shortcutService.deleteShortcutById(shortcut.id);
       } catch (error: any) {
         console.error(error);
-        toastHelper.error(error.response.data.message);
+        Toast.info(error.response.data.message);
       }
     } else {
       toggleConfirmDeleteBtn();
@@ -116,9 +116,7 @@ const ShortcutContainer: React.FC<ShortcutContainerProps> = (props: ShortcutCont
           <span className="shortcut-text">{shortcut.title}</span>
         </div>
         <div className="btns-container">
-          <span className="action-btn toggle-btn">
-            {/*<Icon.MoreHorizontal className="icon-img" />*/}
-          </span>
+          <span className="action-btn toggle-btn">{/*<Icon.MoreHorizontal className="icon-img" />*/}</span>
           <div className="action-btns-wrapper">
             <div className="action-btns-container">
               <span className="btn" onClick={handlePinShortcutBtnClick}>

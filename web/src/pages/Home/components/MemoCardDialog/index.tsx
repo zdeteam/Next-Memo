@@ -4,7 +4,7 @@ import { IMAGE_URL_REG, MEMO_LINK_REG, UNKNOWN_ID } from "../../../../helpers/co
 import * as utils from "../../../../helpers/utils";
 import { formatMemoContent, parseHtmlToRawText } from "../../../../helpers/marked";
 import Only from "../../../../components/OnlyWhen";
-import toastHelper from "../../../../components/Toast";
+import { Toast } from "@/components";
 import { generateDialog } from "../../../../components/Dialog";
 // import Image from "../../../../components/Image";
 import Selector from "../../../../components/Selector";
@@ -91,7 +91,7 @@ const Index: React.FC<Props> = (props: Props) => {
         setLinkedMemos([]);
         setMemo(nextMemo);
       } else {
-        toastHelper.error("MEMO Not Found");
+        Toast.info("MEMO Not Found");
         targetEl.classList.remove("memo-link-text");
       }
     }

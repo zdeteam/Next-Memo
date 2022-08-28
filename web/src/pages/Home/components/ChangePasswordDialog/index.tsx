@@ -5,7 +5,8 @@ import { userService } from "../../../../services";
 import Input from "../../../../components/Input";
 import Button from "../../../../components/Button";
 import { generateDialog } from "../../../../components/Dialog";
-import toastHelper from "../../../../components/Toast";
+import { Toast } from "@/components";
+
 import "./index.less";
 
 const validateConfig: ValidatorConfig = {
@@ -43,19 +44,19 @@ const Index: React.FC<Props> = ({ destroy }: Props) => {
 
   const handleSaveBtnClick = async () => {
     if (newPassword === "" || newPasswordAgain === "") {
-      toastHelper.error("Please fill in all fields.");
+      Toast.info("Please fill in all fields.");
       return;
     }
 
     if (newPassword !== newPasswordAgain) {
-      toastHelper.error("New passwords do not match.");
+      Toast.info("New passwords do not match.");
       setNewPasswordAgain("");
       return;
     }
 
     const passwordValidResult = validate(newPassword, validateConfig);
     if (!passwordValidResult.result) {
-      toastHelper.error("Password " + passwordValidResult.reason);
+      Toast.info("Password " + passwordValidResult.reason);
       return;
     }
 
@@ -65,11 +66,11 @@ const Index: React.FC<Props> = ({ destroy }: Props) => {
         id: user.id,
         password: newPassword,
       });
-      toastHelper.info("Password changed.");
+      Toast.info("Password changed.");
       handleCloseBtnClick();
     } catch (error: any) {
       console.error(error);
-      toastHelper.error(error.response.data.message);
+      Toast.info(error.response.data.message);
     }
   };
 

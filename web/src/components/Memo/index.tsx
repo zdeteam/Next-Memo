@@ -4,11 +4,12 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { GoKebabHorizontal, GoCloudDownload, GoBook, GoBroadcast, GoTrashcan, GoPin } from "react-icons/go";
 import { HiAnnotation } from "react-icons/hi";
-import { IMAGE_URL_REG, UNKNOWN_ID } from "../../helpers/consts";
-import { DONE_BLOCK_REG, TODO_BLOCK_REG } from "../../helpers/marked";
-import { editorStateService, locationService, memoService, userService } from "../../services";
+import { IMAGE_URL_REG, UNKNOWN_ID } from "@/helpers/consts";
+import { DONE_BLOCK_REG, TODO_BLOCK_REG } from "@/helpers/marked";
+import { editorStateService, locationService, memoService, userService } from "@/services";
 import Only from "../OnlyWhen";
-import toastHelper from "../Toast";
+import { Toast } from "@/components";
+
 import Image from "../Image";
 import showMemoCardDialog from "../../pages/Home/components/MemoCardDialog";
 import showShareMemoImageDialog from "../../pages/Home/components/ShareMemoImageDialog";
@@ -78,20 +79,24 @@ const Index: React.FC<Props> = (props: Props) => {
     editorStateService.setEditMemoWithId(memo.id);
   };
 
-  const handleArchiveMemoClick = async () => {
-    try {
-      await memoService.patchMemo({
-        id: memo.id,
-        rowStatus: "ARCHIVED",
-      });
-    } catch (error: any) {
-      toastHelper.error(error.message);
-    }
+  const handleArchiveMemoClick =
+    /**
+     *
+     */
+    async () => {
+      try {
+        await memoService.patchMemo({
+          id: memo.id,
+          rowStatus: "ARCHIVED",
+        });
+      } catch (error: any) {
+        Toast.info(error.message);
+      }
 
-    if (editorStateService.getState().editMemoId === memo.id) {
-      editorStateService.clearEditMemo();
-    }
-  };
+      if (editorStateService.getState().editMemoId === memo.id) {
+        editorStateService.clearEditMemo();
+      }
+    };
 
   const handleGenMemoImageBtnClick = () => {
     showShareMemoImageDialog(memo);
@@ -107,7 +112,7 @@ const Index: React.FC<Props> = (props: Props) => {
       if (memoTemp) {
         showMemoCardDialog(memoTemp);
       } else {
-        toastHelper.error("MEMO Not Found");
+        Toast.info("MEMO not found");
         targetEl.classList.remove("memo-link-text");
       }
     } else if (targetEl.className === "umo-tag") {

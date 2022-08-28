@@ -4,7 +4,7 @@ import { useAppSelector } from "../../../../store";
 import { IMAGE_URL_REG, LINK_URL_REG, MEMO_LINK_REG, TAG_REG } from "../../../../helpers/consts";
 import * as utils from "../../../../helpers/utils";
 import { checkShouldShowMemoWithFilters } from "../../../../helpers/filter";
-import toastHelper from "../../../../components/Toast";
+import { Toast } from "@/components";
 import Memo from "../../../../components/Memo";
 import "./index.less";
 
@@ -87,7 +87,7 @@ const Index: React.FC<Props> = () => {
       })
       .catch((error) => {
         console.error(error);
-        toastHelper.error(error.response.data.message);
+        Toast.info(error.response.data.message);
       });
   }, [user]);
 

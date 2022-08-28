@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import * as api from "../../helpers/api";
-import { validate, ValidatorConfig } from "../../helpers/validator";
-import useI18n from "../../hooks/useI18n";
-import useLoading from "../../hooks/useLoading";
-import { globalService, locationService, userService } from "../../services";
-import toastHelper from "../../components/Toast";
+import * as api from "@/helpers/api";
+import { validate, ValidatorConfig } from "@/helpers/validator";
+import useI18n from "@/hooks/useI18n";
+import useLoading from "@/hooks/useLoading";
+import { globalService, locationService, userService } from "@/services";
+import { Toast } from "@/components";
+
 import "./index.less";
 
 interface Props {}
@@ -54,13 +55,13 @@ const Index: React.FC<Props> = () => {
 
     const emailValidResult = validate(email, validateConfig);
     if (!emailValidResult.result) {
-      toastHelper.error("Email: " + emailValidResult.reason);
+      Toast.info("Email: " + emailValidResult.reason);
       return;
     }
 
     const passwordValidResult = validate(password, validateConfig);
     if (!passwordValidResult.result) {
-      toastHelper.error("Password: " + passwordValidResult.reason);
+      Toast.info("Password: " + passwordValidResult.reason);
       return;
     }
 
@@ -71,11 +72,11 @@ const Index: React.FC<Props> = () => {
       if (user) {
         locationService.replaceHistory("/");
       } else {
-        toastHelper.error("Login failed");
+        Toast.info("Login failed");
       }
     } catch (error: any) {
       console.error(error);
-      toastHelper.error(error.response.data.message);
+      Toast.info(error.response.data.message);
     }
     actionBtnLoadingState.setFinish();
   };
@@ -87,13 +88,13 @@ const Index: React.FC<Props> = () => {
 
     const emailValidResult = validate(email, validateConfig);
     if (!emailValidResult.result) {
-      toastHelper.error("Email: " + emailValidResult.reason);
+      Toast.info("Email: " + emailValidResult.reason);
       return;
     }
 
     const passwordValidResult = validate(password, validateConfig);
     if (!passwordValidResult.result) {
-      toastHelper.error("Password: " + passwordValidResult.reason);
+      Toast.info("Password: " + passwordValidResult.reason);
       return;
     }
 
@@ -104,11 +105,11 @@ const Index: React.FC<Props> = () => {
       if (user) {
         locationService.replaceHistory("/");
       } else {
-        toastHelper.error("Signup failed");
+        Toast.info("Signup failed");
       }
     } catch (error: any) {
       console.error(error);
-      toastHelper.error(error.response.data.message);
+      Toast.info(error.response.data.message);
     }
     actionBtnLoadingState.setFinish();
   };

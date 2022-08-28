@@ -16,7 +16,7 @@ import Paragraph from "@tiptap/extension-paragraph";
 import tippy from "tippy.js";
 import { editorStateService, locationService, memoService } from "../../services";
 import { UNKNOWN_ID } from "../../helpers/consts";
-import toastHelper from "../Toast";
+import {Toast} from "@/components"
 import { useAppSelector } from "../../store";
 import Button from "../Button";
 import MentionList from "./MentionList";
@@ -228,7 +228,7 @@ const Index = function (
       }
       if (props.clearWhenSave) editor?.commands.clearContent();
     } catch (error: any) {
-      toastHelper.error(error.message);
+      Toast.info(error.message)
     }
   };
   const handleExpandBtnClick = () => {

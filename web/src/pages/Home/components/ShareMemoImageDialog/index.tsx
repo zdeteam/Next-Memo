@@ -7,7 +7,7 @@ import * as utils from "../../../../helpers/utils";
 import { formatMemoContent } from "../../../../helpers/marked";
 import Only from "../../../../components/OnlyWhen";
 import { generateDialog } from "../../../../components/Dialog";
-import toastHelper from "../../../../components/Toast";
+import { Toast } from "@/components";
 import "./index.less";
 
 interface Props extends DialogProps {
@@ -57,7 +57,7 @@ const Index: React.FC<Props> = (props: Props) => {
 
   const handleImageOnLoad = (event: React.SyntheticEvent<HTMLImageElement>) => {
     if (event.type === "error") {
-      toastHelper.error("Image load failed");
+      Toast.info("Image load failed");
       (event.target as HTMLImageElement).remove();
     }
     setImgAmount(imgAmount - 1);

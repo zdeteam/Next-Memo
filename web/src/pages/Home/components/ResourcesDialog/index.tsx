@@ -6,7 +6,7 @@ import { resourceService } from "../../../../services";
 import Dropdown from "../../../../components/Dropdown";
 import { generateDialog } from "../../../../components/Dialog";
 import { showCommonDialog } from "../../../../components/Dialog/CommonDialog";
-import toastHelper from "../../../../components/Toast";
+import { Toast } from "@/components";
 import "./index.less";
 
 interface Props extends DialogProps {}
@@ -29,7 +29,7 @@ const Index: React.FC<Props> = (props: Props) => {
     fetchResources()
       .catch((error) => {
         console.error(error);
-        toastHelper.error(error.response.data.message);
+        Toast.info(error.response.data.message);
       })
       .finally(() => {
         loadingState.setFinish();
@@ -68,7 +68,7 @@ const Index: React.FC<Props> = (props: Props) => {
         await resourceService.upload(file);
       } catch (error: any) {
         console.error(error);
-        toastHelper.error(error.response.data.message);
+        Toast.info(error.response.data.message);
       } finally {
         setState({
           ...state,
@@ -82,7 +82,7 @@ const Index: React.FC<Props> = (props: Props) => {
 
   const handleCopyResourceLinkBtnClick = (resource: Resource) => {
     utils.copyTextToClipboard(`${window.location.origin}/h/r/${resource.id}/${resource.filename}`);
-    toastHelper.success("Succeed to copy resource link to clipboard");
+    Toast.info("Succeed to copy resource link to clipboard");
   };
 
   const handleDeleteResourceBtnClick = (resource: Resource) => {

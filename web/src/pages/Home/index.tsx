@@ -11,7 +11,7 @@ import MemosHeader from "./components/MemosHeader";
 import Editor from "../../components/Editor";
 import MemoFilter from "./components/MemoFilter";
 import MemoList from "./components/MemoList";
-import toastHelper from "../../components/Toast";
+import {Toast} from "@/components"
 import Modal from "../../components/Modal";
 import "./index.less";
 import { validate, ValidatorConfig } from "../../helpers/validator";
@@ -57,7 +57,7 @@ function Index() {
         navigate("/");
         setShowLoginForm(false);
       } else {
-        toastHelper.error("😟 Login failed");
+        Toast.info("😟 Login failed");
       }
     } catch (error: any) {
       const data = error.response.data;
@@ -81,7 +81,7 @@ function Index() {
         }
         if (userService.isVisitorMode()) {
           if (!owner) {
-            toastHelper.error("User not found");
+            Toast.info("User not found");
           }
         } else {
           if (!user) {
