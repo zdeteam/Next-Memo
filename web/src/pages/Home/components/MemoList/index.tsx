@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import { memoService, shortcutService } from "../../../../services";
-import { useAppSelector } from "../../../../store";
-import { IMAGE_URL_REG, LINK_URL_REG, MEMO_LINK_REG, TAG_REG } from "../../../../helpers/consts";
-import * as utils from "../../../../helpers/utils";
-import { checkShouldShowMemoWithFilters } from "../../../../helpers/filter";
+import { memoService, shortcutService } from "@/services";
+import { useAppSelector } from "@/store";
+import { IMAGE_URL_REG, LINK_URL_REG, MEMO_LINK_REG, TAG_REG } from "@/helpers/consts";
+import * as utils from "@/helpers/utils";
+import { checkShouldShowMemoWithFilters } from "@/helpers/filter";
 import { Toast } from "@/components";
-import Memo from "../../../../components/Memo";
+import Memo from "@/components/Memo";
 import "./index.less";
 
 interface Props {}

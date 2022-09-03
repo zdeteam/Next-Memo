@@ -4,6 +4,8 @@ import { createBrowserHistory } from "history";
 import { Provider } from "react-redux";
 import App from "./App";
 import Index from "./pages/Home";
+import Trash from "./pages/Trash"
+import Setting from "./pages/Setting"
 import I18nProvider from "./labs/i18n/I18nProvider";
 import store from "./store";
 import "./helpers/polyfill";
@@ -22,6 +24,8 @@ root.render(
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/u/*" element={<Index />} />
+            <Route path="/setting" element={<Setting />} />
+            <Route path="/trash" element={<Trash />} />
           </Routes>
         </App>
       </HistoryRouter>
