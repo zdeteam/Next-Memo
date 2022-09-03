@@ -16,7 +16,7 @@ import Paragraph from "@tiptap/extension-paragraph";
 import tippy from "tippy.js";
 import { editorStateService, locationService, memoService } from "../../services";
 import { UNKNOWN_ID } from "../../helpers/consts";
-import {Toast,Button} from "@/components"
+import { Toast, Button } from "@/components"
 import { useAppSelector } from "../../store";
 // import Button from "@/Button";
 import MentionList from "./MentionList";
@@ -222,8 +222,12 @@ const Index = function (
         }
         editorStateService.clearEditMemo();
         props.onCancel && props.onCancel();
+        Toast.info('保存成功')
       } else {
-        if (content) await memoService.createMemo({ content });
+        if (content) {
+          await memoService.createMemo({ content });
+          Toast.info('保存成功')
+        };
         locationService.clearQuery();
       }
       if (props.clearWhenSave) editor?.commands.clearContent();
@@ -239,17 +243,17 @@ const Index = function (
       <div className={`editor ${isFold && showFoldBtn && "fold"}`} ref={editorRef}>
         <EditorContent editor={editor} />
       </div>
-      {showFoldBtn && props.foldable && (
+      {/* {showFoldBtn && props.foldable && (
         <span className="fold-btn" onClick={handleExpandBtnClick}>
           {!isFold ? <MdOutlineUnfoldLess /> : <MdOutlineUnfoldMore />}
         </span>
-      )}
+      )} */}
       {editor && props.editable ? (
         <>
           <div className="toolbar">
             <MenuBar editor={editor} />
             {props.cardMode && props.editable && (
-              <button
+              <span
                 className="cancel"
                 onClick={() => {
                   editor.commands.setContent(prevContent);
@@ -257,9 +261,9 @@ const Index = function (
                 }}
               >
                 取消
-              </button>
+              </span>
             )}
-            <Button  type='primary' round disabled={editor?.isEmpty} className="write" size="small" onClick={onOk}>
+            <Button type='primary' round disabled={editor?.isEmpty} className="write" size="small" onClick={onOk}>
               保存轻笔记
             </Button>
           </div>

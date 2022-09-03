@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { memoService, shortcutService } from "@/services";
+import { memoService, shortcutService, editorStateService } from "@/services";
 import { useAppSelector } from "@/store";
 import { IMAGE_URL_REG, LINK_URL_REG, MEMO_LINK_REG, TAG_REG } from "@/helpers/consts";
 import * as utils from "@/helpers/utils";
 import { checkShouldShowMemoWithFilters } from "@/helpers/filter";
-import { Toast,NoMore,Memo } from "@/components";
+import { Toast, NoMore, Memo, Dialog } from "@/components";
 // import Memo from "@/components/Memo";
 import "./index.less";
 
@@ -95,16 +95,35 @@ const Index: React.FC<Props> = () => {
     wrapperElement.current?.scrollTo({ top: 0 });
   }, [query]);
 
+
+
+  const handleEditMemoClick = (memo: any) => {
+    // if (userService.isVisitorMode()) return false;
+    // editorStateService.setEditMemoWithId(memo.id);
+    // setMoreAction(false);
+    // memo.editable = true;
+    // setMemo({ ...memo });
+    console.log('123')
+    editorStateService.setEditMemoWithId(memo.id);
+  };
+
   return (
     <div className={`memo-list-container ${isFetching ? "" : "completed"}`} ref={wrapperElement}>
       {sortedMemos.map((memo) => (
-        <Memo key={`${memo.id}-${memo.updatedTs}`} memo={memo} />
+        <Memo key={`${memo.id}-${memo.updatedTs}`} memo={memo} actions={
+          [
+            { name: '分享', action: 'share' },
+            { name: '编辑', action: "edit" },
+            { name: '删除', action: "delete" },
+          ]
+        } />
       ))}
-      <div className="status-text-container">
-        <p className="status-text">
-          {isFetching ? null : sortedMemos.length === 0 ? "没有数据啦" : showMemoFilter ? "" : <NoMore />}
-        </p>
-      </div>
+      {isFetching ? null : sortedMemos.length === 0 ?
+        <div className="no-data">
+          <img src="/images/no-data.png" />
+          <span>轻松记录，随时保存</span>
+        </div>
+        : showMemoFilter ? "" : <NoMore />}
     </div>
   );
 };

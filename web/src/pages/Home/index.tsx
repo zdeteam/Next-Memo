@@ -83,7 +83,7 @@ function Index() {
         } else {
           if (!user) {
             // locationService.replaceHistory();
-            navigate(`/u/${host.id}`);
+            navigate(`/signin`);
           }
         }
         loadingState.setFinish();
@@ -107,11 +107,10 @@ function Index() {
             <MemosHeader onClick={() => setVisible(!visible)} />
             <Only when={!userService.isVisitorMode()}>
               <div className="editor">
-              <Editor editable clearWhenSave />
+                <Editor editable clearWhenSave />
               </div>
-            
             </Only>
-            <MemoFilter />
+            {/* <MemoFilter /> */}
             <MemoList />
             <Only when={userService.isVisitorMode()}>
               <div className="addtion-btn-container">

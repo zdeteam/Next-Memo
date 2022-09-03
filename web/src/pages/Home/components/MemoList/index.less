@@ -1,23 +1,46 @@
 @import "../../../../less/mixin.less";
 
 .memo-list-container {
-  position:relative;
-  @apply flex flex-col justify-start items-start w-full max-w-full ;
-  .hide-scroll-bar();
+  position: relative;
 
-  > .status-text-container {
-    @apply flex flex-col justify-start items-center w-full my-6;
+  >.no-data {
+    // border: 1px solid;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 
-    &.completed {
-      @apply mb-16;
+    >img {
+      width: 5.3rem;
+      margin: 1.15rem 0 0.44rem;
     }
 
-    > .status-text {
-      @apply text-sm text-gray-400 ;
+    >span {
+      color: #a6a6b5;
+      font-weight: 200;
+      font: 0.29rem/0.4rem FZLTXHK--GBK1-0;
+      margin-bottom: 0.32rem;
     }
   }
 
-  &.completed {
-    @apply pb-16;
-  }
+
+
+  // @apply flex flex-col justify-start items-start w-full max-w-full ;
+  // .hide-scroll-bar();
+
+  // > .status-text-container {
+  //   @apply flex flex-col justify-start items-center w-full my-6;
+
+  //   &.completed {
+  //     @apply mb-16;
+  //   }
+
+  //   > .status-text {
+  //     @apply text-sm text-gray-400 ;
+  //   }
+  // }
+
+  // &.completed {
+  //   @apply pb-16;
+  // }
 }

@@ -36,7 +36,14 @@ const TrashPage = (props: any) => {
             <div className="list">
                 {
                     archivedMemos.map((memo) =>
-                        <Memo key={`${memo.id}-${memo.updatedTs}`} memo={memo} />
+                        <Memo key={`${memo.id}-${memo.updatedTs}`} memo={memo}
+                            actions={
+                                [
+                                    { name: '恢复笔记',action:'restore' },
+                                    { name: '彻底删除',action:'deleteForever' }
+                                ]
+                            }
+                        />
                     )
                 }
             </div>

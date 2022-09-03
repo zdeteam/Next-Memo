@@ -4,7 +4,6 @@ import { GoCalendar, GoSettings, GoTrashcan, GoFileMedia, GoX, GoHome } from "re
 import { Calendar, Only ,HeatMap} from "@/components";
 import showDailyReviewDialog from "../DailyReviewDialog";
 import showSettingDialog from "../SettingDialog";
-import showArchivedMemoDialog from "../ArchivedMemoDialog";
 import showResourcesDialog from "../ResourcesDialog";
 // import HeatMap from "../HeatMap";
 import ShortcutList from "../ShortcutList";
@@ -32,9 +31,6 @@ const Index: React.FC<Props> = () => {
     showResourcesDialog();
   };
 
-  const handleArchivedBtnClick = () => {
-    showArchivedMemoDialog();
-  };
   const navigate = useNavigate();
   const { user, owner } = useAppSelector((state) => state.user);
   const { memos, tags } = useAppSelector((state) => state.memo);
@@ -149,7 +145,7 @@ const Index: React.FC<Props> = () => {
                   src="data:image/png;base64,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"
                   alt=""
                 />
-                <span>回收站</span>
+                <span>废纸篓</span>
               </div>
               <div>
                 <img

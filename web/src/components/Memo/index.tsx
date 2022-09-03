@@ -8,18 +8,20 @@ import { IMAGE_URL_REG, UNKNOWN_ID } from "@/helpers/consts";
 import { DONE_BLOCK_REG, TODO_BLOCK_REG } from "@/helpers/marked";
 import { editorStateService, locationService, memoService, userService } from "@/services";
 import Only from "../OnlyWhen";
-import { Toast, ActionSheet, Dialog } from "@/components";
-
+import { Toast, ActionSheet, Dialog,ShareSheet } from "@/components";
+import { useAppSelector } from "../../store";
 import Image from "../Image";
 import showMemoCardDialog from "../../pages/Home/components/MemoCardDialog";
 import showShareMemoImageDialog from "../../pages/Home/components/ShareMemoImageDialog";
 import Editor from "../Editor";
 import "./index.less";
+import { setEditMemoId } from "@/store/modules/editor";
 
 dayjs.extend(relativeTime);
 
 interface Props {
   memo: Memo;
+  actions:any[];
 }
 
 export const getFormatedMemoCreatedAtStr = (createdTs: number): string => {
@@ -37,7 +39,10 @@ const Index: React.FC<Props> = (props: Props) => {
   const memoContainerRef = useRef<HTMLDivElement>(null);
   const imageUrls = Array.from(memo.content.match(IMAGE_URL_REG) ?? []).map((s) => s.replace(IMAGE_URL_REG, "$1"));
   const isVisitorMode = userService.isVisitorMode();
-
+  const editorState = useAppSelector((state) => state.editor);
+  const [editable,setEditable] = useState(false);
+  const [shareVisible,setShareVisible] = useState(false);
+  
   useEffect(() => {
     if (!memoContainerRef) {
       return;
@@ -49,6 +54,16 @@ const Index: React.FC<Props> = (props: Props) => {
       }, 1000 * 1);
     }
   }, []);
+
+
+  useEffect(()=>{
+    console.log('editMemoId')
+    if(memo.id===editorState.editMemoId){
+      setEditable(true);
+    }else{
+      setEditable(false);
+    }
+  },[editorState.editMemoId])
 
   const handleShowMemoStoryDialog = () => {
     showMemoCardDialog(memo);
@@ -71,38 +86,33 @@ const Index: React.FC<Props> = (props: Props) => {
   };
 
   const handleEditMemoClick = () => {
-    if (userService.isVisitorMode()) return false;
-    // editorStateService.setEditMemoWithId(memo.id);
-    setMoreAction(false);
-    memo.editable = true;
-    setMemo({ ...memo });
     editorStateService.setEditMemoWithId(memo.id);
+    setMoreAction(false);
   };
 
   const handleArchiveMemoClick =
-    /**
-     *
-     */
+    async () => {
+      setMoreAction(false);
+      Dialog.confirm({
+        title: '移至废纸篓',
+        message: '可在废纸篓中恢复数据',
+        onConfirm: async () => {
+          try {
+            await memoService.patchMemo({
+              id: memo.id,
+              rowStatus: "ARCHIVED",
+            });
+            Toast.info('删除成功');
+          } catch (error: any) {
+            Toast.info(error.message);
+          }
 
-
-
-    console.log('123123')
-  async () => {
-    try {
-      await memoService.patchMemo({
-        id: memo.id,
-        rowStatus: "ARCHIVED",
-      });
-      Toast.info('删除成功');
-    } catch (error: any) {
-      Toast.info(error.message);
-    }
-
-    if (editorStateService.getState().editMemoId === memo.id) {
-      editorStateService.clearEditMemo();
-    }
-
-  };
+          if (editorStateService.getState().editMemoId === memo.id) {
+            editorStateService.clearEditMemo();
+          }
+        }
+      })
+    };
 
   const handleGenMemoImageBtnClick = () => {
     showShareMemoImageDialog(memo);
@@ -188,6 +198,36 @@ const Index: React.FC<Props> = (props: Props) => {
     });
   };
 
+  const handleDeleteMemoClick = async () => {
+    setMoreAction(false);
+    Dialog.confirm({
+      title: '是否彻底删除',
+      message: '删除后笔记不可恢复',
+      onConfirm: async () => {
+        try {
+          await memoService.deleteMemoById(memo.id);
+          await memoService.fetchAllMemos();
+          Toast.info('删除成功')
+        } catch (error: any) {
+          Toast.info(error.message);
+        }
+      }
+    })
+  };
+
+  const handleRestoreMemoClick = async () => {
+    try {
+      await memoService.patchMemo({
+        id: memo.id,
+        rowStatus: "NORMAL",
+      });
+      await memoService.fetchAllMemos();
+      Toast.info("Restored successfully")
+    } catch (error: any) {
+      Toast.info(error.message);
+    }
+  };
+
   return (
     <div
       onClick={handleMemoContentClick}
@@ -198,7 +238,8 @@ const Index: React.FC<Props> = (props: Props) => {
         <span className="time-text">{createdAtStr}</span>
         {!userService.isVisitorMode() && !memo.editable && <GoKebabHorizontal onClick={moreActions} />}
       </div>
-      <Editor foldable cardMode content={memo.content} editable={memo.editable} onCancel={() => setMemo({ ...memo, editable: false })} />
+      <Editor foldable cardMode content={memo.content} editable={editable} 
+      onCancel={() => editorStateService.setEditMemoWithId(UNKNOWN_ID)} />
       <Only when={imageUrls.length > 0}>
         <div className="images-wrapper">
           {imageUrls.map((imgUrl, idx) => (
@@ -206,17 +247,11 @@ const Index: React.FC<Props> = (props: Props) => {
           ))}
         </div>
       </Only>
-      {/* <Only when={moreAction}>
-        <span className="double-click-tip">双击编辑轻笔记</span>
-      </Only> */}
       {!memo.editable && (
         <div className="card-status">
           <Only when={memo.pinned}>
             <GoPin />
           </Only>
-          {/* <Only when={memo.visibility === "PUBLIC"}>
-            <GoBroadcast />
-          </Only> */}
         </div>
       )}
      
@@ -224,26 +259,47 @@ const Index: React.FC<Props> = (props: Props) => {
         visible={moreAction}
         onCancel={() => setMoreAction(false)}
         // description='这是一段描述信息'
-        actions={[
-          { name: '分享' },
-          { name: '编辑' },
-          {
-            name: '删除', callback: () => {
-              console.log(12312313)
-              Dialog.confirm({
-                title: '确认删除',
-                message: '是否删除本条笔记',
-              })
-            }
-          },
-        ]}
+        actions={props.actions.map((action)=>({...action,callback:()=>{
+          if(action.action==='delete'){
+            handleArchiveMemoClick()
+          }
+          if(action.action==='edit'){
+            handleEditMemoClick()
+          }
+          if(action.action==='share'){
+            setMoreAction(false);
+            setShareVisible(true)
+          }
+          if(action.action==='deleteForever'){
+            handleDeleteMemoClick()
+          }
+          if(action.action==='restore'){
+            handleRestoreMemoClick()
+          }
+        }}))}
         cancelText='取消'
+      />
+      <ShareSheet
+        visible={shareVisible}
+        options={[
+          { name: '复制链接', icon: 'link' },
+          { name: '分享卡片', icon: 'poster' }
+        ]}
+        title='立即分享给好友'
+        onCancel={() => setShareVisible(false)}
+        onSelect={(option, index) => {
+          console.log('option', option)
+          console.log('index', index)
+          setShareVisible(false)
+        }}
       />
     </div>
   );
 };
 
 export default memo(Index);
+
+
 {/* <div className="action-bar">
 <GoBook onClick={() => clickCardMoreAction(handleShowMemoStoryDialog)} />
 <HiAnnotation />
