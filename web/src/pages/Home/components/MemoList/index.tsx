@@ -4,11 +4,11 @@ import { useAppSelector } from "@/store";
 import { IMAGE_URL_REG, LINK_URL_REG, MEMO_LINK_REG, TAG_REG } from "@/helpers/consts";
 import * as utils from "@/helpers/utils";
 import { checkShouldShowMemoWithFilters } from "@/helpers/filter";
-import { Toast } from "@/components";
-import Memo from "@/components/Memo";
+import { Toast,NoMore,Memo } from "@/components";
+// import Memo from "@/components/Memo";
 import "./index.less";
 
-interface Props {}
+interface Props { }
 
 const Index: React.FC<Props> = () => {
   const query = useAppSelector((state) => state.location.query);
@@ -24,55 +24,55 @@ const Index: React.FC<Props> = () => {
   const shownMemos =
     showMemoFilter || shortcut
       ? memos.filter((memo) => {
-          let shouldShow = true;
+        let shouldShow = true;
 
-          if (shortcut) {
-            const filters = JSON.parse(shortcut.payload) as Filter[];
-            if (Array.isArray(filters)) {
-              shouldShow = checkShouldShowMemoWithFilters(memo, filters);
+        if (shortcut) {
+          const filters = JSON.parse(shortcut.payload) as Filter[];
+          if (Array.isArray(filters)) {
+            shouldShow = checkShouldShowMemoWithFilters(memo, filters);
+          }
+        }
+
+        if (tagQuery) {
+          const tagsSet = new Set<string>();
+          for (const t of Array.from(memo.content.match(TAG_REG) ?? [])) {
+            const tag = t.replace(TAG_REG, "$1").trim();
+            const items = tag.split("/");
+            let temp = "";
+            for (const i of items) {
+              temp += i;
+              tagsSet.add(temp);
+              temp += "/";
             }
           }
-
-          if (tagQuery) {
-            const tagsSet = new Set<string>();
-            for (const t of Array.from(memo.content.match(TAG_REG) ?? [])) {
-              const tag = t.replace(TAG_REG, "$1").trim();
-              const items = tag.split("/");
-              let temp = "";
-              for (const i of items) {
-                temp += i;
-                tagsSet.add(temp);
-                temp += "/";
-              }
-            }
-            if (!tagsSet.has(tagQuery)) {
-              shouldShow = false;
-            }
-          }
-          if (
-            duration &&
-            duration.from < duration.to &&
-            (utils.getTimeStampByDate(memo.createdTs) < duration.from || utils.getTimeStampByDate(memo.createdTs) > duration.to)
-          ) {
+          if (!tagsSet.has(tagQuery)) {
             shouldShow = false;
           }
-          if (memoType) {
-            if (memoType === "NOT_TAGGED" && memo.content.match(TAG_REG) !== null) {
-              shouldShow = false;
-            } else if (memoType === "LINKED" && memo.content.match(LINK_URL_REG) === null) {
-              shouldShow = false;
-            } else if (memoType === "IMAGED" && memo.content.match(IMAGE_URL_REG) === null) {
-              shouldShow = false;
-            } else if (memoType === "CONNECTED" && memo.content.match(MEMO_LINK_REG) === null) {
-              shouldShow = false;
-            }
-          }
-          if (textQuery && !memo.content.includes(textQuery)) {
+        }
+        if (
+          duration &&
+          duration.from < duration.to &&
+          (utils.getTimeStampByDate(memo.createdTs) < duration.from || utils.getTimeStampByDate(memo.createdTs) > duration.to)
+        ) {
+          shouldShow = false;
+        }
+        if (memoType) {
+          if (memoType === "NOT_TAGGED" && memo.content.match(TAG_REG) !== null) {
+            shouldShow = false;
+          } else if (memoType === "LINKED" && memo.content.match(LINK_URL_REG) === null) {
+            shouldShow = false;
+          } else if (memoType === "IMAGED" && memo.content.match(IMAGE_URL_REG) === null) {
+            shouldShow = false;
+          } else if (memoType === "CONNECTED" && memo.content.match(MEMO_LINK_REG) === null) {
             shouldShow = false;
           }
+        }
+        if (textQuery && !memo.content.includes(textQuery)) {
+          shouldShow = false;
+        }
 
-          return shouldShow;
-        })
+        return shouldShow;
+      })
       : memos;
 
   const pinnedMemos = shownMemos.filter((m) => m.pinned);
@@ -102,7 +102,7 @@ const Index: React.FC<Props> = () => {
       ))}
       <div className="status-text-container">
         <p className="status-text">
-          {isFetching ? null : sortedMemos.length === 0 ? "没有数据啦" : showMemoFilter ? "" : "已全部加载完成"}
+          {isFetching ? null : sortedMemos.length === 0 ? "没有数据啦" : showMemoFilter ? "" : <NoMore />}
         </p>
       </div>
     </div>

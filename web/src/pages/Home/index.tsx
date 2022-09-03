@@ -106,7 +106,10 @@ function Index() {
           <main className="memos-wrapper">
             <MemosHeader onClick={() => setVisible(!visible)} />
             <Only when={!userService.isVisitorMode()}>
+              <div className="editor">
               <Editor editable clearWhenSave />
+              </div>
+            
             </Only>
             <MemoFilter />
             <MemoList />

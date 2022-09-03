@@ -16,9 +16,9 @@ import Paragraph from "@tiptap/extension-paragraph";
 import tippy from "tippy.js";
 import { editorStateService, locationService, memoService } from "../../services";
 import { UNKNOWN_ID } from "../../helpers/consts";
-import {Toast} from "@/components"
+import {Toast,Button} from "@/components"
 import { useAppSelector } from "../../store";
-import Button from "../Button";
+// import Button from "@/Button";
 import MentionList from "./MentionList";
 import "./index.less";
 
@@ -37,18 +37,18 @@ const MenuBar = ({ editor }: { editor: any }) => {
 
   return (
     <div className="editor-toolbar">
-      <button onClick={() => editor.chain().focus().toggleBold().run()}>
+      <div onClick={() => editor.chain().focus().toggleBold().run()}>
         <GoBold />
-      </button>
-      <button onClick={() => editor.chain().focus().toggleOrderedList().run()}>
+      </div>
+      <div onClick={() => editor.chain().focus().toggleOrderedList().run()}>
         <GoListOrdered />
-      </button>
-      <button onClick={() => editor.chain().focus().toggleBulletList().run()}>
+      </div>
+      <div onClick={() => editor.chain().focus().toggleBulletList().run()}>
         <GoListUnordered />
-      </button>
-      <button onClick={() => editor.chain().focus().toggleTaskList().run()}>
+      </div>
+      <div onClick={() => editor.chain().focus().toggleTaskList().run()}>
         <GoTasklist />
-      </button>
+      </div>
     </div>
   );
 };
@@ -259,7 +259,7 @@ const Index = function (
                 取消
               </button>
             )}
-            <Button disabled={editor?.isEmpty} className="write" onClick={onOk}>
+            <Button  type='primary' round disabled={editor?.isEmpty} className="write" size="small" onClick={onOk}>
               保存轻笔记
             </Button>
           </div>

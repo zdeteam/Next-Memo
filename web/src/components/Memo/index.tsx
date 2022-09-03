@@ -8,7 +8,7 @@ import { IMAGE_URL_REG, UNKNOWN_ID } from "@/helpers/consts";
 import { DONE_BLOCK_REG, TODO_BLOCK_REG } from "@/helpers/marked";
 import { editorStateService, locationService, memoService, userService } from "@/services";
 import Only from "../OnlyWhen";
-import { Toast } from "@/components";
+import { Toast, ActionSheet, Dialog } from "@/components";
 
 import Image from "../Image";
 import showMemoCardDialog from "../../pages/Home/components/MemoCardDialog";
@@ -83,20 +83,26 @@ const Index: React.FC<Props> = (props: Props) => {
     /**
      *
      */
-    async () => {
-      try {
-        await memoService.patchMemo({
-          id: memo.id,
-          rowStatus: "ARCHIVED",
-        });
-      } catch (error: any) {
-        Toast.info(error.message);
-      }
 
-      if (editorStateService.getState().editMemoId === memo.id) {
-        editorStateService.clearEditMemo();
-      }
-    };
+
+
+    console.log('123123')
+  async () => {
+    try {
+      await memoService.patchMemo({
+        id: memo.id,
+        rowStatus: "ARCHIVED",
+      });
+      Toast.info('删除成功');
+    } catch (error: any) {
+      Toast.info(error.message);
+    }
+
+    if (editorStateService.getState().editMemoId === memo.id) {
+      editorStateService.clearEditMemo();
+    }
+
+  };
 
   const handleGenMemoImageBtnClick = () => {
     showShareMemoImageDialog(memo);
@@ -186,9 +192,7 @@ const Index: React.FC<Props> = (props: Props) => {
     <div
       onClick={handleMemoContentClick}
       onDoubleClick={handleEditMemoClick}
-      className={`memo-wrapper ${"memos-" + memo.id} ${memo.pinned && "pinned"} ${memo.editable && "editing"} ${
-        moreAction && "more-actions"
-      }`}
+      className={`memo-wrapper ${"memos-" + memo.id} ${memo.pinned && "pinned"} ${memo.editable && "editing"}`}
     >
       <div className="memo-top-wrapper">
         <span className="time-text">{createdAtStr}</span>
@@ -202,32 +206,52 @@ const Index: React.FC<Props> = (props: Props) => {
           ))}
         </div>
       </Only>
-      <Only when={moreAction}>
+      {/* <Only when={moreAction}>
         <span className="double-click-tip">双击编辑轻笔记</span>
-      </Only>
+      </Only> */}
       {!memo.editable && (
         <div className="card-status">
           <Only when={memo.pinned}>
             <GoPin />
           </Only>
-          <Only when={memo.visibility === "PUBLIC"}>
+          {/* <Only when={memo.visibility === "PUBLIC"}>
             <GoBroadcast />
-          </Only>
+          </Only> */}
         </div>
       )}
-      <div className="action-bar">
-        <GoBook onClick={() => clickCardMoreAction(handleShowMemoStoryDialog)} />
-        <HiAnnotation />
-        <GoPin onClick={() => clickCardMoreAction(handleTogglePinMemoBtnClick)} />
-        {/*<GoPencil />*/}
-        <GoCloudDownload onClick={() => clickCardMoreAction(handleGenMemoImageBtnClick)} />
-        <GoBroadcast
-          onClick={() => clickCardMoreAction(() => handleVisibilitySelectorChange(memo.visibility === "PUBLIC" ? "PRIVATE" : "PUBLIC"))}
-        />
-        <GoTrashcan onClick={() => clickCardMoreAction(handleArchiveMemoClick)} />
-      </div>
+     
+      <ActionSheet
+        visible={moreAction}
+        onCancel={() => setMoreAction(false)}
+        // description='这是一段描述信息'
+        actions={[
+          { name: '分享' },
+          { name: '编辑' },
+          {
+            name: '删除', callback: () => {
+              console.log(12312313)
+              Dialog.confirm({
+                title: '确认删除',
+                message: '是否删除本条笔记',
+              })
+            }
+          },
+        ]}
+        cancelText='取消'
+      />
     </div>
   );
 };
 
 export default memo(Index);
+{/* <div className="action-bar">
+<GoBook onClick={() => clickCardMoreAction(handleShowMemoStoryDialog)} />
+<HiAnnotation />
+<GoPin onClick={() => clickCardMoreAction(handleTogglePinMemoBtnClick)} />
+<GoPencil />
+<GoCloudDownload onClick={() => clickCardMoreAction(handleGenMemoImageBtnClick)} />
+<GoBroadcast
+  onClick={() => clickCardMoreAction(() => handleVisibilitySelectorChange(memo.visibility === "PUBLIC" ? "PRIVATE" : "PUBLIC"))}
+/>
+<GoTrashcan onClick={} />
+</div> */}

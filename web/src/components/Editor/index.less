@@ -7,25 +7,19 @@
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
-  //border-radius: 0.5rem;
-  //background-color: rgb(255 255 255);
-  //padding: 0.5rem 1rem 0.5rem 0.5rem;
-  transition-property: all;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 0.15s;
 
-  background: #fff;
-  border-radius: 0.24rem;
-  padding: 0.12rem 0.28rem;
-  margin-bottom: 0.24rem;
+
+  
   box-sizing: border-box;
-  border: 0.02rem solid transparent;
-  box-shadow: 0 0.04rem 0.16rem 0 rgb(189 189 201 / 20%);
+
+
+  
+  
+
+  // border: 1px solid;
 
   //border: 1px solid rgb(234, 234, 230);
-  &:hover {
-    border: 1px solid #ffab27;
-  }
+  
   &.no-hover {
     border: none;
   }
@@ -40,6 +34,12 @@
   .editor {
     flex: 1;
     width: 100%;
+    font-size: .32rem;
+    padding: 0.2rem;
+    line-height: 1.75;
+    max-height: 3.4rem;
+    overflow-y: auto;
+
     &.fold {
       max-height: 122px;
       overflow: hidden;
@@ -63,37 +63,42 @@
   }
 
   .toolbar {
-    margin-top: 4px;
     width: 100%;
-    height: 24px;
+    display: flex;
+    align-items: center;
     .editor-toolbar {
-      display: inline-block;
-      > button {
+      display: flex;
+      align-items: center;
+      margin-top: 0.2rem;
+      > div {
+        // border: 1px solid;
+
         border-radius: 4px;
         padding: 2px;
         width: 28px;
         height: 28px;
         margin-right: 6px;
         transition: all 0.2s ease-in-out;
-        &:focus {
-          color: #ffab27;
-          background-color: #fff6e9;
-          svg {
-            fill: @primary-color-400;
-          }
-        }
-        &:hover {
-          background-color: #fff6e9;
-        }
+        // &:focus {
+        //   color: #ffab27;
+        //   background-color: #fff6e9;
+        //   svg {
+        //     fill: @primary-color-400;
+        //   }
+        // }
+        // &:hover {
+        //   background-color: #fff6e9;
+        // }
         svg {
           width: 20px;
           height: 20px;
+          vertical-align: top;
         }
       }
     }
 
     > button {
-      margin-right: 6px;
+      // margin-right: 6px;
 
       &.cancel {
         position: absolute;
@@ -108,7 +113,7 @@
         display: inline-block;
         position: absolute;
         right: 0;
-        bottom: 4px;
+        // bottom: 4px;
       }
     }
   }

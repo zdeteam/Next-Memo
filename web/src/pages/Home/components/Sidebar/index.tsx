@@ -1,12 +1,12 @@
 import { locationService, userService } from "../../../../services";
 import useI18n from "../../../../hooks/useI18n";
 import { GoCalendar, GoSettings, GoTrashcan, GoFileMedia, GoX, GoHome } from "react-icons/go";
-import { Calendar, Only } from "@/components";
+import { Calendar, Only ,HeatMap} from "@/components";
 import showDailyReviewDialog from "../DailyReviewDialog";
 import showSettingDialog from "../SettingDialog";
 import showArchivedMemoDialog from "../ArchivedMemoDialog";
 import showResourcesDialog from "../ResourcesDialog";
-import HeatMap from "../HeatMap";
+// import HeatMap from "../HeatMap";
 import ShortcutList from "../ShortcutList";
 import TagList from "../TagList";
 import "./index.less";
@@ -89,7 +89,6 @@ const Index: React.FC<Props> = () => {
           {/*<span className="version">内测中 V{profile?.version}</span>*/}
         </div>
       </div>
-      <div className="heatMap"></div>
       <div className="amount-text-container">
         <div>
           <span>{memos.length}</span>
@@ -104,6 +103,10 @@ const Index: React.FC<Props> = () => {
           <span>DAYS</span>
         </div>
       </div>
+      <div className="heatMap">
+        <HeatMap />
+      </div>
+      
       <div className="menu-list">
         <div>
           <div>

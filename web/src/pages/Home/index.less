@@ -1,28 +1,31 @@
 @import "../../less/mixin.less";
 
-.page-wrapper{
+.page-wrapper {
   border-bottom: 1px solid red;
-  .login-form{
-    >img{
+
+  .login-form {
+    >img {
       width: 160px;
       margin: 0 auto;
     }
-    >.input-wrapper{
+
+    >.input-wrapper {
       margin-bottom: 6px;
     }
-    >.button-wrapper{
-      margin:12px 0 4px 0;
+
+    >.button-wrapper {
+      margin: 12px 0 4px 0;
       border: 1px solid;
     }
-    >span{
+
+    >span {
       font-size: 12px;
       margin-left: 4px;
     }
   }
-  > .page-container {
 
-
-    > .memos-wrapper {
+  >.page-container {
+    >.memos-wrapper {
       width: 100%;
       height: 100vh;
       margin: 0 auto;
@@ -45,9 +48,30 @@
       //padding-left: 1rem;
       //padding-right: 1rem;
 
-      > .addtion-btn-container {
+      >.editor {
+
+        border-radius: 0.24rem;
+        padding: 0.12rem 0.28rem;
+        margin-bottom: 0.24rem;
+        border: 0.02rem solid transparent;
+        box-shadow: 0 0.04rem 0.16rem 0 rgb(189 189 201 / 20%);
+        // border: 1px solid red;
+        background: #fff;
+
+        transition-property: all;
+        transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+        transition-duration: 0.15s;
+        
+        &:hover {
+          border: 1px solid #ffab27;
+        }
+
+      }
+
+      >.addtion-btn-container {
+
         //@apply fixed bottom-12 left-1/2 -translate-x-1/2;
-        >button{
+        >button {
           border-radius: 21px;
         }
       }

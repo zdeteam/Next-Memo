@@ -1,0 +1,35 @@
+.no-more {
+    height: 1.6rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    >div {
+        font-size: .28rem;
+        font-weight: 300;
+        line-height: .4rem;
+        color: #b6b6bf;
+
+        &::before {
+            display: inline-block;
+            vertical-align: middle;
+            content: "";
+            width: 0.12rem;
+            height: 0.12rem;
+            background-color: #e1e1e6;
+            transform: rotate(45deg);
+            margin-right: 0.28rem;
+        }
+
+        &::after {
+            display: inline-block;
+            vertical-align: middle;
+            content: "";
+            width: 0.12rem;
+            height: 0.12rem;
+            background-color: #e1e1e6;
+            transform: rotate(45deg);
+            margin-left: 0.28rem;
+        }
+    }
+}
