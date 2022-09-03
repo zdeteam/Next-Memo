@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import useI18n from "./hooks/useI18n";
-import { appRouterSwitch } from "./routers";
 import { globalService } from "./services";
 import { useAppSelector } from "./store";
 import * as storage from "./helpers/storage";

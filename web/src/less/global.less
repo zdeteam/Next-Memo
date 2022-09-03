@@ -1,5 +1,53 @@
 @import "./mixin.less";
 
+@font-face {
+  font-family: "Bebas Neue Bold";
+  src: url(https://db.onlinewebfonts.com/t/0159fb15532719ed3e692f0b13bf9c91.eot);
+  src: url(https://db.onlinewebfonts.com/t/0159fb15532719ed3e692f0b13bf9c91.eot#iefix) format("embedded-opentype"), url(https://db.onlinewebfonts.com/t/0159fb15532719ed3e692f0b13bf9c91.woff2) format("woff2"), url(https://db.onlinewebfonts.com/t/0159fb15532719ed3e692f0b13bf9c91.woff) format("woff"), url(https://db.onlinewebfonts.com/t/0159fb15532719ed3e692f0b13bf9c91.ttf) format("truetype"), url(https://db.onlinewebfonts.com/t/0159fb15532719ed3e692f0b13bf9c91.svg#Bebas%20Neue%20Bold) format("svg")
+}
+
+
+body{
+  margin: 0;
+  font-family: "PingFang SC","Helvetica Neue",Helvetica,Arial,"Hiragino Sans GB","Heiti SC","Microsoft YaHei","WenQuanYi Micro Hei",sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: none!important;
+  background-color: #fafafc;
+}
+
+
+:root {
+  /*--box-shadow:0 0 0 rgba(0,0,0,0.3),0 4px 14px rgba(0,0,0,0.1);*/
+  /*--box-shadow:0px 20px 40px 0px rgb(0 0 0 / 20%);*/
+  /* --box-shadow:rgb(33 33 52 / 10%) 0px 1px 4px;*/
+  -webkit-overflow-scrolling: touch;
+}
+div{
+  box-sizing: border-box;
+}
+
+*{
+  /*color:#323232;*/
+}
+
+input:focus,
+button:focus {
+  outline-width: 0;
+}
+
+span.umo-tag {
+  display: inline-block;
+  padding: 0.2rem 0.5rem;
+  border-radius: 12px;
+  /*width: 48px;*/
+  text-align: center;
+  background-color: #fff6e9;
+  color: #ffab27;
+}
+@keyframes scale-in{from{transform:scale(0)}to{transform:scale(1)}}
+
+
 .ProseMirror {
   min-height: 52px;
   font-size: 14px;

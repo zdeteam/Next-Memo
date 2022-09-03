@@ -1,46 +1,93 @@
 @import "../../../../less/mixin.less";
 
 .sidebar-wrapper {
-  @apply fixed sm:sticky top-0 left-0 z-20 sm:z-0 hidden sm:!flex flex-col justify-start items-start w-64 h-screen py-4 pl-2 bg-white sm:bg-transparent shadow-2xl sm:shadow-none overflow-x-hidden overflow-y-auto transition-all;
-  padding-top:12px;
+  position: relative;
+  width:80vw;
+  height: 100vh;
 
-  .hide-scroll-bar();
+  > .user-banner-container {
+    border: 1px solid;
+    font-size: .34rem;
+    color: #333;
+    display: flex;
+    //-webkit-align-items: center;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.4rem;
+  }
 
-  > .close-container {
-    @apply w-full pr-6 my-2 flex sm:hidden flex-row justify-end items-center;
+  > .heatMap {
+    border: 1px solid;
+    width: 100%;
+    padding: 0 0.4rem 0.04rem;
+    height: 366px;
+  }
 
-    > .action-btn {
-      @apply p-1 bg-gray-100 rounded shadow w-7 h-7 flex flex-row justify-center items-center;
+  > .amount-text-container {
+    //border: 1px solid;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    //padding-top: 0.1rem;
+    padding: 0 0.4rem 0.04rem;
+
+    > div {
+      //border: 1px solid;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      > span:first-of-type {
+        color: #333;
+        font: 0.44rem/0.52rem "Bebas Neue Bold";
+        font-size: .44rem;
+
+      }
+
+      > span:last-of-type {
+        line-height: .28rem;
+        transform: scale(.83);
+        color: grey;
+        font-size: .24rem;
+        font-family: PingFangSC-Regular, gotham, Hiragino Sans GB, STHeiti, Microsoft Yahei, helvetica, arial, sans-serif;
+        font-weight: 400;
+      }
     }
   }
 
-  > .action-btns-container {
-    @apply w-full px-2 my-2 flex flex-col justify-start items-start shrink-0;
-
-    > .action-btn {
-      width: calc(100% - 1.5rem);
-      text-align: left;
-      height:34px;
+  > .menu-list{
+    padding: 0.2rem 0.4rem;
+    >div{
+      //border: 1px solid;
       display: flex;
       align-items: center;
-      margin-bottom:2px;
-      padding:0 8px;
-      border-radius:21px;
-      transition: all .2s ease-in-out;
-      font-size: 14px;
-      border:1px solid transparent;
-      &:hover{
-        background-color: @primary-color-100;
-        color:@primary-color-400;
-        border-color: @primary-color-400;
-        svg{
-          fill:@primary-color-400;
+      width: 100%;
+      height: 0.96rem;
+      justify-content: space-between;
+      >div:first-of-type{
+        display: flex;
+        align-items: center;
+        >img{
+          width: 0.48rem;
+        }
+
+        >span{
+          font-size: .3rem;
+          color: #404040;
+          letter-spacing: 0;
+          line-height: .44rem;
+          font-weight: 400;
+          margin-left: 0.12rem;
         }
       }
-      svg {
-        margin-right: 4px;
-        width: 20px;
-        height: 20px;
+      >div:last-of-type{
+        display: flex;
+        -webkit-align-items: center;
+        align-items: center;
+        >img{
+          width: 0.36rem;
+        }
       }
     }
   }

@@ -1,22 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Button from "../../components/Button";
-import Input from "../../components/Input";
-import { userService } from "../../services";
-import { useAppSelector } from "../../store";
-import useLoading from "../../hooks/useLoading";
-import Only from "../../components/OnlyWhen";
+import useLoading from "@/hooks/useLoading";
+import { userService } from "@/services";
+import { useAppSelector } from "@/store";
+import { Popup, Modal, Toast, Editor, Button, Input, Only } from "@/components";
 import Sidebar from "./components/Sidebar";
+
 import MemosHeader from "./components/MemosHeader";
-import Editor from "../../components/Editor";
 import MemoFilter from "./components/MemoFilter";
 import MemoList from "./components/MemoList";
-import {Toast} from "@/components"
-import Modal from "../../components/Modal";
+import { validate, ValidatorConfig } from "@/helpers/validator";
+import * as api from "@/helpers/api";
 import "./index.less";
-import { validate, ValidatorConfig } from "../../helpers/validator";
-import * as api from "../../helpers/api";
-import { Dialog } from "react-vant";
 
 const validateConfig: ValidatorConfig = {
   notEmpty: true,
@@ -28,6 +23,8 @@ const validateConfig: ValidatorConfig = {
 
 function Index() {
   const [email, setEmail] = useState("");
+  const [visible, setVisible] = useState(false);
+
   const [emailError, setEmailError] = useState("");
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
@@ -94,18 +91,24 @@ function Index() {
   }, []);
 
   return (
-    <section className="page-wrapper home">
+    <section className="page-wrapper">
       {loadingState.isLoading ? null : (
         <div className="page-container">
-          <Sidebar />
+          <Popup
+            visible={visible}
+            position="left"
+            onClose={() => {
+              setVisible(false);
+            }}
+          >
+            <Sidebar />
+          </Popup>
           <main className="memos-wrapper">
-            <div className="memos-editor-wrapper">
-              <MemosHeader />
-              <Only when={!userService.isVisitorMode()}>
-                <Editor editable clearWhenSave />
-              </Only>
-              <MemoFilter />
-            </div>
+            <MemosHeader onClick={() => setVisible(!visible)} />
+            <Only when={!userService.isVisitorMode()}>
+              <Editor editable clearWhenSave />
+            </Only>
+            <MemoFilter />
             <MemoList />
             <Only when={userService.isVisitorMode()}>
               <div className="addtion-btn-container">

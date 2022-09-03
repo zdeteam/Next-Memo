@@ -3,13 +3,11 @@ import { Routes, Route, unstable_HistoryRouter as HistoryRouter } from "react-ro
 import { createBrowserHistory } from "history";
 import { Provider } from "react-redux";
 import App from "./App";
-import Signin from "./pages/Auth";
 import Index from "./pages/Home";
 import I18nProvider from "./labs/i18n/I18nProvider";
 import store from "./store";
 import "./helpers/polyfill";
 import "./less/global.less";
-import "./css/index.css";
 
 const container = document.getElementById("root");
 const root = createRoot(container as HTMLElement);

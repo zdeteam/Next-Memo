@@ -1,22 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" href="https://openflomo.zde.today/h/r/10003/umo-logo.png" type="image/png" />
-    <meta name="theme-color" content="#f6f5f4" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+<head>
+    <meta charset="UTF-8"/>
+    <link rel="icon" href="https://openflomo.zde.today/h/r/10003/umo-logo.png" type="image/png"/>
+    <meta name="theme-color" content="#f6f5f4"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
     <title>「有墨」轻笔记，慢生活</title>
-    <link rel="manifest" href="/manifest.json" />
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+    <link rel="manifest" href="/manifest.json"/>
     <script>
-      window.addEventListener("load", () => {
-        if ("serviceWorker" in navigator) {
-          navigator.serviceWorker.register("/sw.js");
+        function e() {
+            var e = document.documentElement.clientWidth || window.innerWidth;
+            e >= 750 && (e = 750);
+            e <= 320 && (e = 320);
+            var t = e / 7.5;
+            document.documentElement.style.fontSize = "".concat(t, "px");
         }
-      });
+
+        e()
+        window.addEventListener("resize", e);
     </script>
-  </body>
+</head>
+<body>
+<div id="root"></div>
+<script type="module" src="/src/main.tsx"></script>
+<script>
+    window.addEventListener("load", () => {
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("/sw.js");
+        }
+    });
+</script>
+</body>
 </html>

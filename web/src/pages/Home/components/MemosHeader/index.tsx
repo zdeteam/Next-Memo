@@ -7,9 +7,11 @@ import "./index.less";
 
 let prevRequestTimestamp = Date.now();
 
-interface Props {}
+interface Props {
+  onClick:()=>void;
+}
 
-const Index: React.FC<Props> = () => {
+const Index: React.FC<Props> = (props) => {
   const query = useAppSelector((state) => state.location.query);
   const shortcuts = useAppSelector((state) => state.shortcut.shortcuts);
   const [titleText, setTitleText] = useState("");
@@ -56,12 +58,12 @@ const Index: React.FC<Props> = () => {
   }, []);
 
   return (
-    <div className="section-header-container memos-header-container">
+    <div className="memos-header-container">
       <div className="title-container">
-        <div className="action-btn" onClick={toggleSiderbar}>
+        <div className="action-btn" >
           {/*<Icon.Menu className="icon-img" />*/}
         </div>
-        <span className="title-text" onClick={handleTitleTextClick}>
+        <span className="title-text" onClick={props.onClick}>
           {titleText}
         </span>
       </div>
