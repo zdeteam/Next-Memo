@@ -21,7 +21,7 @@ dayjs.extend(relativeTime);
 
 interface Props {
   memo: Memo;
-  actions: any[];
+  actions?: any[];
 }
 
 export const getFormatedMemoCreatedAtStr = (createdTs: number): string => {
@@ -35,7 +35,7 @@ export const getFormatedMemoCreatedAtStr = (createdTs: number): string => {
 const Index: React.FC<Props> = (props: Props) => {
   const [memo, setMemo] = useState({ editable: false, ...props.memo });
   const [moreAction, setMoreAction] = useState(false);
-  const [createdAtStr, setCreatedAtStr] = useState<string>(getFormatedMemoCreatedAtStr(memo.createdTs*1000));
+  const [createdAtStr, setCreatedAtStr] = useState<string>(getFormatedMemoCreatedAtStr(memo.createdTs * 1000));
   const memoContainerRef = useRef<HTMLDivElement>(null);
   const memoContentContainerRef = useRef<HTMLDivElement>(null);
   const imageUrls = Array.from(memo.content.match(IMAGE_URL_REG) ?? []).map((s) => s.replace(IMAGE_URL_REG, "$1"));
@@ -86,7 +86,7 @@ const Index: React.FC<Props> = (props: Props) => {
   };
 
   const handleEditMemoClick = () => {
-    console.log(memo.id)
+    console.log(memo.id);
     editorStateService.setEditMemoWithId(memo.id);
     setMoreAction(false);
   };
@@ -236,7 +236,7 @@ const Index: React.FC<Props> = (props: Props) => {
     >
       <div className="memo-top-wrapper">
         <span className="time-text">{createdAtStr}</span>
-        {!userService.isVisitorMode() && !memo.editable && <GoKebabHorizontal onClick={moreActions} />}
+        {!userService.isVisitorMode() && !memo.editable && props.actions?.length !== 0 && <GoKebabHorizontal onClick={moreActions} />}
       </div>
       <Editor
         foldable
@@ -259,48 +259,51 @@ const Index: React.FC<Props> = (props: Props) => {
           </Only>
         </div>
       )} */}
-
-      <ActionSheet
-        visible={moreAction}
-        onCancel={() => setMoreAction(false)}
-        // description='这是一段描述信息'
-        actions={props.actions.map((action) => ({
-          ...action,
-          callback: () => {
-            if (action.action === "delete") {
-              handleArchiveMemoClick();
-            }
-            if (action.action === "edit") {
-              handleEditMemoClick();
-            }
-            if (action.action === "share") {
-              setMoreAction(false);
-              setShareVisible(true);
-            }
-            if (action.action === "deleteForever") {
-              handleDeleteMemoClick();
-            }
-            if (action.action === "restore") {
-              handleRestoreMemoClick();
-            }
-          },
-        }))}
-        cancelText="取消"
-      />
-      <ShareSheet
-        visible={shareVisible}
-        options={[
-          { name: "复制链接", icon: "link" },
-          { name: "分享卡片", icon: "poster" },
-        ]}
-        title="立即分享给好友"
-        onCancel={() => setShareVisible(false)}
-        onSelect={(option, index) => {
-          console.log("option", option);
-          console.log("index", index);
-          setShareVisible(false);
-        }}
-      />
+      {props.actions?.length && (
+        <>
+          <ActionSheet
+            visible={moreAction}
+            onCancel={() => setMoreAction(false)}
+            // description='这是一段描述信息'
+            actions={props.actions.map((action) => ({
+              ...action,
+              callback: () => {
+                if (action.action === "delete") {
+                  handleArchiveMemoClick();
+                }
+                if (action.action === "edit") {
+                  handleEditMemoClick();
+                }
+                if (action.action === "share") {
+                  setMoreAction(false);
+                  setShareVisible(true);
+                }
+                if (action.action === "deleteForever") {
+                  handleDeleteMemoClick();
+                }
+                if (action.action === "restore") {
+                  handleRestoreMemoClick();
+                }
+              },
+            }))}
+            cancelText="取消"
+          />
+          <ShareSheet
+            visible={shareVisible}
+            options={[
+              { name: "复制链接", icon: "link" },
+              { name: "分享卡片", icon: "poster" },
+            ]}
+            title="立即分享给好友"
+            onCancel={() => setShareVisible(false)}
+            onSelect={(option, index) => {
+              console.log("option", option);
+              console.log("index", index);
+              setShareVisible(false);
+            }}
+          />
+        </>
+      )}
     </div>
   );
 };

@@ -46,19 +46,15 @@ const memoService = {
       memoFind.creatorId = userService.getUserIdFromPath();
     }
     const { data } = (await api.getMemoList(memoFind)).data;
-    const archivedMemos = data.map((m) => {
+    const archivedMemos = data.list.map((m) => {
       return convertResponseModelMemo(m);
     });
     return archivedMemos;
   },
 
-  getMemoById: (memoId: MemoId) => {
-    for (const m of memoService.getState().memos) {
-      if (m.id === memoId) {
-        return m;
-      }
-    }
-    return null;
+  getMemoById: async (memoId: MemoId) => {
+    const { data } = await api.getMemoById(memoId);
+    return data.data;
   },
 
   updateTagsState: async () => {

@@ -102,6 +102,10 @@ export function createMemo(memoCreate: MemoCreate) {
   return axios.post<ResponseObject<Memo>>("/api/memo", memoCreate);
 }
 
+export function getMemoById(memoId: MemoId) {
+  return axios.get<ResponseObject<Memo>>(`/api/memo/${memoId}`);
+}
+
 export function patchMemo(memoPatch: MemoPatch) {
   return axios.patch<ResponseObject<Memo>>(`/api/memo/${memoPatch.id}`, memoPatch);
 }

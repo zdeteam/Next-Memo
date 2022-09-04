@@ -4,10 +4,11 @@ import { createBrowserHistory } from "history";
 import { Provider } from "react-redux";
 import App from "./App";
 import Index from "./pages/Home";
-import Trash from "./pages/Trash"
-import Setting from "./pages/Setting"
-import SignIn from "./pages/Auth"
-import Search from './pages/Search'
+import Trash from "./pages/Trash";
+import Setting from "./pages/Setting";
+import SignIn from "./pages/Auth";
+import Search from "./pages/Search";
+import Note from "./pages/Note"; 
 import I18nProvider from "./labs/i18n/I18nProvider";
 import store from "./store";
 import "./helpers/polyfill";
@@ -30,6 +31,7 @@ root.render(
             <Route path="/trash" element={<Trash />} />
             <Route path="/signin" element={<SignIn />} />
             <Route path="/search" element={<Search />} />
+            <Route path="/note/:noteId" element={<Note />} />
           </Routes>
         </App>
       </HistoryRouter>
