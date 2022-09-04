@@ -1,0 +1,112 @@
+.fus-datepicker {
+    border-spacing: 0;
+    // color: #787878;
+    // background: white;
+    width: 100%;
+    border-radius: 6px;
+    // font-family: "Lato", sans-serif;
+    overflow: hidden;
+    outline-color: #e74c3c;
+    // border: 1px solid;
+    font-size: .26rem;
+    display: flex;
+    flex-direction: column;
+    // padding: 0 0.4rem 0.04rem;
+    >thead>tr{
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: .1rem;
+        &:first-of-type{
+            font-size: .2rem;
+            color: #d5d5dc;
+            letter-spacing: .0042rem;
+            // text-align: justify;
+            font-weight: 600;
+           
+            display: flex;
+            align-items: center;
+            >th:nth-of-type(2){
+                 font-family: "Bebas Neue Bold";
+            }
+        }
+    }
+    > tbody >tr{
+        // border: 1px solid;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: .1rem;
+        >td{
+            // position: absolute;
+            // left: 50%;
+            // top: 50%;
+            // -webkit-transform: translateX(-50%) translateY(-50%);
+            // transform: translateX(-50%) translateY(-50%);
+            width: 0.54rem;
+            height: 0.54rem;
+            border-radius: 50%;
+            background-color: #f7f7f7;
+            display: -webkit-flex;
+            display: flex;
+            -webkit-align-items: center;
+            align-items: center;
+            -webkit-justify-content: center;
+            justify-content: center;
+            font-family: PingFangSC-Regular;
+            font-size: .26rem;
+            // color: #fff;
+            letter-spacing: 0;
+            text-align: center;
+            font-weight: 400;
+        }
+    }
+}
+
+
+// .fus-datepicker td.day:not(.grayed):not(.selected) {
+//     cursor: pointer;
+//     border-radius: 50%;
+// }
+
+// .fus-datepicker td.day:not(.grayed):not(.selected).cursor {
+//     background: #eee;
+// }
+
+.fus-datepicker td.grayed {
+    color: #ccc;
+    border-radius: 50%;
+    // margin: 0.02rem;
+}
+
+.fus-datepicker td.selected {
+    color: white;
+    background: #e74c3c;
+}
+
+// .fus-datepicker td.today:not(.selected) {
+//     color: #e74c3c;
+// }
+
+// .fus-datepicker .weekdays {
+//     color: #e74c3c;
+//     >td{
+//         height: auto;
+//         font-size: .2rem;
+//         color: #404040;
+        
+//     }
+    
+// }
+
+// .fus-datepicker .chevron {
+//     cursor: pointer;
+//     user-select: none;
+//     font-size: 2.5em;
+//     margin-top: -0.1em;
+//     transition: color 0.2s ease-in-out;
+// }
+
+// .fus-datepicker .chevron:hover {
+//     color: #ccc;
+// }

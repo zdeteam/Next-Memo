@@ -1,7 +1,7 @@
 import { locationService, userService } from "../../../../services";
 import useI18n from "../../../../hooks/useI18n";
 import { GoCalendar, GoSettings, GoTrashcan, GoFileMedia, GoX, GoHome } from "react-icons/go";
-import { Calendar, Only ,HeatMap} from "@/components";
+import { Calendar, Only, HeatMap2 } from "@/components";
 import showDailyReviewDialog from "../DailyReviewDialog";
 import showSettingDialog from "../SettingDialog";
 import showResourcesDialog from "../ResourcesDialog";
@@ -16,8 +16,8 @@ import * as api from "@/helpers/api";
 import { useNavigate } from "react-router-dom";
 
 interface Props {
-  closePopup:()=>void
- }
+  closePopup: () => void;
+}
 
 const Index: React.FC<Props> = (props) => {
   const { t } = useI18n();
@@ -38,7 +38,7 @@ const Index: React.FC<Props> = (props) => {
   const { memos, tags } = useAppSelector((state) => state.memo);
   const [shouldShowPopupBtns, setShouldShowPopupBtns] = useState(false);
   const [username, setUsername] = useState("Memos");
-  const [tagsVisible,setTagsVisible] = useState(false);
+  const [tagsVisible, setTagsVisible] = useState(false);
   const [profile, setProfile] = useState<Profile>();
   const [createdDays, setCreatedDays] = useState(0);
   const isVisitorMode = userService.isVisitorMode();
@@ -85,9 +85,23 @@ const Index: React.FC<Props> = (props) => {
     <aside className="sidebar-wrapper">
       <div className="user-banner-container">
         <div className="username-container">
-          <span className="username-text" onClick={() => navigate('/setting')}>{username}</span>
+          <span className="username-text" onClick={() => navigate("/setting")}>
+            {username}
+          </span>
           {/*<span className="version">内测中 V{profile?.version}</span>*/}
         </div>
+      </div>
+
+      <div className="heatMap">
+        <HeatMap2
+          i18n={{
+            previousMonth: "Previous month",
+            nextMonth: "Next month",
+            months: ["01月", "02月", "03月", "04月", "05月", "06月", "07月", "08月", "09月", "10月", "11月", "12月"],
+            weekdays: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+            weekdaysShort: ["日", "一", "二", "三", "四", "五", "六"],
+          }}
+        />
       </div>
       <div className="amount-text-container">
         <div>
@@ -103,10 +117,6 @@ const Index: React.FC<Props> = (props) => {
           <span>DAYS</span>
         </div>
       </div>
-      <div className="heatMap">
-        <HeatMap />
-      </div>
-      
       <div className="menu-list">
         <div className="item" onClick={handleAllNotesClick}>
           <div>
@@ -123,7 +133,7 @@ const Index: React.FC<Props> = (props) => {
             />
           </div>
         </div>
-        <div  className="item" onClick={()=>setTagsVisible(!tagsVisible)}>
+        <div className="item" onClick={() => setTagsVisible(!tagsVisible)}>
           <div>
             <img
               src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAYAAABV7bNHAAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAASKADAAQAAAABAAAASAAAAACQMUbvAAAEAUlEQVR4Ae1bvWobQRC2hKTOzgMEAm4UF4HgFA5KEbALF34Cd+4EIaUL5xHiwlUIAXXp/AQuVEiQxiSFjbtEjSGQB3DcWULK9112zueL73a1p/uJmYVj73ZnZr/9bmdvd+5uaUmTMqAMKAPKgDKgDCgDyoAyoAwoA8qAMlAxBmpZ8cxms9rW1la7Vqu9gK1HWe3loH8FjGeDwWAEjLN57WciaHNz8zka/AwAzCudQM4FAO4Nh0PmzsmbIEPON5DTcm6tZEGQdAMIG/OQ1PDBbNyKI0fIOUfjxzh++9jLUwcYV3Dsoo114gVG4l5H7uRuXiMIo+cpGvluOnbebrdf9nq9cZ4dzWK72+02R6PRV5JEOyBnDaPoh4vNuotQXAYNcEIOEs6Pq0wOQRIfcf5FHBAU4peypNyLIBgLn1ZouHJudV9nYzhD/PfJRst8CYraeNDnSpDl9ipBSpCFAUu1jiAlyMKApdprJW2x6VSNDe776XT6Go/fNy5Lf25tsDj9VK/Xv2Dj+c6pkQUIleJiIOcxyDkA/g6Ot479oFyHetR31MksVgpBjUZjOYJ8JXKedhrKxfTTdDLXFepivPOmc6uCHC62vL29vSbXSflkMlmGi0n1KnSWUHYNd/slhXnkhRFk5pyDmxtGHG4TXGYHZTu3JfYzyJ+IFOwe5jknFeZinJClU4vM87IrGAsbQXxaoVFOtJxL6C7BqEH5T1yf4rClDnSeUAg6HEHXOLhR/ogjt1QYQeZR3mVPOOdE3OoUdQxopSY85hmuCAhqNpv7/X5f4lGpelkrC3OxrEDL0leCLMwrQUqQhQFLtY4gJcjCgKVaR5ASZGHAUl3YQtG8qg5W0uPxOLqb75hFoAVqEBoJZKB/BJ1wJe0ST7IZT6ovjCAGuwCC8Z87yWwfghXynYqUC9mmGJFnyF+liGeqKmwOYiQwE9IE5bzsSnOFjSCGJBCa+CDxIAlZoIMnKNsXQEk5Yj9HDI2wvtVqMb98UPEgdkyCWwx2SYK7XLtsPM2cI2qXLjoinCUvzMWiIHnnI9eu7/ZDuZh+xNTiT0shiCMJrnWI7jAO5BrPodwp9WQkLp6Ofy0WNgfFm+acFC9LuzaP8tyeVkltlzKCksBUsVwJstwVJUgJsjBgqdYRpARZGLBU+46gK7GLlXD4zlzKqpjHcIb4bVi9CEJjZ2IY57v8Dlmuq5gTH3EKtih+KUvKvT4kRwP8geUcufyj8V98aU8S8Fb2AotU5y/tvVbSaGSGzeMecvlXg5/580i6EZUoB15+OUHczkC9XIy9NUv/DTQ2198zZTFlcM71IwuxerlYtJPG3R7s/2LRvuq5MqAMKAPKgDKgDCgDyoAyoAy4MvAH/StlcsuDb1MAAAAASUVORK5CYII="
@@ -131,24 +141,20 @@ const Index: React.FC<Props> = (props) => {
             />
             <span>我的标签</span>
           </div>
-          <div style={tagsVisible?{ transform: 'rotate(90deg)'}:{}}>
+          <div style={tagsVisible ? { transform: "rotate(90deg)" } : {}}>
             <img
               src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADYAAAA2CAYAAACMRWrdAAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAANqADAAQAAAABAAAANgAAAADzQy6kAAADEUlEQVRoBe1YPYgTQRTO7iYESWcXMKCNTTgD+S0j5kAExSKljeh12nhi4V/l2eidgoeNhaIWVtZW4k9z5MciHMFDPEQDFzlREAIGxKzfO25lWDITc/tmrpmFMLPvbfK+73tvXmY2FrOXVcAqYBWwClgFrAJWAauAVWAXFPB939mFsFshtQVuNpsXEaHqum69WCz+Nk3Q1RGw0WhcRbYW8TkxGo2eYfR0xFH9JjuxVqu1gID02bpAqg7bE4zssYIY40bWUkT5UZaoBMddD8vl8pzjOP44J7eNTcV2u50AqRkFwDPI3H2Fn9XFmrFer7en3++/AMGqAuXdSqUyr/CzuNgyRmgymcyvVCp1HOW2okB3Ac3lpsLP4mIlRoiy2ewALf4YyLUVCK9gPV5X+CO7WEtRRNPtdvcOBoNXsB0S7eIc5C+hoSyKNq45e8YCYMjcj0QiMYv794EtPGIt3kZDOR+2c9xrI0bg8vn8N8/zaph+lIEFuXtYc3My/07t2kpRBIT1lAGBt7DtF+3BHCU5wud0qVR6GtiijkaIEchOp3NgOBwSuX0S0H9A7ijW3EuJfyqz1lIUkeRyuU+4rwH8V9EuzGk/eUu4jzQ1RoxQ4o/5A4ZHMsQo14My37R2o8TQJOYB/rICZFPhm8pljBgdZYBsSYYOJfozHo+ztX4jxNAVb4DQv6NMmBxIfcdu5UihUJD+54W/M+k+PumBqP4JRxn6+U2QmsUpezVqLPH72to91pKDXcUyxnNiQHGOTG2AVA2k1kQ7x1xLxkDGRaYeAOBZBcjP26TWFc/s2MVODKQ8ZOoxEJ2SoUKm1mlNIVNfZM9EtbOWIp2it1/e1GXAQGoN3a+GfeSG7BkOO1tXpDUFUs8xqkitJpPJqm5SJAwbMWQCnPzXCrXf4XR9GFurTcUzbC42YoQIW6Y7GK6F0YH0Ch1f6IwW9um6Z11jAUg0jwWUJe00YiD1ht6D0CuDwG9i1EKMgIPcEkpzJp1On6SXPCbIGItBXdJYMBvIKmAVsApYBawCVgGrgFXAKvCfCvwF5+bysL/RBPAAAAAASUVORK5CYII="
               alt=""
             />
           </div>
         </div>
-        {
-          tagsVisible&&(
-            <TagList closePopup={props.closePopup} />
-          )
-        }
+        {tagsVisible && <TagList closePopup={props.closePopup} />}
         <Only when={!userService.isVisitorMode()}>
           {/*<div onClick={handleMyAccountBtnClick}>*/}
           {/*  <GoSettings /> {t("sidebar.setting")}*/}
           {
             /*</div>*/
-            <div  className="item" onClick={() => navigate('/trash')}>
+            <div className="item" onClick={() => navigate("/trash")}>
               <div>
                 <img
                   src="data:image/png;base64,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"

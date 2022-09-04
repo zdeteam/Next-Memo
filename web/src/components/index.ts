@@ -10,8 +10,10 @@ import Memo from "./Memo";
 import PageLayout from "./PageLayout";
 import NoMore from "./NoMore";
 import { HeatMap } from "./HeatMap/Calendar";
+import HeatMap2 from './HeatMap2'
 
 export {
+  HeatMap2,
   List,
   Loading,
   ShareSheet,

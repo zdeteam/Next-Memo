@@ -236,7 +236,7 @@ const Index = function (
   };
   return (
     <div className={`prosemirror-editor ${props.cardMode && "no-hover"}`}>
-      <div className={`editor ${isFold && showFoldBtn && "fold"}`} ref={editorRef}>
+      <div style={props.cardMode ? { padding: 0 } : {}} className={`editor ${isFold && showFoldBtn && "fold"}`} ref={editorRef}>
         <EditorContent editor={editor} />
       </div>
       {/* {showFoldBtn && props.foldable && (

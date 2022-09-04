@@ -6,7 +6,7 @@ import { useLocaleUtils, useLocaleLanguage } from './shared/hooks';
 
 import { Header, MonthSelector, YearSelector, DaysList } from './components';
 
-import './DatePicker.css';
+import './DatePicker.less';
 
 const HeatMap = ({
   value,

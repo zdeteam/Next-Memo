@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useLoading from "@/hooks/useLoading";
-import { userService } from "@/services";
+import { userService,memoService } from "@/services";
 import { useAppSelector } from "@/store";
 import { Popup, Modal, Toast, Editor, Button, Input, Only } from "@/components";
 import Sidebar from "./components/Sidebar";
@@ -88,6 +88,7 @@ function Index() {
         }
         loadingState.setFinish();
       });
+      memoService.updateTagsState();
   }, []);
 
   return (

@@ -17,7 +17,6 @@ const memoService = {
   },
 
   fetchAllMemos: async (params: MemoFind) => {
-    console.log('params',params)
     const timeoutIndex = setTimeout(() => {
       store.dispatch(setIsFetching(true));
     }, 1000);
@@ -31,7 +30,6 @@ const memoService = {
     }
     const { data } = (await api.getMemoList(memoFind)).data;
     const memos = data.list.filter((m) => m.rowStatus !== "ARCHIVED").map((m) => convertResponseModelMemo(m));
-    console.log(22222,data.total)
     store.dispatch(setMemos({ total: data.total, list: memos }));
     store.dispatch(setMount(data.total));
     clearTimeout(timeoutIndex);

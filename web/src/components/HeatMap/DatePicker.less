@@ -447,8 +447,9 @@
 
 .Calendar__weekDays {
   display: flex;
-  justify-content: space-between;
-  color: var(--cl-color-disabled);
+  border: 1px solid;
+  /* justify-content: space-between; */
+  /* color: var(--cl-color-disabled); */
   font-size: 1.2em;
   margin-bottom: 0.7em;
   /* padding: 0 2.6em; */
@@ -457,14 +458,14 @@
 
 .Calendar__weekDay {
   display: block;
-  width: calc(100% / 7);
+  width: calc(100%/7);
   text-align: center;
   text-decoration: none;
 }
 
 .Calendar__sectionWrapper {
   position: relative;
-  min-height: 21.8em;
+  min-height: 3.2rem;
   overflow: hidden;
 }
 
@@ -516,11 +517,12 @@
 .Calendar__weekRow {
   display: flex;
   width: 100%;
+  border: 1px solid;
 }
 
 .Calendar__day {
   display: block;
-  width: calc(100% / 7);
+  width: 0.6rem;
   text-align: center;
   padding: calc(0.25em - 1px) 0;
   font-size: 1.6em;
@@ -533,6 +535,7 @@
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  border: 1px solid;
 }
 
 .Calendar__day:focus {
@@ -541,8 +544,12 @@
 }
 
 .Calendar__day.-ltr {
-  min-height: 2.6em;
-  font-size: 1.45em;
+  width: 0.64rem;
+  height: 0.6rem;
+  margin: 0 .05rem;
+
+  /* min-height: 2.6em; */
+  font-size: 0.26rem;
 }
 
 .Calendar__day.-rtl {

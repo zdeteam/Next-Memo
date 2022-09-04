@@ -153,6 +153,7 @@ const DaysList = ({
       year: date.year,
     }));
     const allDays = [...prependingBlankDays, ...standardDays];
+    console.log('allDays',allDays)
     return allDays;
   };
 

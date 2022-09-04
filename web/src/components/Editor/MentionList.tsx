@@ -10,6 +10,7 @@ interface Props {
 export default forwardRef((props: Props, ref) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const { tags } = useAppSelector((state) => state.memo);
+  console.log('tags',tags)
   const selectItem = (index: number) => {
     const item = tags[index];
     if (item) {
