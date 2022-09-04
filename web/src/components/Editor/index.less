@@ -17,6 +17,15 @@
 
   //border: 1px solid rgb(234, 234, 230);
   
+  &.toolbar-on-top{
+    // border: 1px solid red;
+    flex-direction: column-reverse;
+    >.toolbar{
+      margin: 0;
+    }
+  }
+
+
   &.no-hover {
     border: none;
   }
@@ -64,6 +73,7 @@
     display: flex;
     align-items: center;
      margin-top: 0.2rem;
+     font-size: 0.34rem;
     .editor-toolbar {
       display: flex;
       align-items: center;
@@ -78,6 +88,7 @@
           width: .4rem;
           height: .4rem;
           vertical-align: top;
+          fill: rgba(28, 31, 35, 0.84);
         }
       }
     }

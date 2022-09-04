@@ -8,7 +8,8 @@ import Trash from "./pages/Trash";
 import Setting from "./pages/Setting";
 import SignIn from "./pages/Auth";
 import Search from "./pages/Search";
-import Note from "./pages/Note"; 
+import Note from "./pages/Note";
+import Edit from "./pages/Edit"
 import I18nProvider from "./labs/i18n/I18nProvider";
 import store from "./store";
 import "./helpers/polyfill";
@@ -32,6 +33,7 @@ root.render(
             <Route path="/signin" element={<SignIn />} />
             <Route path="/search" element={<Search />} />
             <Route path="/note/:noteId" element={<Note />} />
+            <Route path="/edit" element={<Edit />} />
           </Routes>
         </App>
       </HistoryRouter>

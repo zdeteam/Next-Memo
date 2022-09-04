@@ -14,6 +14,7 @@ import Image from "../Image";
 import Editor from "../Editor";
 import "./index.less";
 import { setEditMemoId } from "@/store/modules/editor";
+import { useNavigate } from "react-router-dom";
 
 dayjs.extend(relativeTime);
 
@@ -31,6 +32,7 @@ export const getFormatedMemoCreatedAtStr = (createdTs: number): string => {
 };
 
 const Index: React.FC<Props> = (props: Props) => {
+  const navigate = useNavigate();
   const [memo, setMemo] = useState({ editable: false, ...props.memo });
   const [moreAction, setMoreAction] = useState(false);
   const [createdAtStr, setCreatedAtStr] = useState<string>(getFormatedMemoCreatedAtStr(memo.createdTs * 1000));
@@ -63,11 +65,11 @@ const Index: React.FC<Props> = (props: Props) => {
     }
   }, [editorState.editMemoId]);
 
-
   const handleEditMemoClick = () => {
-    console.log(memo.id);
-    editorStateService.setEditMemoWithId(memo.id);
-    setMoreAction(false);
+    // console.log(memo.id);
+    // editorStateService.setEditMemoWithId(memo.id);
+    // setMoreAction(false);
+    navigate("/edit");
   };
 
   const handleArchiveMemoClick = async () => {
@@ -92,7 +94,6 @@ const Index: React.FC<Props> = (props: Props) => {
       },
     });
   };
-
 
   // const handleMemoContentClick = async (e: React.MouseEvent) => {
   //   const targetEl = e.target as HTMLElement;
@@ -205,19 +206,17 @@ const Index: React.FC<Props> = (props: Props) => {
   };
 
   return (
-    <div
-      onDoubleClick={handleEditMemoClick}
-      className={`memo-wrapper ${"memos-" + memo.id} ${memo.pinned && "pinned"} ${memo.editable && "editing"}`}
-    >
+    <div className={`memo-wrapper ${"memos-" + memo.id} ${memo.pinned && "pinned"} ${memo.editable && "editing"}`}>
       <div className="memo-top-wrapper">
         <span className="time-text">{createdAtStr}</span>
-        {!userService.isVisitorMode() && !memo.editable && props.actions?.length !== 0 && <GoKebabHorizontal onClick={moreActions} />}
+        {!userService.isVisitorMode() && !memo.editable && props.actions?.length !== 0 && <img src="/svg/menu.svg" onClick={moreActions} />}
       </div>
       <Editor
         foldable
         cardMode
         content={memo.content}
         editable={editable}
+        onClick={handleEditMemoClick}
         onCancel={() => editorStateService.setEditMemoWithId(UNKNOWN_ID)}
       />
       <Only when={imageUrls.length > 0}>
@@ -247,7 +246,8 @@ const Index: React.FC<Props> = (props: Props) => {
                   handleArchiveMemoClick();
                 }
                 if (action.action === "edit") {
-                  handleEditMemoClick();
+                  // handleEditMemoClick();
+                  navigate("/edit");
                 }
                 if (action.action === "share") {
                   setMoreAction(false);

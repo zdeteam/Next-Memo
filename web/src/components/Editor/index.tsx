@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { GoBold, GoListOrdered, GoListUnordered, GoUnfold, GoFold, GoTasklist } from "react-icons/go";
 import { MdOutlineUnfoldMore, MdOutlineUnfoldLess } from "react-icons/md";
 import { EditorContent, ReactRenderer, useEditor } from "@tiptap/react";
+import classNames from 'classnames';
 import Document from "@tiptap/extension-document";
 import TaskItem from "@tiptap/extension-task-item";
 import TaskList from "@tiptap/extension-task-list";
@@ -28,7 +29,9 @@ interface ProseMirrorEditorProps {
   foldable?: boolean;
   cardMode?: boolean;
   onCancel?: () => void;
+  onClick?: () => void;
   clearWhenSave?: boolean;
+  toolbarPosition?: "top" | "bottom";
 }
 const MenuBar = ({ editor }: { editor: any }) => {
   if (!editor) {
@@ -56,6 +59,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
 const Index = function (
   props: ProseMirrorEditorProps = {
     editable: true,
+    toolbarPosition: "bottom",
   }
 ) {
   const MAX_MEMO_CONTAINER_HEIGHT = 160;
@@ -235,15 +239,13 @@ const Index = function (
     setIsFold(!isFold);
   };
   return (
-    <div className={`prosemirror-editor ${props.cardMode && "no-hover"}`}>
-      <div style={props.cardMode ? { padding: 0 } : {}} className={`editor ${isFold && showFoldBtn && "fold"}`} ref={editorRef}>
+    <div
+      onClick={props.onClick}
+      className={classNames("prosemirror-editor", { "no-hover": props.cardMode, "toolbar-on-top": props.toolbarPosition === "top" })}
+    >
+      <div style={props.cardMode ? { padding: 0 } : {}} className={classNames("editor", { fold: isFold && showFoldBtn })} ref={editorRef}>
         <EditorContent editor={editor} />
       </div>
-      {/* {showFoldBtn && props.foldable && (
-        <span className="fold-btn" onClick={handleExpandBtnClick}>
-          {!isFold ? <MdOutlineUnfoldLess /> : <MdOutlineUnfoldMore />}
-        </span>
-      )} */}
       {editor && props.editable ? (
         <>
           <div className="toolbar">
