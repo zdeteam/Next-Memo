@@ -1,16 +1,18 @@
 import { useEffect, useRef, useState } from "react";
 import { memoService, shortcutService, editorStateService } from "@/services";
 import { useAppSelector } from "@/store";
+import useI18n from "@/hooks/useI18n";
 import { IMAGE_URL_REG, LINK_URL_REG, MEMO_LINK_REG, TAG_REG } from "@/helpers/consts";
 import * as utils from "@/helpers/utils";
 import { checkShouldShowMemoWithFilters } from "@/helpers/filter";
-import { Toast, NoMore, Memo, Dialog } from "@/components";
+import { Toast, NoMore, Memo, Loading, Only } from "@/components";
 // import Memo from "@/components/Memo";
 import "./index.less";
 
 interface Props {}
 
 const Index: React.FC<Props> = () => {
+  const { t } = useI18n();
   const query = useAppSelector((state) => state.location.query);
   const memos = useAppSelector((state) => state.memo.memos);
   const user = useAppSelector((state) => state.user.user);
@@ -84,6 +86,7 @@ const Index: React.FC<Props> = () => {
       .fetchAllMemos()
       .then(() => {
         // do nth
+        setFetchStatus(false);
       })
       .catch((error) => {
         console.error(error);
@@ -110,9 +113,7 @@ const Index: React.FC<Props> = () => {
   return (
     <div className={`memo-list-container ${isFetching ? "" : "completed"}`} ref={wrapperElement}>
       <Only when={isFetching}>
-        <div className="status-text-container fetching-tip">
-          <p className="status-text">{t("memo-list.fetching-data")}</p>
-        </div>
+        <Loading />
       </Only>
       {sortedMemos.map((memo) => (
         <Memo

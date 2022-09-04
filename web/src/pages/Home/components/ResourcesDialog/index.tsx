@@ -84,9 +84,9 @@ const Index: React.FC<Props> = (props: Props) => {
     inputEl.click();
   };
 
-  const handlPreviewBtnClick = (resource: Resource) => {
-    showPreviewImageDialog(`${window.location.origin}/h/r/${resource.id}/${resource.filename}`);
-  };
+  // const handlPreviewBtnClick = (resource: Resource) => {
+  //   showPreviewImageDialog(`${window.location.origin}/h/r/${resource.id}/${resource.filename}`);
+  // };
 
   const handleCopyResourceLinkBtnClick = (resource: Resource) => {
     utils.copyTextToClipboard(`${window.location.origin}/h/r/${resource.id}/${resource.filename}`);
@@ -136,7 +136,7 @@ const Index: React.FC<Props> = (props: Props) => {
                   <span className="field-text">{resource.type}</span>
                   <div className="buttons-container">
                     <Dropdown className="actions-dropdown">
-                      <button onClick={() => handlPreviewBtnClick(resource)}>Preview</button>
+                      {/* <button onClick={() => handlPreviewBtnClick(resource)}>Preview</button> */}
                       <button onClick={() => handleCopyResourceLinkBtnClick(resource)}>Copy Link</button>
                       <button className="delete-btn" onClick={() => handleDeleteResourceBtnClick(resource)}>
                         Delete
