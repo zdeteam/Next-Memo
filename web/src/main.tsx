@@ -6,6 +6,7 @@ import App from "./App";
 import Index from "./pages/Home";
 import Trash from "./pages/Trash"
 import Setting from "./pages/Setting"
+import SignIn from "./pages/Auth"
 import I18nProvider from "./labs/i18n/I18nProvider";
 import store from "./store";
 import "./helpers/polyfill";
@@ -26,6 +27,7 @@ root.render(
             <Route path="/u/*" element={<Index />} />
             <Route path="/setting" element={<Setting />} />
             <Route path="/trash" element={<Trash />} />
+            <Route path="/signin" element={<SignIn />} />
           </Routes>
         </App>
       </HistoryRouter>

@@ -92,7 +92,7 @@ const Index: React.FC<Props> = (props: Props) => {
 
   const handleArchiveMemoClick =
     async () => {
-      setMoreAction(false);
+      setMoreAction(false)
       Dialog.confirm({
         title: '移至废纸篓',
         message: '可在废纸篓中恢复数据',

@@ -1,17 +1,24 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { userService } from "@/services";
-import { NavBar, Button } from "@/components";
+import { NavBar, Button,Dialog } from "@/components";
 import "./index.less";
 
 const SettingPage = () => {
+  const navigate = useNavigate()
   const navigation = useNavigate();
   const handleSignOutBtnClick = async () => {
-    const { host, owner, user } = userService.getState();
-    userService.doSignOut().catch(() => {
-      // do nth
-    });
-    if (host) window.location.href = `/u/${host.id}`;
+
+    Dialog.confirm({
+      title: '是否退出登录',
+      onConfirm: async () => {
+        const { host, owner, user } = userService.getState();
+        userService.doSignOut().catch(() => {
+          // do nth
+        });
+        navigate("/signin")
+      }
+    })
   };
 
   return (

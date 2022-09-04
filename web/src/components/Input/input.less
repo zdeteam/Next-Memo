@@ -1,16 +1,6 @@
 .input-wrapper {
-  //height: 32px;
-  //line-height: 30px;
-  display: inline-block;
-  position: relative;
-  vertical-align: middle;
-  box-shadow: none;
-  border: 1px solid transparent;
-  //width: 100%;
-  outline: none;
-  cursor: text;
-  box-sizing: border-box;
-  color: var(--semi-color-text-0);
+  display: flex;
+  flex-flow: column;
   > input {
     border-radius: 99px;
     background-color: #2e32380d;
@@ -22,17 +12,19 @@
     padding-right: 12px;
     //background-color: transparent;
     box-sizing: border-box;
-    height: 30px;
-    line-height: 30px;
+    height: 0.8rem;
+    line-height: 0.8rem;
     color:rgba(28, 31, 35, 0.6);
     font-size:13px;
+    // border: 1px solid;
   }
   > label {
     display: inline-block;
     font-size: 13px;
-    margin-bottom: 4px;
-    margin-left: 8px;
+    margin:8px 0 2px 0;
+    padding-left: 8px;
     font-weight: bold;
+    // border: 1px solid;
   }
   >.message{
     //border: 1px solid;
