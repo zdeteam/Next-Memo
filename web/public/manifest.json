@@ -9,9 +9,9 @@
     }
   ],
   "start_url": "/",
-  "background_color": "#f6f5f4",
+  "background_color": "#ffffff",
   "display": "standalone",
   "scope": "/",
-  "theme_color": "#f6f5f4",
+  "theme_color": "#ffffff",
   "description": "轻笔记，慢生活"
 }
