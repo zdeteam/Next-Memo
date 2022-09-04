@@ -1,4 +1,4 @@
-import { Loading,Button, Toast, Popup, Dialog, Calendar, NavBar, ActionSheet, ShareSheet } from "react-vant";
+import { Loading, Button, List, Toast, Popup, Dialog, Calendar, NavBar, ActionSheet, ShareSheet } from "react-vant";
 import Editor from "./Editor";
 // import Button from "./Button";
 import DatePicker from "./DatePicker";
@@ -12,6 +12,7 @@ import NoMore from "./NoMore";
 import { HeatMap } from "./HeatMap/Calendar";
 
 export {
+  List,
   Loading,
   ShareSheet,
   PageLayout,

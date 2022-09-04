@@ -92,6 +92,8 @@ func (s *Server) registerMemoRoutes(g *echo.Group) {
 		ctx := c.Request().Context()
 		memoFind := &api.MemoFind{}
 
+		response := api.MemoGet{}
+
 		if userID, err := strconv.Atoi(c.QueryParam("creatorId")); err == nil {
 			memoFind.CreatorID = &userID
 		}
@@ -140,12 +142,24 @@ func (s *Server) registerMemoRoutes(g *echo.Group) {
 		}
 
 		list, err := s.Store.FindMemoList(ctx, memoFind)
+		response.List = list
+
+		normalRowStatus := api.Normal
+		memoMountFind := &api.MemoFind{
+			CreatorID: memoFind.CreatorID,
+			RowStatus: &normalRowStatus,
+		}
+
+		allMemos, err := s.Store.FindMemoList(ctx, memoMountFind)
+
+		response.Total = len(allMemos)
+
 		if err != nil {
 			return echo.NewHTTPError(http.StatusInternalServerError, "Failed to fetch memo list").SetInternal(err)
 		}
 
 		c.Response().Header().Set(echo.HeaderContentType, echo.MIMEApplicationJSONCharsetUTF8)
-		if err := json.NewEncoder(c.Response().Writer).Encode(composeResponse(list)); err != nil {
+		if err := json.NewEncoder(c.Response().Writer).Encode(composeResponse(response)); err != nil {
 			return echo.NewHTTPError(http.StatusInternalServerError, "Failed to encode memo list response").SetInternal(err)
 		}
 		return nil

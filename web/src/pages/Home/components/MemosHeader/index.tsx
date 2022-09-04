@@ -51,15 +51,15 @@ const Index: React.FC<Props> = (props) => {
     }
   }, [query, shortcuts]);
 
-  const handleTitleTextClick = useCallback(() => {
-    const now = Date.now();
-    if (now - prevRequestTimestamp > 1 * 1000) {
-      prevRequestTimestamp = now;
-      memoService.fetchAllMemos().catch(() => {
-        // do nth
-      });
-    }
-  }, []);
+  // const handleTitleTextClick = useCallback(() => {
+  //   const now = Date.now();
+  //   if (now - prevRequestTimestamp > 1 * 1000) {
+  //     prevRequestTimestamp = now;
+  //     memoService.fetchAllMemos().catch(() => {
+  //       // do nth
+  //     });
+  //   }
+  // }, []);
 
   return (
     <div className="memos-header-container">

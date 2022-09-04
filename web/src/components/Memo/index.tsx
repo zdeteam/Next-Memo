@@ -8,7 +8,7 @@ import { IMAGE_URL_REG, UNKNOWN_ID } from "@/helpers/consts";
 import { DONE_BLOCK_REG, TODO_BLOCK_REG } from "@/helpers/marked";
 import { editorStateService, locationService, memoService, userService } from "@/services";
 import Only from "../OnlyWhen";
-import { Toast, ActionSheet, Dialog,ShareSheet } from "@/components";
+import { Toast, ActionSheet, Dialog, ShareSheet } from "@/components";
 import { useAppSelector } from "../../store";
 import Image from "../Image";
 import showMemoCardDialog from "../../pages/Home/components/MemoCardDialog";
@@ -21,7 +21,7 @@ dayjs.extend(relativeTime);
 
 interface Props {
   memo: Memo;
-  actions:any[];
+  actions: any[];
 }
 
 export const getFormatedMemoCreatedAtStr = (createdTs: number): string => {
@@ -35,15 +35,15 @@ export const getFormatedMemoCreatedAtStr = (createdTs: number): string => {
 const Index: React.FC<Props> = (props: Props) => {
   const [memo, setMemo] = useState({ editable: false, ...props.memo });
   const [moreAction, setMoreAction] = useState(false);
-  const [createdAtStr, setCreatedAtStr] = useState<string>(getFormatedMemoCreatedAtStr(memo.createdTs));
+  const [createdAtStr, setCreatedAtStr] = useState<string>(getFormatedMemoCreatedAtStr(memo.createdTs*1000));
   const memoContainerRef = useRef<HTMLDivElement>(null);
   const memoContentContainerRef = useRef<HTMLDivElement>(null);
   const imageUrls = Array.from(memo.content.match(IMAGE_URL_REG) ?? []).map((s) => s.replace(IMAGE_URL_REG, "$1"));
   const isVisitorMode = userService.isVisitorMode();
   const editorState = useAppSelector((state) => state.editor);
-  const [editable,setEditable] = useState(false);
-  const [shareVisible,setShareVisible] = useState(false);
-  
+  const [editable, setEditable] = useState(false);
+  const [shareVisible, setShareVisible] = useState(false);
+
   useEffect(() => {
     if (!memoContentContainerRef) {
       return;
@@ -51,20 +51,19 @@ const Index: React.FC<Props> = (props: Props) => {
 
     if (Date.now() - memo.createdTs < 1000 * 60 * 60 * 24) {
       setInterval(() => {
-        setCreatedAtStr(dayjs(memo.createdTs).fromNow());
+        setCreatedAtStr(dayjs(memo.createdTs * 1000).fromNow());
       }, 1000 * 1);
     }
   }, []);
 
-
-  useEffect(()=>{
-    console.log('editMemoId')
-    if(memo.id===editorState.editMemoId){
+  useEffect(() => {
+    console.log("editMemoId");
+    if (memo.id === editorState.editMemoId) {
       setEditable(true);
-    }else{
+    } else {
       setEditable(false);
     }
-  },[editorState.editMemoId])
+  }, [editorState.editMemoId]);
 
   const handleShowMemoStoryDialog = () => {
     showMemoCardDialog(memo);
@@ -87,33 +86,33 @@ const Index: React.FC<Props> = (props: Props) => {
   };
 
   const handleEditMemoClick = () => {
+    console.log(memo.id)
     editorStateService.setEditMemoWithId(memo.id);
     setMoreAction(false);
   };
 
-  const handleArchiveMemoClick =
-    async () => {
-      setMoreAction(false)
-      Dialog.confirm({
-        title: '移至废纸篓',
-        message: '可在废纸篓中恢复数据',
-        onConfirm: async () => {
-          try {
-            await memoService.patchMemo({
-              id: memo.id,
-              rowStatus: "ARCHIVED",
-            });
-            Toast.info('删除成功');
-          } catch (error: any) {
-            Toast.info(error.message);
-          }
-
-          if (editorStateService.getState().editMemoId === memo.id) {
-            editorStateService.clearEditMemo();
-          }
+  const handleArchiveMemoClick = async () => {
+    setMoreAction(false);
+    Dialog.confirm({
+      title: "移至废纸篓",
+      message: "可在废纸篓中恢复数据",
+      onConfirm: async () => {
+        try {
+          await memoService.patchMemo({
+            id: memo.id,
+            rowStatus: "ARCHIVED",
+          });
+          Toast.info("删除成功");
+        } catch (error: any) {
+          Toast.info(error.message);
         }
-      })
-    };
+
+        if (editorStateService.getState().editMemoId === memo.id) {
+          editorStateService.clearEditMemo();
+        }
+      },
+    });
+  };
 
   const handleGenMemoImageBtnClick = () => {
     showShareMemoImageDialog(memo);
@@ -202,18 +201,18 @@ const Index: React.FC<Props> = (props: Props) => {
   const handleDeleteMemoClick = async () => {
     setMoreAction(false);
     Dialog.confirm({
-      title: '是否彻底删除',
-      message: '删除后笔记不可恢复',
+      title: "是否彻底删除",
+      message: "删除后笔记不可恢复",
       onConfirm: async () => {
         try {
           await memoService.deleteMemoById(memo.id);
-          await memoService.fetchAllMemos();
-          Toast.info('删除成功')
+          await memoService.fetchAllMemos({ limit: 10, offset: 0 });
+          Toast.info("删除成功");
         } catch (error: any) {
           Toast.info(error.message);
         }
-      }
-    })
+      },
+    });
   };
 
   const handleRestoreMemoClick = async () => {
@@ -222,8 +221,8 @@ const Index: React.FC<Props> = (props: Props) => {
         id: memo.id,
         rowStatus: "NORMAL",
       });
-      await memoService.fetchAllMemos();
-      Toast.info("Restored successfully")
+      await memoService.fetchAllMemos({ limit: 10, offset: 0 });
+      Toast.info("Restored successfully");
     } catch (error: any) {
       Toast.info(error.message);
     }
@@ -239,8 +238,13 @@ const Index: React.FC<Props> = (props: Props) => {
         <span className="time-text">{createdAtStr}</span>
         {!userService.isVisitorMode() && !memo.editable && <GoKebabHorizontal onClick={moreActions} />}
       </div>
-      <Editor foldable cardMode content={memo.content} editable={editable} 
-      onCancel={() => editorStateService.setEditMemoWithId(UNKNOWN_ID)} />
+      <Editor
+        foldable
+        cardMode
+        content={memo.content}
+        editable={editable}
+        onCancel={() => editorStateService.setEditMemoWithId(UNKNOWN_ID)}
+      />
       <Only when={imageUrls.length > 0}>
         <div className="images-wrapper">
           {imageUrls.map((imgUrl, idx) => (
@@ -255,43 +259,46 @@ const Index: React.FC<Props> = (props: Props) => {
           </Only>
         </div>
       )} */}
-     
+
       <ActionSheet
         visible={moreAction}
         onCancel={() => setMoreAction(false)}
         // description='这是一段描述信息'
-        actions={props.actions.map((action)=>({...action,callback:()=>{
-          if(action.action==='delete'){
-            handleArchiveMemoClick()
-          }
-          if(action.action==='edit'){
-            handleEditMemoClick()
-          }
-          if(action.action==='share'){
-            setMoreAction(false);
-            setShareVisible(true)
-          }
-          if(action.action==='deleteForever'){
-            handleDeleteMemoClick()
-          }
-          if(action.action==='restore'){
-            handleRestoreMemoClick()
-          }
-        }}))}
-        cancelText='取消'
+        actions={props.actions.map((action) => ({
+          ...action,
+          callback: () => {
+            if (action.action === "delete") {
+              handleArchiveMemoClick();
+            }
+            if (action.action === "edit") {
+              handleEditMemoClick();
+            }
+            if (action.action === "share") {
+              setMoreAction(false);
+              setShareVisible(true);
+            }
+            if (action.action === "deleteForever") {
+              handleDeleteMemoClick();
+            }
+            if (action.action === "restore") {
+              handleRestoreMemoClick();
+            }
+          },
+        }))}
+        cancelText="取消"
       />
       <ShareSheet
         visible={shareVisible}
         options={[
-          { name: '复制链接', icon: 'link' },
-          { name: '分享卡片', icon: 'poster' }
+          { name: "复制链接", icon: "link" },
+          { name: "分享卡片", icon: "poster" },
         ]}
-        title='立即分享给好友'
+        title="立即分享给好友"
         onCancel={() => setShareVisible(false)}
         onSelect={(option, index) => {
-          console.log('option', option)
-          console.log('index', index)
-          setShareVisible(false)
+          console.log("option", option);
+          console.log("index", index);
+          setShareVisible(false);
         }}
       />
     </div>
@@ -300,8 +307,8 @@ const Index: React.FC<Props> = (props: Props) => {
 
 export default memo(Index);
 
-
-{/* <div className="action-bar">
+{
+  /* <div className="action-bar">
 <GoBook onClick={() => clickCardMoreAction(handleShowMemoStoryDialog)} />
 <HiAnnotation />
 <GoPin onClick={() => clickCardMoreAction(handleTogglePinMemoBtnClick)} />
@@ -311,4 +318,5 @@ export default memo(Index);
   onClick={() => clickCardMoreAction(() => handleVisibilitySelectorChange(memo.visibility === "PUBLIC" ? "PRIVATE" : "PUBLIC"))}
 />
 <GoTrashcan onClick={} />
-</div> */}
+</div> */
+}

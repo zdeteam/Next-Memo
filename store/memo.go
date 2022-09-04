@@ -299,7 +299,7 @@ func findMemoRawList(ctx context.Context, tx *sql.Tx, find *api.MemoFind) ([]*me
 	if find.Limit > 0 {
 		pagination = fmt.Sprintf("%s LIMIT %d", pagination, find.Limit)
 		if find.Offset > 0 {
-			pagination = fmt.Sprintf("%s OFFSET %d", pagination, find.Offset)
+			pagination = fmt.Sprintf("%s OFFSET %d", pagination, find.Offset*find.Limit)
 		}
 	}
 

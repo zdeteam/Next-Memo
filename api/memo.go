@@ -80,3 +80,8 @@ type MemoFind struct {
 type MemoDelete struct {
 	ID int `json:"id"`
 }
+
+type MemoGet struct {
+	Total int     `json:"total"`
+	List  []*Memo `json:"list"`
+}

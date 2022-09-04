@@ -89,7 +89,13 @@ export function getMemoList(memoFind?: MemoFind) {
   if (memoFind?.rowStatus) {
     queryList.push(`rowStatus=${memoFind.rowStatus}`);
   }
-  return axios.get<ResponseObject<Memo[]>>(`/api/memo?${queryList.join("&")}`);
+  if (memoFind?.limit) {
+    queryList.push(`limit=${memoFind.limit}`);
+  }
+  if (memoFind?.offset !== undefined) {
+    queryList.push(`offset=${memoFind.offset}`);
+  }
+  return axios.get<ResponseObject<{ total: number; list: Memo[] }>>(`/api/memo?${queryList.join("&")}`);
 }
 
 export function createMemo(memoCreate: MemoCreate) {
