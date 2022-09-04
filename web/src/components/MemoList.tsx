@@ -1,16 +1,17 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { memoService, shortcutService } from "../services";
+import useI18n from "../hooks/useI18n";
 import { useAppSelector } from "../store";
-import { IMAGE_URL_REG, LINK_URL_REG, MEMO_LINK_REG, TAG_REG } from "../helpers/consts";
+import { IMAGE_URL_REG, LINK_URL_REG, MEMO_LINK_REG, TAG_REG } from "../helpers/marked";
 import * as utils from "../helpers/utils";
 import { checkShouldShowMemoWithFilters } from "../helpers/filter";
 import toastHelper from "./Toast";
+import Only from "./common/OnlyWhen";
 import Memo from "./Memo";
 import "../less/memo-list.less";
 
-interface Props {}
-
-const MemoList: React.FC<Props> = () => {
+const MemoList = () => {
+  const { t } = useI18n();
   const query = useAppSelector((state) => state.location.query);
   const memos = useAppSelector((state) => state.memo.memos);
   const user = useAppSelector((state) => state.user.user);
@@ -83,7 +84,7 @@ const MemoList: React.FC<Props> = () => {
     memoService
       .fetchAllMemos()
       .then(() => {
-        setFetchStatus(false);
+        // do nth
       })
       .catch((error) => {
         console.error(error);
@@ -92,13 +93,20 @@ const MemoList: React.FC<Props> = () => {
   }, [user]);
 
   useEffect(() => {
-    wrapperElement.current?.scrollTo({ top: 0 });
+    wrapperElement.current?.scrollTo({
+      top: 0,
+    });
   }, [query]);
 
   return (
     <div className={`memo-list-container ${isFetching ? "" : "completed"}`} ref={wrapperElement}>
+      <Only when={isFetching}>
+        <div className="status-text-container fetching-tip">
+          <p className="status-text">{t("memo-list.fetching-data")}</p>
+        </div>
+      </Only>
       {sortedMemos.map((memo) => (
-        <Memo key={`${memo.id}-${memo.updatedTs}`} memo={memo} />
+        <Memo key={`${memo.id}-${memo.createdTs}-${memo.updatedTs}`} memo={memo} />
       ))}
       <div className="status-text-container">
         <p className="status-text">

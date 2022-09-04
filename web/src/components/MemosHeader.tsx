@@ -8,9 +8,7 @@ import "../less/memos-header.less";
 
 let prevRequestTimestamp = Date.now();
 
-interface Props {}
-
-const MemosHeader: React.FC<Props> = () => {
+const MemosHeader = () => {
   const query = useAppSelector((state) => state.location.query);
   const shortcuts = useAppSelector((state) => state.shortcut.shortcuts);
   const [titleText, setTitleText] = useState("");
@@ -48,7 +46,7 @@ const MemosHeader: React.FC<Props> = () => {
 
   const handleTitleTextClick = useCallback(() => {
     const now = Date.now();
-    if (now - prevRequestTimestamp > 10 * 1000) {
+    if (now - prevRequestTimestamp > 1 * 1000) {
       prevRequestTimestamp = now;
       memoService.fetchAllMemos().catch(() => {
         // do nth

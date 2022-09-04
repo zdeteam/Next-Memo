@@ -10,6 +10,7 @@ export interface EditorRefActions {
   insertText: (text: string) => void;
   setContent: (text: string) => void;
   getContent: () => string;
+  getCursorPosition: () => number;
 }
 
 interface EditorProps {
@@ -18,10 +19,8 @@ interface EditorProps {
   placeholder: string;
   fullscreen: boolean;
   showConfirmBtn: boolean;
-  showCancelBtn: boolean;
   tools?: ReactNode;
   onConfirmBtnClick: (content: string) => void;
-  onCancelBtnClick: () => void;
   onContentChange: (content: string) => void;
 }
 
@@ -33,9 +32,7 @@ const Editor = forwardRef((props: EditorProps, ref: React.ForwardedRef<EditorRef
     placeholder,
     fullscreen,
     showConfirmBtn,
-    showCancelBtn,
     onConfirmBtnClick: handleConfirmBtnClickCallback,
-    onCancelBtnClick: handleCancelBtnClickCallback,
     onContentChange: handleContentChangeCallback,
   } = props;
   const { t } = useI18n();
@@ -68,20 +65,26 @@ const Editor = forwardRef((props: EditorProps, ref: React.ForwardedRef<EditorRef
         }
 
         const prevValue = editorRef.current.value;
-        editorRef.current.value =
-          prevValue.slice(0, editorRef.current.selectionStart) + rawText + prevValue.slice(editorRef.current.selectionStart);
+        const cursorPosition = editorRef.current.selectionStart;
+        editorRef.current.value = prevValue.slice(0, cursorPosition) + rawText + prevValue.slice(cursorPosition);
+        editorRef.current.focus();
+        editorRef.current.selectionEnd = cursorPosition + rawText.length;
         handleContentChangeCallback(editorRef.current.value);
         refresh();
       },
       setContent: (text: string) => {
         if (editorRef.current) {
           editorRef.current.value = text;
+          editorRef.current.focus();
           handleContentChangeCallback(editorRef.current.value);
           refresh();
         }
       },
       getContent: (): string => {
         return editorRef.current?.value ?? "";
+      },
+      getCursorPosition: (): number => {
+        return editorRef.current?.selectionStart ?? 0;
       },
     }),
     []
@@ -111,10 +114,6 @@ const Editor = forwardRef((props: EditorProps, ref: React.ForwardedRef<EditorRef
     editorRef.current.value = "";
   }, []);
 
-  const handleCommonCancelBtnClick = useCallback(() => {
-    handleCancelBtnClickCallback();
-  }, []);
-
   return (
     <div className={"common-editor-wrapper " + className}>
       <textarea
@@ -130,11 +129,6 @@ const Editor = forwardRef((props: EditorProps, ref: React.ForwardedRef<EditorRef
           <Only when={props.tools !== undefined}>{props.tools}</Only>
         </div>
         <div className="btns-container">
-          <Only when={showCancelBtn}>
-            <button className="action-btn cancel-btn" onClick={handleCommonCancelBtnClick}>
-              {t("editor.cancel-edit")}
-            </button>
-          </Only>
           <Only when={showConfirmBtn}>
             <button className="action-btn confirm-btn" disabled={editorRef.current?.value === ""} onClick={handleCommonConfirmBtnClick}>
               {t("editor.save")} <span className="icon-text">✍️</span>

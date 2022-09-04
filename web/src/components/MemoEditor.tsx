@@ -16,8 +16,9 @@ interface State {
   fullscreen: boolean;
 }
 
-const MemoEditor: React.FC<Props> = () => {
+const MemoEditor = () => {
   const { t, locale } = useI18n();
+  const user = useAppSelector((state) => state.user.user);
   const editorState = useAppSelector((state) => state.editor);
   const tags = useAppSelector((state) => state.memo.tags);
   const [state, setState] = useState<State>({
@@ -27,6 +28,7 @@ const MemoEditor: React.FC<Props> = () => {
   const editorRef = useRef<EditorRefActions>(null);
   const prevGlobalStateRef = useRef(editorState);
   const tagSeletorRef = useRef<HTMLDivElement>(null);
+  const editorFontStyle = user?.setting.editorFontStyle || "normal";
 
   useEffect(() => {
     if (editorState.markMemoId && editorState.markMemoId !== UNKNOWN_ID) {
@@ -167,7 +169,7 @@ const MemoEditor: React.FC<Props> = () => {
     setEditorContentCache("");
   };
 
-  const handleCancelBtnClick = useCallback(() => {
+  const handleCancelEditingBtnClick = useCallback(() => {
     editorStateService.clearEditMemo();
     editorRef.current?.setContent("");
     setEditorContentCache("");
@@ -177,21 +179,55 @@ const MemoEditor: React.FC<Props> = () => {
     setEditorContentCache(content);
   }, []);
 
+  const handleCheckBoxBtnClick = () => {
+    if (!editorRef.current) {
+      return;
+    }
+
+    const cursorPosition = editorRef.current.getCursorPosition();
+    const prevValue = editorRef.current.getContent().slice(0, cursorPosition);
+    if (prevValue === "" || prevValue.endsWith("\n")) {
+      editorRef.current?.insertText("- [ ] ");
+    } else {
+      editorRef.current?.insertText("\n- [ ] ");
+    }
+  };
+
+  const handleCodeBlockBtnClick = () => {
+    if (!editorRef.current) {
+      return;
+    }
+
+    const cursorPosition = editorRef.current.getCursorPosition();
+    const prevValue = editorRef.current.getContent().slice(0, cursorPosition);
+    if (prevValue === "" || prevValue.endsWith("\n")) {
+      editorRef.current?.insertText("```\n\n```");
+    } else {
+      editorRef.current?.insertText("\n```\n\n```");
+    }
+  };
+
   const handleUploadFileBtnClick = useCallback(() => {
     const inputEl = document.createElement("input");
+    inputEl.style.position = "fixed";
+    inputEl.style.top = "-100vh";
+    inputEl.style.left = "-100vw";
+    document.body.appendChild(inputEl);
     inputEl.type = "file";
-    inputEl.multiple = false;
-    inputEl.accept = "image/png, image/gif, image/jpeg";
+    inputEl.multiple = true;
+    inputEl.accept = "image/*";
     inputEl.onchange = async () => {
       if (!inputEl.files || inputEl.files.length === 0) {
         return;
       }
 
-      const file = inputEl.files[0];
-      const url = await handleUploadFile(file);
-      if (url) {
-        editorRef.current?.insertText(`![](${url})`);
+      for (const file of inputEl.files) {
+        const url = await handleUploadFile(file);
+        if (url) {
+          editorRef.current?.insertText(`![](${url})`);
+        }
       }
+      document.body.removeChild(inputEl);
     };
     inputEl.click();
   }, []);
@@ -214,22 +250,25 @@ const MemoEditor: React.FC<Props> = () => {
 
   const editorConfig = useMemo(
     () => ({
-      className: "memo-editor",
+      className: `memo-editor ${editorFontStyle}`,
       initialContent: getEditorContentCache(),
       placeholder: t("editor.placeholder"),
       fullscreen: state.fullscreen,
       showConfirmBtn: true,
-      showCancelBtn: isEditing,
       onConfirmBtnClick: handleSaveBtnClick,
-      onCancelBtnClick: handleCancelBtnClick,
       onContentChange: handleContentChange,
     }),
-    [isEditing, state.fullscreen, locale]
+    [isEditing, state.fullscreen, locale, editorFontStyle]
   );
 
   return (
     <div className={`memo-editor-container ${isEditing ? "edit-ing" : ""} ${state.fullscreen ? "fullscreen" : ""}`}>
-      <p className={"tip-text " + (isEditing ? "" : "hidden")}>Editting...</p>
+      <div className={`tip-container ${isEditing ? "" : "!hidden"}`}>
+        <span className="tip-text">{t("editor.editing")}</span>
+        <button className="cancel-btn" onClick={handleCancelEditingBtnClick}>
+          {t("common.cancel")}
+        </button>
+      </div>
       <Editor
         ref={editorRef}
         {...editorConfig}
@@ -238,11 +277,27 @@ const MemoEditor: React.FC<Props> = () => {
             <div className="action-btn tag-action">
               <Icon.Hash className="icon-img" />
               <div ref={tagSeletorRef} className="tag-list" onClick={handleTagSeletorClick}>
-                {tags.map((t) => {
-                  return <span key={t}>{t}</span>;
-                })}
+                {tags.length > 0 ? (
+                  tags.map((tag) => {
+                    return (
+                      <span className="item-container" key={tag}>
+                        {tag}
+                      </span>
+                    );
+                  })
+                ) : (
+                  <p className="tip-text" onClick={(e) => e.stopPropagation()}>
+                    {t("common.null")}
+                  </p>
+                )}
               </div>
             </div>
+            <button className="action-btn">
+              <Icon.CheckSquare className="icon-img" onClick={handleCheckBoxBtnClick} />
+            </button>
+            <button className="action-btn">
+              <Icon.Code className="icon-img" onClick={handleCodeBlockBtnClick} />
+            </button>
             <button className="action-btn">
               <Icon.Image className="icon-img" onClick={handleUploadFileBtnClick} />
               <span className={`tip-text ${state.isUploadingResource ? "!block" : ""}`}>Uploading</span>

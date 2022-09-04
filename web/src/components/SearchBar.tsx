@@ -6,9 +6,7 @@ import React, { useEffect, useState } from "react";
 import Modal from "../components/common/Modal";
 import { GoSearch } from "react-icons/go";
 
-interface Props {}
-
-const SearchBar: React.FC<Props> = () => {
+const SearchBar = () => {
   const memoType = useAppSelector((state) => state.location.query?.type);
   const [keyword, setKeyword] = useState("");
   const [showCmdK, setShowCmdK] = useState(false);

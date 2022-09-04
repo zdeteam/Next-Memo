@@ -15,12 +15,8 @@
         > .title-container {
           @apply w-full flex flex-row justify-between items-center;
 
-          > .title-text {
-            @apply text-2xl mb-2;
-
-            > .icon-text {
-              @apply text-4xl;
-            }
+          > .logo-img {
+            @apply h-20 w-auto;
           }
         }
 
@@ -61,7 +57,7 @@
         @apply flex flex-row justify-end items-center w-full mt-2;
 
         > .btn {
-          @apply px-1 py-2 text-sm rounded hover:opacity-80;
+          @apply flex flex-row justify-center items-center px-1 py-2 text-sm rounded hover:opacity-80;
 
           &.signin-btn {
             @apply bg-green-600 text-white px-3 shadow;
@@ -70,6 +66,10 @@
           &.requesting {
             @apply cursor-wait opacity-80;
           }
+
+          > .img-icon {
+            @apply w-4 h-auto mr-1 animate-spin;
+          }
         }
       }
 
@@ -77,7 +77,7 @@
         @apply w-full inline-block float-right text-sm mt-4 text-gray-500 text-right whitespace-pre-wrap;
 
         &.host-tip {
-          @apply bg-blue-500 text-white px-2 py-1 rounded;
+          @apply text-blue-600;
         }
       }
     }

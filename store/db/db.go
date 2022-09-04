@@ -7,7 +7,6 @@ import (
 	"errors"
 	"fmt"
 	"io/fs"
-	"io/ioutil"
 	"os"
 	"regexp"
 	"sort"
@@ -15,8 +14,6 @@ import (
 
 	"github.com/usememos/memos/common"
 	"github.com/usememos/memos/server/profile"
-
-	_ "github.com/mattn/go-sqlite3"
 )
 
 //go:embed migration
@@ -91,12 +88,12 @@ func (db *DB) Open(ctx context.Context) (err error) {
 				minorVersionList := getMinorVersionList()
 
 				// backup the raw database file before migration
-				rawBytes, err := ioutil.ReadFile(db.profile.DSN)
+				rawBytes, err := os.ReadFile(db.profile.DSN)
 				if err != nil {
 					return fmt.Errorf("failed to read raw database file, err: %w", err)
 				}
 				backupDBFilePath := fmt.Sprintf("%s/memos_%s_%d_backup.db", db.profile.Data, db.profile.Version, time.Now().Unix())
-				if err := ioutil.WriteFile(backupDBFilePath, rawBytes, 0644); err != nil {
+				if err := os.WriteFile(backupDBFilePath, rawBytes, 0644); err != nil {
 					return fmt.Errorf("failed to write raw database file, err: %w", err)
 				}
 
@@ -176,11 +173,7 @@ func (db *DB) applyMigrationForMinorVersion(ctx context.Context, minorVersion st
 		return err
 	}
 
-	if err := tx.Commit(); err != nil {
-		return err
-	}
-
-	return nil
+	return tx.Commit()
 }
 
 func (db *DB) seed(ctx context.Context) error {
@@ -205,7 +198,7 @@ func (db *DB) seed(ctx context.Context) error {
 	return nil
 }
 
-// excecute runs a single SQL statement within a transaction.
+// execute runs a single SQL statement within a transaction.
 func (db *DB) execute(ctx context.Context, stmt string) error {
 	tx, err := db.Db.Begin()
 	if err != nil {
@@ -217,11 +210,7 @@ func (db *DB) execute(ctx context.Context, stmt string) error {
 		return err
 	}
 
-	if err := tx.Commit(); err != nil {
-		return err
-	}
-
-	return nil
+	return tx.Commit()
 }
 
 // minorDirRegexp is a regular expression for minor version directory.
@@ -265,9 +254,5 @@ func (db *DB) createMigrationHistoryTable(ctx context.Context) error {
 		return err
 	}
 
-	if err := tx.Commit(); err != nil {
-		return err
-	}
-
-	return nil
+	return tx.Commit()
 }

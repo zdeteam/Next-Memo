@@ -9,13 +9,14 @@
     "create": "创建",
     "change": "修改",
     "reset": "重置",
-    "restore": "恢复",
     "language": "语言",
     "version": "版本",
     "pin": "置顶",
     "unpin": "取消置顶",
     "edit": "编辑",
+    "restore": "恢复",
     "delete": "删除",
+    "null": "空",
     "share": "分享",
     "mark": "标注",
     "archive": "归档",
@@ -39,12 +40,15 @@
     "umo": "有墨更多"
   },
   "editor": {
+    "editing": "编辑中...",
     "save": "记下",
-    "cancel-edit": "退出编辑",
     "placeholder": "现在的想法是..."
   },
   "memo": {
     "view-story": "查看详情"
+  },
+  "memo-list": {
+    "fetching-data": "请求数据中..."
   },
   "tag-list": {
     "tip-text": "输入 #tag 创建标签"

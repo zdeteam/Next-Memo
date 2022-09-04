@@ -2,13 +2,14 @@ import { useState, useEffect, useCallback } from "react";
 import { editorStateService, memoService, userService } from "../services";
 import { IMAGE_URL_REG, MEMO_LINK_REG, UNKNOWN_ID } from "../helpers/consts";
 import * as utils from "../helpers/utils";
-import { formatMemoContent, parseHtmlToRawText } from "../helpers/marked";
+import { formatMemoContent, IMAGE_URL_REG, MEMO_LINK_REG, parseHtmlToRawText } from "../helpers/marked";
 import Only from "./common/OnlyWhen";
 import toastHelper from "./Toast";
 import { generateDialog } from "./Dialog";
 import Image from "./Image";
 import Icon from "./Icon";
 import Selector from "./common/Selector";
+import showChangeMemoCreatedTsDialog from "./ChangeMemoCreatedTsDialog";
 import "../less/memo-card-dialog.less";
 
 interface LinkedMemo extends Memo {
@@ -21,6 +22,7 @@ interface Props extends DialogProps {
 }
 
 const MemoCardDialog: React.FC<Props> = (props: Props) => {
+  const memos = useAppSelector((state) => state.memo.memos);
   const [memo, setMemo] = useState<Memo>({
     ...props.memo,
   });
@@ -74,7 +76,12 @@ const MemoCardDialog: React.FC<Props> = (props: Props) => {
     };
 
     fetchLinkedMemos();
-  }, [memo.id]);
+    setMemo(memoService.getMemoById(memo.id) as Memo);
+  }, [memos, memo.id]);
+
+  const handleMemoCreatedAtClick = () => {
+    showChangeMemoCreatedTsDialog(memo.id);
+  };
 
   const handleMemoContentClick = useCallback(async (e: React.MouseEvent) => {
     const targetEl = e.target as HTMLElement;

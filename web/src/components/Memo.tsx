@@ -34,11 +34,12 @@ const Memo: React.FC<Props> = (props: Props) => {
   const [moreAction, setMoreAction] = useState(false);
   const [createdAtStr, setCreatedAtStr] = useState<string>(getFormatedMemoCreatedAtStr(memo.createdTs));
   const memoContainerRef = useRef<HTMLDivElement>(null);
+  const memoContentContainerRef = useRef<HTMLDivElement>(null);
   const imageUrls = Array.from(memo.content.match(IMAGE_URL_REG) ?? []).map((s) => s.replace(IMAGE_URL_REG, "$1"));
   const isVisitorMode = userService.isVisitorMode();
 
   useEffect(() => {
-    if (!memoContainerRef) {
+    if (!memoContentContainerRef) {
       return;
     }
 
@@ -125,7 +126,7 @@ const Memo: React.FC<Props> = (props: Props) => {
       }
 
       const status = targetEl.dataset?.value;
-      const todoElementList = [...(memoContainerRef.current?.querySelectorAll(`span.todo-block[data-value=${status}]`) ?? [])];
+      const todoElementList = [...(memoContentContainerRef.current?.querySelectorAll(`span.todo-block[data-value=${status}]`) ?? [])];
       for (const element of todoElementList) {
         if (element === targetEl) {
           const index = indexOf(todoElementList, element);

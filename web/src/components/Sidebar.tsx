@@ -13,9 +13,7 @@ import TagList from "./TagList";
 import "../less/siderbar.less";
 import { useAppSelector } from "../store";
 
-interface Props {}
-
-const Sidebar: React.FC<Props> = () => {
+const Sidebar = () => {
   const { t } = useI18n();
   const user = useAppSelector((state) => state.user.user as User);
   console.log("user", user);

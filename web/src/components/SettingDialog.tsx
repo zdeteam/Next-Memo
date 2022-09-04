@@ -13,7 +13,7 @@ import AboutSection from "./Settings/AboutSection";
 import "../less/setting-dialog.less";
 import Icon from "./Icon";
 
-interface Props extends DialogProps {}
+type Props = DialogProps;
 
 type SettingSection = "my-account" | "preferences" | "member";
 

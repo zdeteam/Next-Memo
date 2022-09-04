@@ -8,7 +8,7 @@ tmp
 web/dist
 
 # build folder
-memos-build
+build
 
 .DS_Store
 .idea

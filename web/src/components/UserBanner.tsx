@@ -8,9 +8,7 @@ import { useAppSelector } from "../store";
 import "../less/user-banner.less";
 import * as api from "../helpers/api";
 
-interface Props {}
-
-const UserBanner: React.FC<Props> = () => {
+const UserBanner = () => {
   const { user, owner } = useAppSelector((state) => state.user);
   const { memos, tags } = useAppSelector((state) => state.memo);
   const [shouldShowPopupBtns, setShouldShowPopupBtns] = useState(false);

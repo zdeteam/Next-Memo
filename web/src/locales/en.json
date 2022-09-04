@@ -14,7 +14,9 @@
     "pin": "Pin",
     "unpin": "Unpin",
     "edit": "Edit",
+    "restore": "Restore",
     "delete": "Delete",
+    "null": "Null",
     "share": "Share",
     "mark": "Mark",
     "archive": "Archive",
@@ -38,12 +40,15 @@
     "umo": "UMO More"
   },
   "editor": {
+    "editing": "Editing...",
     "save": "Save",
-    "cancel-edit": "Cancel edit",
     "placeholder": "Any thoughts..."
   },
   "memo": {
     "view-story": "View Story"
+  },
+  "memo-list": {
+    "fetching-data": "fetching data..."
   },
   "tag-list": {
     "tip-text": "Enter `#tag ` to create"
@@ -56,7 +61,8 @@
       "title": "Account Information"
     },
     "preference-section": {
-      "default-memo-visibility": "Default memo visibility"
+      "default-memo-visibility": "Default memo visibility",
+      "editor-font-style": "Editor font style"
     },
     "member-section": {
       "create-a-member": "Create a member"

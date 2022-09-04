@@ -3,6 +3,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 interface State {
   memos: Memo[];
   tags: string[];
+  isFetching: boolean;
 }
 
 const memoSlice = createSlice({
@@ -10,6 +11,8 @@ const memoSlice = createSlice({
   initialState: {
     memos: [],
     tags: [],
+    // isFetching flag should starts with true.
+    isFetching: true,
   } as State,
   reducers: {
     setMemos: (state, action: PayloadAction<Memo[]>) => {
@@ -47,9 +50,15 @@ const memoSlice = createSlice({
         tags: action.payload,
       };
     },
+    setIsFetching: (state, action: PayloadAction<boolean>) => {
+      return {
+        ...state,
+        isFetching: action.payload,
+      };
+    },
   },
 });
 
-export const { setMemos, setTags, createMemo, patchMemo } = memoSlice.actions;
+export const { setMemos, createMemo, patchMemo, setTags, setIsFetching } = memoSlice.actions;
 
 export default memoSlice.reducer;

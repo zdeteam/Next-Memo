@@ -7,6 +7,7 @@ import * as storage from "./helpers/storage";
 
 function App(props: any) {
   const { setLocale } = useI18n();
+  const user = useAppSelector((state) => state.user.user);
   const global = useAppSelector((state) => state.global);
   const pathname = useAppSelector((state) => state.location.pathname);
   const [isLoading, setLoading] = useState(true);
@@ -18,11 +19,17 @@ function App(props: any) {
   }, []);
 
   useEffect(() => {
+    if (user?.setting.locale) {
+      globalService.setLocale(user.setting.locale);
+    }
+  }, [user?.setting.locale]);
+
+  useEffect(() => {
     setLocale(global.locale);
     storage.set({
       locale: global.locale,
     });
-  }, [global]);
+  }, [global.locale]);
 
   return <>{isLoading ? null : props.children}</>;
 }
