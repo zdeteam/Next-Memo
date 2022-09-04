@@ -88,7 +88,7 @@ function Index() {
         }
         loadingState.setFinish();
       });
-      memoService.updateTagsState();
+    memoService.updateTagsState();
   }, []);
 
   return (

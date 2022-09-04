@@ -115,7 +115,7 @@ const Index: React.FC<Props> = () => {
   const onLoad = async () => {
     const { total, list } = await getData();
     // setMemoList([...memoList, ...list]);
-    setMemoList((v) => [...v, ...list]);
+    setMemoList((v: any[]) => [...v, ...list]);
     // console.log('totaltotaltotaltotal',total,memoList.length)
     if (memoList.length >= total) {
       setFinished(true);

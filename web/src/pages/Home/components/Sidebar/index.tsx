@@ -6,7 +6,7 @@ import showDailyReviewDialog from "../DailyReviewDialog";
 import showSettingDialog from "../SettingDialog";
 import showResourcesDialog from "../ResourcesDialog";
 // import HeatMap from "../HeatMap";
-import ShortcutList from "../ShortcutList";
+// import ShortcutList from "../ShortcutList";
 import TagList from "../TagList";
 import "./index.less";
 import { useAppSelector } from "@/store";
