@@ -83,7 +83,7 @@ const Index: React.FC<Props> = () => {
     memoService
       .fetchAllMemos()
       .then(() => {
-        setFetchStatus(false);
+        // do nth
       })
       .catch((error) => {
         console.error(error);
@@ -92,7 +92,9 @@ const Index: React.FC<Props> = () => {
   }, [user]);
 
   useEffect(() => {
-    wrapperElement.current?.scrollTo({ top: 0 });
+    wrapperElement.current?.scrollTo({
+      top: 0,
+    });
   }, [query]);
 
   const handleEditMemoClick = (memo: any) => {
@@ -107,6 +109,11 @@ const Index: React.FC<Props> = () => {
 
   return (
     <div className={`memo-list-container ${isFetching ? "" : "completed"}`} ref={wrapperElement}>
+      <Only when={isFetching}>
+        <div className="status-text-container fetching-tip">
+          <p className="status-text">{t("memo-list.fetching-data")}</p>
+        </div>
+      </Only>
       {sortedMemos.map((memo) => (
         <Memo
           key={`${memo.id}-${memo.updatedTs}`}

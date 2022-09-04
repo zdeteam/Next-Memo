@@ -1,9 +1,9 @@
-import { useAppSelector } from "../../../../store";
-import { GoTag, GoCalendar, GoSearch, GoLightBulb, GoTelescope } from "react-icons/go";
-import { locationService, shortcutService } from "../../../../services";
-import * as utils from "../../../../helpers/utils";
-import { getTextWithMemoType } from "../../../../helpers/filter";
-import "./index.less";
+import { useAppSelector } from "../store";
+import { GoTag, GoCalendar, GoSearch, GoLightBulb,GoTelescope } from "react-icons/go";
+import { locationService, shortcutService } from "../services";
+import * as utils from "../helpers/utils";
+import { getTextWithMemoType } from "../helpers/filter";
+import "../less/memo-filter.less";
 
 interface FilterProps {}
 

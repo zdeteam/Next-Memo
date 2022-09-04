@@ -73,7 +73,12 @@ const Index: React.FC<Props> = (props: Props) => {
     };
 
     fetchLinkedMemos();
-  }, [memo.id]);
+    setMemo(memoService.getMemoById(memo.id) as Memo);
+  }, [memos, memo.id]);
+
+  const handleMemoCreatedAtClick = () => {
+    showChangeMemoCreatedTsDialog(memo.id);
+  };
 
   const handleMemoContentClick = useCallback(async (e: React.MouseEvent) => {
     const targetEl = e.target as HTMLElement;

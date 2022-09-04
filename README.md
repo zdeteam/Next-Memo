@@ -15,7 +15,7 @@
 
 ![demo](https://github.com/zdeteam/open-flomo/blob/a4c463f801c67b4bd93b18a9dd87e97b22f565b1/screen.png)
 
-## ✨ Features
+## Features
 
 - 🦄 Fully open source;
 - 📜 Writing in plain textarea without any burden,
@@ -24,7 +24,9 @@
 - 🚀 Fast self-hosting with `Docker`;
 - 🤠 Pleasant UI and UX;
 
-## ⚓️ Deploy with Docker
+## Deploy with Docker
+
+### Docker Run
 
 ```docker
 docker run -d --name open-flomo --publish 8080:8080 --volume ~/.open-flomo/:/var/opt/open-flomo zdeteam/open-flomo:latest --mode prod --port 8080 --emailHost 发送邮件服务器(例如：smtp.exmail.qq.com) --emailPort 端口号 --emailUsername 邮箱账号 --emailPassword 邮箱密码
@@ -32,7 +34,11 @@ docker run -d --name open-flomo --publish 8080:8080 --volume ~/.open-flomo/:/var
 
 OpenFlomo should be running at [http://localhost:5230](http://localhost:5230). If the `~/.memos/` does not have a `memos_prod.db` file, then memos will auto generate it.
 
-## 🏗 Development
+### Docker Compose
+
+See [the example `docker-compose.yaml`](./docker-compose.yaml) file.
+
+## Development
 
 OpenFlomo is built with a curated tech stack. It is optimized for developer experience and is very easy to start working on the code:
 1. It has no external dependency.

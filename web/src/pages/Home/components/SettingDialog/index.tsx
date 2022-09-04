@@ -11,7 +11,7 @@ import PreferencesSection from "../Settings/PreferencesSection";
 import MemberSection from "../Settings/MemberSection";
 import "./index.less";
 
-interface Props extends DialogProps {}
+type Props = DialogProps;
 
 type SettingSection = "my-account" | "preferences" | "member";
 

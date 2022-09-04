@@ -18,17 +18,32 @@ const localeSelectorItems = [
   },
 ];
 
-const PreferencesSection: React.FC<Props> = () => {
+const editorFontStyleSelectorItems = [
+  {
+    text: "Normal",
+    value: "normal",
+  },
+  {
+    text: "Mono",
+    value: "mono",
+  },
+];
+
+const PreferencesSection = () => {
   const { t } = useI18n();
   const { setting } = useAppSelector((state) => state.user.user as User);
 
   const handleLocaleChanged = async (value: string) => {
-    globalService.setLocale(value as Locale);
     await userService.upsertUserSetting("locale", value);
+    globalService.setLocale(value as Locale);
   };
 
   const handleDefaultMemoVisibilityChanged = async (value: string) => {
     await userService.upsertUserSetting("memoVisibility", value);
+  };
+
+  const handleEditorFontStyleChanged = async (value: string) => {
+    await userService.upsertUserSetting("editorFontStyle", value);
   };
 
   return (

@@ -9,7 +9,7 @@ import { showCommonDialog } from "../../../../components/Dialog/CommonDialog";
 import { Toast } from "@/components";
 import "./index.less";
 
-interface Props extends DialogProps {}
+type Props = DialogProps;
 
 interface State {
   resources: Resource[];
@@ -50,9 +50,13 @@ const Index: React.FC<Props> = (props: Props) => {
     }
 
     const inputEl = document.createElement("input");
+    inputEl.style.position = "fixed";
+    inputEl.style.top = "-100vh";
+    inputEl.style.left = "-100vw";
+    document.body.appendChild(inputEl);
     inputEl.type = "file";
-    inputEl.multiple = false;
-    inputEl.accept = "image/png, image/gif, image/jpeg";
+    inputEl.multiple = true;
+    inputEl.accept = "image/*";
     inputEl.onchange = async () => {
       if (!inputEl.files || inputEl.files.length === 0) {
         return;
@@ -78,6 +82,10 @@ const Index: React.FC<Props> = (props: Props) => {
       }
     };
     inputEl.click();
+  };
+
+  const handlPreviewBtnClick = (resource: Resource) => {
+    showPreviewImageDialog(`${window.location.origin}/h/r/${resource.id}/${resource.filename}`);
   };
 
   const handleCopyResourceLinkBtnClick = (resource: Resource) => {
@@ -128,6 +136,7 @@ const Index: React.FC<Props> = (props: Props) => {
                   <span className="field-text">{resource.type}</span>
                   <div className="buttons-container">
                     <Dropdown className="actions-dropdown">
+                      <button onClick={() => handlPreviewBtnClick(resource)}>Preview</button>
                       <button onClick={() => handleCopyResourceLinkBtnClick(resource)}>Copy Link</button>
                       <button className="delete-btn" onClick={() => handleDeleteResourceBtnClick(resource)}>
                         Delete

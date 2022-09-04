@@ -1,14 +1,15 @@
 import { useEffect } from "react";
 import { GoPlus, GoSettings, GoTrashcan, GoFileMedia } from "react-icons/go";
-import { locationService, shortcutService } from "../../../../services";
-import { useAppSelector } from "@/store";
-import useI18n from "@/hooks/useI18n";
-import * as utils from "@/helpers/utils";
-import useToggle from "@/hooks/useToggle";
-import useLoading from "@/hooks/useLoading";
-import { Toast } from "@/components";
-import showCreateShortcutDialog from "../CreateShortcutDialog";
-import "./index.less";
+import { locationService, shortcutService } from "../services";
+import { useAppSelector } from "../store";
+import useI18n from "../hooks/useI18n";
+import * as utils from "../helpers/utils";
+import useToggle from "../hooks/useToggle";
+import useLoading from "../hooks/useLoading";
+import Icon from "./Icon";
+import toastHelper from "./Toast";
+import showCreateShortcutDialog from "./CreateShortcutDialog";
+import "../less/shortcut-list.less";
 
 interface Props {}
 

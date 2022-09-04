@@ -9,14 +9,12 @@ import Dropdown from "@/components/Dropdown";
 import { showCommonDialog } from "@/components/Dialog/CommonDialog";
 import "./member-section.less";
 
-interface Props {}
-
 interface State {
   createUserEmail: string;
   createUserPassword: string;
 }
 
-const PreferencesSection: React.FC<Props> = () => {
+const PreferencesSection = () => {
   const { t } = useI18n();
   const currentUser = useAppSelector((state) => state.user.user);
   const [state, setState] = useState<State>({
