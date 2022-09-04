@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { NavBar, Button, Memo, Toast } from "@/components";
+import { NavBar, PageLayout, Memo, Toast } from "@/components";
 import useLoading from "@/hooks/useLoading";
 import { memoService } from "@/services";
 import { useAppSelector } from "@/store";
@@ -31,23 +31,24 @@ const TrashPage = (props: any) => {
     }, [memos]);
 
     return (
-        <div className="trash-page">
-            <NavBar title="回收站" leftText="返回" onClickLeft={() => navigation("/")} />
-            <div className="list">
-                {
-                    archivedMemos.map((memo) =>
-                        <Memo key={`${memo.id}-${memo.updatedTs}`} memo={memo}
-                            actions={
-                                [
-                                    { name: '恢复笔记',action:'restore' },
-                                    { name: '彻底删除',action:'deleteForever' }
-                                ]
-                            }
-                        />
-                    )
-                }
-            </div>
-        </div>
+        <PageLayout
+            title='回收站'
+            className="trash-page"
+            onClickLeft={() => navigation("/")}
+        >
+            {
+                archivedMemos.map((memo) =>
+                    <Memo key={`${memo.id}-${memo.updatedTs}`} memo={memo}
+                        actions={
+                            [
+                                { name: '恢复笔记', action: 'restore' },
+                                { name: '彻底删除', action: 'deleteForever' }
+                            ]
+                        }
+                    />
+                )
+            }
+        </PageLayout>
     );
 };
 

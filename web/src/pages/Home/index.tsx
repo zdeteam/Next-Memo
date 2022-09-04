@@ -101,18 +101,19 @@ function Index() {
               setVisible(false);
             }}
           >
-            <Sidebar />
+            <Sidebar closePopup={() => setVisible(false)} />
           </Popup>
           <main className="memos-wrapper">
-            <MemosHeader onClick={() => setVisible(!visible)} />
-            <Only when={!userService.isVisitorMode()}>
-              <div className="editor">
-                <Editor editable clearWhenSave />
-              </div>
-            </Only>
-            {/* <MemoFilter /> */}
+            <div className="top">
+              <MemosHeader onClick={() => setVisible(!visible)} />
+              <Only when={!userService.isVisitorMode()}>
+                <div className="editor">
+                  <Editor editable clearWhenSave />
+                </div>
+              </Only>
+            </div>
             <MemoList />
-            <Only when={userService.isVisitorMode()}>
+            {/* <Only when={userService.isVisitorMode()}>
               <div className="addtion-btn-container">
                 {user ? (
                   <Button size="L" onClick={() => (window.location.href = "/")}>
@@ -124,7 +125,7 @@ function Index() {
                   </Button>
                 )}
               </div>
-            </Only>
+            </Only> */}
           </main>
         </div>
       )}

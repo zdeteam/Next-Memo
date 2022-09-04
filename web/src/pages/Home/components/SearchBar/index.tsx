@@ -5,10 +5,12 @@ import "./index.less";
 import React, { useEffect, useState } from "react";
 import Modal from "../../../../components/Modal";
 import { GoSearch } from "react-icons/go";
+import { useNavigate } from "react-router-dom";
 
 interface Props {}
 
 const Index: React.FC<Props> = () => {
+  const navigate = useNavigate()
   const memoType = useAppSelector((state) => state.location.query?.type);
   const [keyword, setKeyword] = useState("");
   const [showCmdK, setShowCmdK] = useState(false);
@@ -27,34 +29,34 @@ const Index: React.FC<Props> = () => {
     setKeyword(text);
   };
 
-  useEffect(() => {
-    function handleKeyDown(e: KeyboardEvent) {
-      if ((navigator?.platform?.toLowerCase().includes("mac") ? e.metaKey : e.ctrlKey) && e.key === "k") {
-        e.preventDefault();
-        e.stopPropagation();
-        setShowCmdK(!showCmdK);
-      }
-      console.log(e.key);
-      if (e.key === "Enter") {
-        locationService.setTextQuery(keyword);
-        setShowCmdK(false);
-      }
-      if (e.key === "Escape") {
-        setShowCmdK(false);
-      }
-    }
+  // useEffect(() => {
+  //   function handleKeyDown(e: KeyboardEvent) {
+  //     if ((navigator?.platform?.toLowerCase().includes("mac") ? e.metaKey : e.ctrlKey) && e.key === "k") {
+  //       e.preventDefault();
+  //       e.stopPropagation();
+  //       setShowCmdK(!showCmdK);
+  //     }
+  //     console.log(e.key);
+  //     if (e.key === "Enter") {
+  //       locationService.setTextQuery(keyword);
+  //       setShowCmdK(false);
+  //     }
+  //     if (e.key === "Escape") {
+  //       setShowCmdK(false);
+  //     }
+  //   }
 
-    if (!showCmdK) setKeyword("");
+  //   if (!showCmdK) setKeyword("");
 
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [showCmdK, keyword]);
+  //   document.addEventListener("keydown", handleKeyDown);
+  //   return () => {
+  //     document.removeEventListener("keydown", handleKeyDown);
+  //   };
+  // }, [showCmdK, keyword]);
 
   return (
     <div className="search-bar-container">
-      <div className="search-wrapper" onClick={() => setShowCmdK(true)}>
+      <div className="search-wrapper" onClick={() => navigate('/search')}>
         <GoSearch />
         <span>搜索</span>
         <span>⌘K</span>

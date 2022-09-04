@@ -55,7 +55,7 @@ export default forwardRef((props: Props, ref) => {
   }));
 
   return (
-    <div className="items">
+    <div className="mentionList-items">
       {tags.length ? (
         tags.map((item, index) => (
           <button className={`item ${index === selectedIndex ? "is-selected" : ""}`} key={index} onClick={() => selectItem(index)}>

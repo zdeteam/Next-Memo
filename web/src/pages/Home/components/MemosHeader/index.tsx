@@ -12,6 +12,7 @@ interface Props {
 }
 
 const Index: React.FC<Props> = (props) => {
+  const { user } = useAppSelector((state) => state.user);
   const query = useAppSelector((state) => state.location.query);
   const shortcuts = useAppSelector((state) => state.shortcut.shortcuts);
   const [titleText, setTitleText] = useState("");
@@ -64,7 +65,7 @@ const Index: React.FC<Props> = (props) => {
           {/*<Icon.Menu className="icon-img" />*/}
         </div>
         <span className="title-text" onClick={props.onClick}>
-          {titleText}
+          {`${titleText}, ${user?.name}`}
         </span>
       </div>
       <SearchBar />

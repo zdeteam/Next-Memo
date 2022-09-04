@@ -1,0 +1,97 @@
+.search-page {
+
+    // border: 4px solid red;
+    // height: 100px;
+    >.header {
+        // border: 3px solid red;
+        // height: 120px;
+        display: flex;
+        align-items: center;
+        padding: 0.4rem 0.24rem 0.2rem;
+        justify-content: space-between;
+
+        >.searchBox {
+            position: relative;
+            background: #fff;
+            width: 5.66rem;
+            height: 0.8rem;
+            line-height: .8rem;
+            border-radius: 0.4rem;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            padding-right: 0.16rem;
+
+            >img {
+                width: 0.8rem;
+                height: 0.8rem;
+            }
+
+            >form {
+                flex: 1 1;
+                height: 100%;
+                position: relative;
+
+                >input {
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    border: 0;
+                    outline: none;
+                    font-size: .32rem;
+                    position: absolute;
+                }
+            }
+        }
+
+        >.cancel {
+            font-size: .32rem;
+            color: #262626;
+            letter-spacing: 0;
+            text-align: right;
+            font-weight: 500;
+        }
+    }
+
+    >.body {
+        padding: 0 0.24rem;
+        >.title {
+            padding: 0.4rem 0;
+
+            font-size: .36rem;
+            color: #c9c9c9;
+            letter-spacing: 0;
+            font-weight: 400;
+
+        }
+
+        >.link {
+            display: flex;
+            flex-wrap: wrap;
+
+            >div {
+                height: 0.56rem;
+                padding: 0 0.2rem;
+                font-size: .24rem;
+                color: #262626;
+                letter-spacing: 0;
+                line-height: .28rem;
+                font-weight: 400;
+                background: #fff;
+                border-radius: 0.34rem;
+                border: 0.02rem solid transparent;
+                display: -webkit-flex;
+                display: flex;
+                -webkit-align-items: center;
+                align-items: center;
+                margin: 0 0.2rem 0.24rem 0;
+
+                >img {
+                    width: 0.36rem;
+                    height: 0.36rem;
+                }
+            }
+        }
+    }
+}

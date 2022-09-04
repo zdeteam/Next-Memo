@@ -247,13 +247,13 @@ const Index: React.FC<Props> = (props: Props) => {
           ))}
         </div>
       </Only>
-      {!memo.editable && (
+      {/* {!memo.editable && (
         <div className="card-status">
           <Only when={memo.pinned}>
             <GoPin />
           </Only>
         </div>
-      )}
+      )} */}
      
       <ActionSheet
         visible={moreAction}
