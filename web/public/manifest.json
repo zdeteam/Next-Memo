@@ -1,6 +1,6 @@
 {
-  "short_name": "Memos",
-  "name": "Memos",
+  "short_name": "有墨轻记",
+  "name": "有墨轻记",
   "icons": [
     {
       "src": "/logo.webp",
@@ -13,5 +13,5 @@
   "display": "standalone",
   "scope": "/",
   "theme_color": "#f6f5f4",
-  "description": "usememos/memos"
+  "description": "轻笔记，慢生活"
 }
