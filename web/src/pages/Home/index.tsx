@@ -88,7 +88,7 @@ function Index() {
         }
         loadingState.setFinish();
       });
-      memoService.updateTagsState();
+    memoService.updateTagsState();
   }, []);
 
   return (
@@ -130,34 +130,6 @@ function Index() {
           </main>
         </div>
       )}
-      <Modal visible={showLoginForm} closeable onClose={() => setShowLoginForm(false)}>
-        <div className="login-form">
-          <Input
-            fullWidth
-            label="用户名"
-            message={emailError}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              const text = e.target.value as string;
-              setEmail(text);
-            }}
-          />
-          <Input
-            fullWidth
-            type="password"
-            message={passwordError}
-            label="密码"
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              const text = e.target.value as string;
-              setPassword(text);
-            }}
-          />
-          <Button fullWidth onClick={handleSigninBtnsClick}>
-            登录
-          </Button>
-          {/*<a></a>*/}
-          <span>版本内测中, 暂未开放注册</span>
-        </div>
-      </Modal>
     </section>
   );
 }

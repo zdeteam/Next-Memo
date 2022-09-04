@@ -49,7 +49,7 @@ interface PickerProps {
   renderAbbreviations: () => JSX.Element;
   onKeyDown: (e: React.KeyboardEvent<HTMLElement>) => void;
 }
-const DatePicker: React.SFC<PickerProps> = ({ cursor, weekStart, renderDay, renderHeader, renderAbbreviations, onKeyDown }) => {
+function DatePicker({ cursor, weekStart, renderDay, renderHeader, renderAbbreviations, onKeyDown }: PickerProps) {
   const matrix = generateMatrix(cursor, weekStart);
   return (
     <table className="fus-datepicker" tabIndex={0} onKeyDown={onKeyDown}>
@@ -64,7 +64,7 @@ const DatePicker: React.SFC<PickerProps> = ({ cursor, weekStart, renderDay, rend
       </tbody>
     </table>
   );
-};
+}
 
 interface DayProps {
   day: Date;
@@ -73,7 +73,7 @@ interface DayProps {
   onChange: (date: Date) => void;
   onCursorChange: (date: Date) => void;
 }
-const Day: React.SFC<DayProps> = ({ day, date, cursor, onChange, onCursorChange }) => {
+const Day = ({ day, date, cursor, onChange, onCursorChange }: DayProps) => {
   const isSelected = sameDates(day, date);
   const isCursor = sameDates(day, cursor);
   const isToday = sameDates(day, new Date());
@@ -116,7 +116,7 @@ interface AbbreviationsProps {
   i18n: I18n;
   weekStart: number;
 }
-const Abbreviations: React.SFC<AbbreviationsProps> = ({ i18n, weekStart }) => {
+const Abbreviations = ({ i18n, weekStart }: AbbreviationsProps) => {
   return (
     <tr className="weekdays">
       {abbreviationDays(i18n, weekStart).map((day: string) => (
@@ -134,7 +134,7 @@ interface HeaderProps {
   prevMonthClick: (e: React.MouseEvent<HTMLElement>) => void;
   nextMonthClick: (e: React.MouseEvent<HTMLElement>) => void;
 }
-const Header: React.SFC<HeaderProps> = ({ i18n, cursor, prevMonthClick, nextMonthClick }) => {
+const Header = ({ i18n, cursor, prevMonthClick, nextMonthClick }: HeaderProps) => {
   return (
     <tr>
       <th colSpan={1}>

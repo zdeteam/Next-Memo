@@ -11,8 +11,6 @@ import Only from "../OnlyWhen";
 import { Toast, ActionSheet, Dialog, ShareSheet } from "@/components";
 import { useAppSelector } from "../../store";
 import Image from "../Image";
-import showMemoCardDialog from "../../pages/Home/components/MemoCardDialog";
-import showShareMemoImageDialog from "../../pages/Home/components/ShareMemoImageDialog";
 import Editor from "../Editor";
 import "./index.less";
 import { setEditMemoId } from "@/store/modules/editor";
@@ -21,7 +19,7 @@ dayjs.extend(relativeTime);
 
 interface Props {
   memo: Memo;
-  actions: any[];
+  actions?: any[];
 }
 
 export const getFormatedMemoCreatedAtStr = (createdTs: number): string => {
@@ -35,7 +33,7 @@ export const getFormatedMemoCreatedAtStr = (createdTs: number): string => {
 const Index: React.FC<Props> = (props: Props) => {
   const [memo, setMemo] = useState({ editable: false, ...props.memo });
   const [moreAction, setMoreAction] = useState(false);
-  const [createdAtStr, setCreatedAtStr] = useState<string>(getFormatedMemoCreatedAtStr(memo.createdTs*1000));
+  const [createdAtStr, setCreatedAtStr] = useState<string>(getFormatedMemoCreatedAtStr(memo.createdTs * 1000));
   const memoContainerRef = useRef<HTMLDivElement>(null);
   const memoContentContainerRef = useRef<HTMLDivElement>(null);
   const imageUrls = Array.from(memo.content.match(IMAGE_URL_REG) ?? []).map((s) => s.replace(IMAGE_URL_REG, "$1"));
@@ -65,28 +63,9 @@ const Index: React.FC<Props> = (props: Props) => {
     }
   }, [editorState.editMemoId]);
 
-  const handleShowMemoStoryDialog = () => {
-    showMemoCardDialog(memo);
-  };
-
-  const handleTogglePinMemoBtnClick = async () => {
-    try {
-      if (memo.pinned) {
-        await memoService.unpinMemo(memo.id);
-      } else {
-        await memoService.pinMemo(memo.id);
-      }
-    } catch (error) {
-      // do nth
-    }
-  };
-
-  const handleMarkMemoClick = () => {
-    editorStateService.setMarkMemoWithId(memo.id);
-  };
 
   const handleEditMemoClick = () => {
-    console.log(memo.id)
+    console.log(memo.id);
     editorStateService.setEditMemoWithId(memo.id);
     setMoreAction(false);
   };
@@ -114,65 +93,62 @@ const Index: React.FC<Props> = (props: Props) => {
     });
   };
 
-  const handleGenMemoImageBtnClick = () => {
-    showShareMemoImageDialog(memo);
-  };
 
-  const handleMemoContentClick = async (e: React.MouseEvent) => {
-    const targetEl = e.target as HTMLElement;
+  // const handleMemoContentClick = async (e: React.MouseEvent) => {
+  //   const targetEl = e.target as HTMLElement;
 
-    if (targetEl.className === "memo-link-text") {
-      const memoId = targetEl.dataset?.value;
-      const memoTemp = memoService.getMemoById(Number(memoId) ?? UNKNOWN_ID);
+  //   if (targetEl.className === "memo-link-text") {
+  //     const memoId = targetEl.dataset?.value;
+  //     const memoTemp = memoService.getMemoById(Number(memoId) ?? UNKNOWN_ID);
 
-      if (memoTemp) {
-        showMemoCardDialog(memoTemp);
-      } else {
-        Toast.info("MEMO not found");
-        targetEl.classList.remove("memo-link-text");
-      }
-    } else if (targetEl.className === "umo-tag") {
-      if (memo.editable) return false;
-      const tagName = targetEl.innerText.slice(1);
-      const currTagQuery = locationService.getState().query?.tag;
-      if (currTagQuery === tagName) {
-        locationService.setTagQuery(undefined);
-      } else {
-        locationService.setTagQuery(tagName);
-      }
-    } else if (targetEl.classList.contains("todo-block")) {
-      if (userService.isVisitorMode()) {
-        return;
-      }
+  //     if (memoTemp) {
+  //       showMemoCardDialog(memoTemp);
+  //     } else {
+  //       Toast.info("MEMO not found");
+  //       targetEl.classList.remove("memo-link-text");
+  //     }
+  //   } else if (targetEl.className === "umo-tag") {
+  //     if (memo.editable) return false;
+  //     const tagName = targetEl.innerText.slice(1);
+  //     const currTagQuery = locationService.getState().query?.tag;
+  //     if (currTagQuery === tagName) {
+  //       locationService.setTagQuery(undefined);
+  //     } else {
+  //       locationService.setTagQuery(tagName);
+  //     }
+  //   } else if (targetEl.classList.contains("todo-block")) {
+  //     if (userService.isVisitorMode()) {
+  //       return;
+  //     }
 
-      const status = targetEl.dataset?.value;
-      const todoElementList = [...(memoContentContainerRef.current?.querySelectorAll(`span.todo-block[data-value=${status}]`) ?? [])];
-      for (const element of todoElementList) {
-        if (element === targetEl) {
-          const index = indexOf(todoElementList, element);
-          const tempList = memo.content.split(status === "DONE" ? DONE_BLOCK_REG : TODO_BLOCK_REG);
-          let finalContent = "";
+  //     const status = targetEl.dataset?.value;
+  //     const todoElementList = [...(memoContentContainerRef.current?.querySelectorAll(`span.todo-block[data-value=${status}]`) ?? [])];
+  //     for (const element of todoElementList) {
+  //       if (element === targetEl) {
+  //         const index = indexOf(todoElementList, element);
+  //         const tempList = memo.content.split(status === "DONE" ? DONE_BLOCK_REG : TODO_BLOCK_REG);
+  //         let finalContent = "";
 
-          for (let i = 0; i < tempList.length; i++) {
-            if (i === 0) {
-              finalContent += `${tempList[i]}`;
-            } else {
-              if (i === index + 1) {
-                finalContent += status === "DONE" ? "- [ ] " : "- [x] ";
-              } else {
-                finalContent += status === "DONE" ? "- [x] " : "- [ ] ";
-              }
-              finalContent += `${tempList[i]}`;
-            }
-          }
-          await memoService.patchMemo({
-            id: memo.id,
-            content: finalContent,
-          });
-        }
-      }
-    }
-  };
+  //         for (let i = 0; i < tempList.length; i++) {
+  //           if (i === 0) {
+  //             finalContent += `${tempList[i]}`;
+  //           } else {
+  //             if (i === index + 1) {
+  //               finalContent += status === "DONE" ? "- [ ] " : "- [x] ";
+  //             } else {
+  //               finalContent += status === "DONE" ? "- [x] " : "- [ ] ";
+  //             }
+  //             finalContent += `${tempList[i]}`;
+  //           }
+  //         }
+  //         await memoService.patchMemo({
+  //           id: memo.id,
+  //           content: finalContent,
+  //         });
+  //       }
+  //     }
+  //   }
+  // };
 
   const moreActions = () => {
     setMoreAction(!moreAction);
@@ -230,13 +206,12 @@ const Index: React.FC<Props> = (props: Props) => {
 
   return (
     <div
-      onClick={handleMemoContentClick}
       onDoubleClick={handleEditMemoClick}
       className={`memo-wrapper ${"memos-" + memo.id} ${memo.pinned && "pinned"} ${memo.editable && "editing"}`}
     >
       <div className="memo-top-wrapper">
         <span className="time-text">{createdAtStr}</span>
-        {!userService.isVisitorMode() && !memo.editable && <GoKebabHorizontal onClick={moreActions} />}
+        {!userService.isVisitorMode() && !memo.editable && props.actions?.length !== 0 && <GoKebabHorizontal onClick={moreActions} />}
       </div>
       <Editor
         foldable
@@ -259,48 +234,51 @@ const Index: React.FC<Props> = (props: Props) => {
           </Only>
         </div>
       )} */}
-
-      <ActionSheet
-        visible={moreAction}
-        onCancel={() => setMoreAction(false)}
-        // description='这是一段描述信息'
-        actions={props.actions.map((action) => ({
-          ...action,
-          callback: () => {
-            if (action.action === "delete") {
-              handleArchiveMemoClick();
-            }
-            if (action.action === "edit") {
-              handleEditMemoClick();
-            }
-            if (action.action === "share") {
-              setMoreAction(false);
-              setShareVisible(true);
-            }
-            if (action.action === "deleteForever") {
-              handleDeleteMemoClick();
-            }
-            if (action.action === "restore") {
-              handleRestoreMemoClick();
-            }
-          },
-        }))}
-        cancelText="取消"
-      />
-      <ShareSheet
-        visible={shareVisible}
-        options={[
-          { name: "复制链接", icon: "link" },
-          { name: "分享卡片", icon: "poster" },
-        ]}
-        title="立即分享给好友"
-        onCancel={() => setShareVisible(false)}
-        onSelect={(option, index) => {
-          console.log("option", option);
-          console.log("index", index);
-          setShareVisible(false);
-        }}
-      />
+      {props.actions?.length && (
+        <>
+          <ActionSheet
+            visible={moreAction}
+            onCancel={() => setMoreAction(false)}
+            // description='这是一段描述信息'
+            actions={props.actions.map((action) => ({
+              ...action,
+              callback: () => {
+                if (action.action === "delete") {
+                  handleArchiveMemoClick();
+                }
+                if (action.action === "edit") {
+                  handleEditMemoClick();
+                }
+                if (action.action === "share") {
+                  setMoreAction(false);
+                  setShareVisible(true);
+                }
+                if (action.action === "deleteForever") {
+                  handleDeleteMemoClick();
+                }
+                if (action.action === "restore") {
+                  handleRestoreMemoClick();
+                }
+              },
+            }))}
+            cancelText="取消"
+          />
+          <ShareSheet
+            visible={shareVisible}
+            options={[
+              { name: "复制链接", icon: "link" },
+              { name: "分享卡片", icon: "poster" },
+            ]}
+            title="立即分享给好友"
+            onCancel={() => setShareVisible(false)}
+            onSelect={(option, index) => {
+              console.log("option", option);
+              console.log("index", index);
+              setShareVisible(false);
+            }}
+          />
+        </>
+      )}
     </div>
   );
 };

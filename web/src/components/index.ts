@@ -9,7 +9,7 @@ import Modal from "./Modal";
 import Memo from "./Memo";
 import PageLayout from "./PageLayout";
 import NoMore from "./NoMore";
-import { HeatMap } from "./HeatMap/Calendar";
+// import { HeatMap } from "./HeatMap/Calendar";
 import HeatMap2 from './HeatMap2'
 
 export {
@@ -32,6 +32,5 @@ export {
   Dropdown,
   Input,
   Only,
-  Modal,
-  HeatMap,
+  Modal
 };
