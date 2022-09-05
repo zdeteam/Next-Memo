@@ -12,6 +12,9 @@
     <title>「有墨」轻笔记，慢生活</title>
     <link rel="manifest" href="/manifest.json"/>
     <script>
+
+
+
         document.documentElement.addEventListener(
         "touchstart",
         function(event) {
@@ -38,7 +41,7 @@
       document.addEventListener("gesturestart", function(event) {
         event.preventDefault();
       });
-      
+
         function e() {
             var e = document.documentElement.clientWidth || window.innerWidth;
             e >= 750 && (e = 750);

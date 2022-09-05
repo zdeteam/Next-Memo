@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
-import { NavBar } from "@/components";
+import { NavBar, Sticky } from "@/components";
 import "./index.less";
 
 interface Props {
@@ -15,7 +15,11 @@ const PageLayout = (props: Props) => {
 
   return (
     <div className="page-layout">
-      {props.title && <NavBar title={props.title} leftText="返回" onClickLeft={props.onClickLeft} />}
+      {props.title && (
+        <Sticky>
+          <NavBar title={props.title} leftText="返回" onClickLeft={props.onClickLeft} />
+        </Sticky>
+      )}
       <div className={"body " + props.className}>{props.children}</div>
     </div>
   );
