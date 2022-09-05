@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { GoBold, GoListOrdered, GoListUnordered, GoUnfold, GoFold, GoTasklist } from "react-icons/go";
 import { MdOutlineUnfoldMore, MdOutlineUnfoldLess } from "react-icons/md";
 import { EditorContent, ReactRenderer, useEditor } from "@tiptap/react";
-import classNames from 'classnames';
+import classNames from "classnames";
 import Document from "@tiptap/extension-document";
 import TaskItem from "@tiptap/extension-task-item";
 import TaskList from "@tiptap/extension-task-list";
@@ -28,7 +28,7 @@ interface ProseMirrorEditorProps {
   editable: boolean;
   foldable?: boolean;
   onCancel?: () => void;
-  onClick?: () => void;
+  onDoubleClick?: () => void;
   onSave?: () => void;
   clearWhenSave?: boolean;
   toolbarPosition?: "top" | "bottom";
@@ -213,7 +213,7 @@ const Editor = function (
 
   const onOk = async () => {
     const content = editor?.getHTML();
-    console.log(11122); 
+    console.log(11122);
     try {
       const { editMemoId } = editorStateService.getState();
       if (editMemoId && editMemoId !== UNKNOWN_ID) {
@@ -244,8 +244,11 @@ const Editor = function (
   };
   return (
     <div
-      onClick={props.onClick}
-      className={classNames("prosemirror-editor", { "toolbar-on-top": props.toolbarPosition === "top" })}
+      onDoubleClick={props.onDoubleClick}
+      className={classNames("prosemirror-editor", {
+        "toolbar-on-top": props.toolbarPosition === "top",
+        editable: props.editable,
+      })}
     >
       <div className={classNames("editor", { fold: isFold && showFoldBtn })} ref={editorRef}>
         <EditorContent editor={editor} />
@@ -254,7 +257,7 @@ const Editor = function (
         <>
           <div className="toolbar">
             <MenuBar editor={editor} />
-           
+
             <Button type="primary" round disabled={editor?.isEmpty} className="write" size="small" onClick={onOk}>
               保存轻笔记
             </Button>

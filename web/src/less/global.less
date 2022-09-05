@@ -54,9 +54,9 @@ span.umo-tag {
 
 .ProseMirror {
   // min-height: 52px;
-  font-size: .28rem;
+  font-size: .32rem;
   color: #4b4b4d;
-
+  font-family: "PingFang SC","Helvetica Neue",Helvetica,Arial,"Hiragino Sans GB","Heiti SC","Microsoft YaHei","WenQuanYi Micro Hei",sans-serif;
   > * + * {
     margin-top: 0.75em;
   }
@@ -148,25 +148,26 @@ span.umo-tag {
   ul[data-type=taskList] {
     li {
       p {
-        line-height: 1.4;
+        line-height: 0.5rem;
         min-height: 20px;
         margin: 0;
       }
 
       input[type="checkbox"] {
-        width: 18px;
-        height: 18px;
-        border-radius: 12px;
+        // border: 1px solid;
+        width: .5rem;
+        height: .5rem;
+        border-radius: 50%;
         // --checkbox-width: 1.125rem;
         --checkbox-bg: white;
-        --checkbox-radius: 4px;
+        --checkbox-radius: 50%;
         --checkbox-border-color: #cdd2da;
         --checkbox-hover-border-color: #85919f;
         --checkbox-checked-bg: @primary-color-400;
         --checkbox-disabled-bg: #eceef0;
         --checkbox-disabled-checked-bg: #85919f;
         position: relative;
-        background: @primary-color-400;
+       
         border: none;
         transition: .3s;
         -webkit-appearance: none;
@@ -174,7 +175,11 @@ span.umo-tag {
         appearance: none;
         margin: 0;
         cursor: pointer;
-
+        // font-size: 0.7rem;
+        font-size: 0;
+        &:checked{
+          background: @primary-color-400;
+        }
         &:after {
           position: absolute;
           top: 0;
@@ -184,17 +189,20 @@ span.umo-tag {
           content: "";
           background: #fff;
           border-radius: inherit;
-          box-shadow: inset 0 0 0 1px rgb(205, 210, 218);
+          border: none;
+          border: 1px solid rgba(75, 75, 77,0.5);
+          // box-shadow: inset 0 0 0 1px rgb(205, 210, 218);
           transition: .2s;
         }
 
         &:before {
           position: absolute;
-          content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18px' height='18px' fill='none' stroke-width='2px' stroke='white' stroke-linecap='round' viewBox='0 0 21 21'%3E%3Cpolyline points='5 10.75 8.5 14.25 16 6'%3E%3C/polyline%3E%3C/svg%3E");
+          content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1.5em' height='1.5em' fill='none' stroke-width='2px' stroke='white' stroke-linecap='round' viewBox='0 0 21 21'%3E%3Cpolyline points='5 10.75 8.5 14.25 16 6'%3E%3C/polyline%3E%3C/svg%3E");
           transform: scale(0);
-          top: 1px;
-          width: 18px;
-          height: 18px;
+          // top: 3px;
+          // border: 1px solid;
+          width: 100%;
+          height: 100%;
           display: flex;
           justify-content: center;
           align-items: center;

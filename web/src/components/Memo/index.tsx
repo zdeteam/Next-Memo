@@ -215,7 +215,7 @@ const Index: React.FC<Props> = (props: Props) => {
         foldable
         content={memo.content}
         editable={editable}
-        onClick={handleEditMemoClick}
+        onDoubleClick={handleEditMemoClick}
         onCancel={() => editorStateService.setEditMemoWithId(UNKNOWN_ID)}
       />
       <Only when={imageUrls.length > 0}>
