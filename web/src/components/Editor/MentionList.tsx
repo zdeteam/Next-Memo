@@ -10,7 +10,7 @@ interface Props {
 export default forwardRef((props: Props, ref) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const { tags } = useAppSelector((state) => state.memo);
-  console.log('tags',tags)
+  console.log("tags", tags);
   const selectItem = (index: number) => {
     const item = tags[index];
     if (item) {
@@ -54,18 +54,14 @@ export default forwardRef((props: Props, ref) => {
       return false;
     },
   }));
-
+  if (tags.length === 0) return null;
   return (
     <div className="mentionList-items">
-      {tags.length ? (
-        tags.map((item, index) => (
-          <button className={`item ${index === selectedIndex ? "is-selected" : ""}`} key={index} onClick={() => selectItem(index)}>
-            {item}
-          </button>
-        ))
-      ) : (
-        <div className="item">No result</div>
-      )}
+      {tags.map((item, index) => (
+        <button className={`item ${index === selectedIndex ? "is-selected" : ""}`} key={index} onClick={() => selectItem(index)}>
+          {item}
+        </button>
+      ))}
     </div>
   );
 });

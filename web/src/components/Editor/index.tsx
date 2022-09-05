@@ -1,11 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
 import { GoBold, GoListOrdered, GoListUnordered, GoUnfold, GoFold, GoTasklist } from "react-icons/go";
+import { MdOutlineFormatColorText } from "react-icons/md";
+import classNames from "classnames";
 import { MdOutlineUnfoldMore, MdOutlineUnfoldLess } from "react-icons/md";
 import { EditorContent, ReactRenderer, useEditor } from "@tiptap/react";
-import classNames from "classnames";
+// import classNames from "classnames";
 import Document from "@tiptap/extension-document";
 import TaskItem from "@tiptap/extension-task-item";
 import TaskList from "@tiptap/extension-task-list";
+import { Color } from "@tiptap/extension-color";
+import TextStyle from "@tiptap/extension-text-style";
 import BulletList from "@tiptap/extension-bullet-list";
 import ListItem from "@tiptap/extension-list-item";
 import Placeholder from "@tiptap/extension-placeholder";
@@ -19,6 +23,7 @@ import { editorStateService, locationService, memoService } from "../../services
 import { UNKNOWN_ID } from "../../helpers/consts";
 import { Toast, Button } from "@/components";
 import { useAppSelector } from "../../store";
+import StarterKit from "@tiptap/starter-kit";
 // import Button from "@/Button";
 import MentionList from "./MentionList";
 import "./index.less";
@@ -37,21 +42,40 @@ const MenuBar = ({ editor }: { editor: any }) => {
   if (!editor) {
     return null;
   }
-
+  
   return (
     <div className="editor-toolbar">
-      <div onClick={() => editor.chain().focus().toggleBold().run()}>
+      <button>
+        <img
+          // onClick={() => {editor.chain().focus();editor.commands.insertContent('#')}}
+          src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAMAAAANIilAAAABLFBMVEUAAAAAAAD///9/f39mZmZVVVVJSUlgYGBVVVVNTU1JSUlNTU1VVVVRUVFHR0dSUlJMTExMTExSUlJQUFBOTk5RUVFRUVFPT09NTU1RUVFOTk5OTk5MTExQUFBOTk5NTU1RUVFPT09PT09QUFBQUFBPT09OTk5OTk5NTU1OTk5OTk5OTk5NTU1NTU1OTk5PT09MTExOTk5OTk5OTk5OTk5NTU1OTk5NTU1OTk5OTk5NTU1NTU1NTU1OTk5OTk5OTk5NTU1NTU1OTk5OTk5OTk5NTU1OTk5NTU1NTU1NTU1NTU1NTU1NTU1NTU1NTU1NTU1NTU1NTU1NTU1NTU1NTU1OTk5NTU1NTU1OTk5OTk5NTU1NTU1OTk5NTU1NTU1NTU1NTU1NTU1NTU1NTU1p8h2wAAAAY3RSTlMAAQECBQYHCAkKDhQVFhkZGx4fIyQmKSorLC4xMjM0ODk6RElQUVtiY2hpcnd6fX6AgIOGjI6TlZmam56vsLG3ubzDxMXGyMnKzM3U1trb3OHk5ebo6err7PDz9fb3+Pv8/f4E+SdDAAABTklEQVRIx+3W104CURRGYREr9l6w9+4g9i723kFFEWa9/zt4hdFk/tmTEKMhrrvvYt+cnLNzSkr++/1Cw2ep6TJFo/YU3HYrGs0Cd72KRpvAVZ2if9XnwH5Y0KjtBlhRNBpKAROKRuNpoEfRv9KYC5kKQeu8NoAzRaOaPWBd0ajpEphSNOp8hdyAotEo8NCiaLQAnDQoehdNZLHKJqLewwmClPAeTgYaTnoPx19cc9R9iXsPR8bmHMdxnCPgednJ941zYxH/g9sGrmoV/au6AA5Dgn97E0QV/QvHcpCuEgyyCU4Vg2yCNcUgm2BS0ajjDdx+xR/YBPmL7ewAyaXPm/2V8mIX9KQKeswFrZGCFli+eeC+T9FoC7iuUwzwJzgICxblnyAUcyFTLlicf4KuNGQHFY1GgMdWRaMYcFyvaDQD74uVikbNu0+rjZLF0Qde6BFWTtcHjAAAAABJRU5ErkJggg=="
+          alt=""
+        />
+      </button>
+      <button className={editor.isActive("bold") ? "is-active" : ""} onClick={() => editor.chain().focus().toggleBold().run()}>
         <GoBold />
-      </div>
-      <div onClick={() => editor.chain().focus().toggleOrderedList().run()}>
+      </button>
+      <button
+        onClick={() => {
+          if (!editor.isActive("textStyle", { color: "#F98181" })) editor.chain().focus().setColor("#F98181").run();
+          else editor.chain().focus().unsetColor().run();
+        }}
+        className={classNames("color-red", { "is-active": editor.isActive("textStyle", { color: "#F98181" }) })}
+      >
+        <MdOutlineFormatColorText />
+      </button>
+      <button
+        className={editor.isActive("orderedList") ? "is-active" : ""}
+        onClick={() => editor.chain().focus().toggleOrderedList().run()}
+      >
         <GoListOrdered />
-      </div>
-      <div onClick={() => editor.chain().focus().toggleBulletList().run()}>
+      </button>
+      <button className={editor.isActive("bulletList") ? "is-active" : ""} onClick={() => editor.chain().focus().toggleBulletList().run()}>
         <GoListUnordered />
-      </div>
-      <div onClick={() => editor.chain().focus().toggleTaskList().run()}>
+      </button>
+      <button className={editor.isActive("taskList") ? "is-active" : ""} onClick={() => editor.chain().focus().toggleTaskList().run()}>
         <GoTasklist />
-      </div>
+      </button>
     </div>
   );
 };
@@ -132,11 +156,13 @@ const Editor = function (
         },
 
         onKeyDown(props: any) {
-          console.log(props);
+          // console.log(props);
           if (props.event.key === "Escape") {
             popup[0].hide();
             return true;
           }
+          console.log(123);
+          // alert(123)
           return component.ref?.onKeyDown(props, props.view.state.mention$.query);
         },
 
@@ -160,6 +186,8 @@ const Editor = function (
       OrderedList,
       ListItem,
       Placeholder,
+      Color,
+      TextStyle,
       Mention.configure({
         HTMLAttributes: {
           class: "umo-tag",
@@ -257,8 +285,12 @@ const Editor = function (
         <>
           <div className="toolbar">
             <MenuBar editor={editor} />
-
-            <Button type="primary" round disabled={editor?.isEmpty} className="write" size="small" onClick={onOk}>
+            {!editor?.isEmpty && (
+              <span className="cancel" onClick={() => editor?.commands.clearContent()}>
+                清空
+              </span>
+            )}
+            <Button type="primary" round disabled={editor?.isEmpty} className="write" size="normal" onClick={onOk}>
               保存轻笔记
             </Button>
           </div>
