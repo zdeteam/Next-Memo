@@ -7,19 +7,31 @@
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
-
-
-  
   box-sizing: border-box;
-  
+  // border: 1px solid;
 
   // border: 1px solid;
 
   //border: 1px solid rgb(234, 234, 230);
-  
-  &.no-hover {
-    border: none;
+  &.editable{
+    // border: 1px solid;
+    >.editor{
+      // border: 1px solid;
+      max-height: 3.4rem;
+    }
   }
+  &.toolbar-on-top{
+    // border: 1px solid red;
+    flex-direction: column-reverse;
+    >.toolbar{
+      margin: 0;
+    }
+  }
+
+
+  // &.no-hover {
+  //   border: none;
+  // }
   p.is-editor-empty:first-child::before {
     content: "你在想什么...";
     float: left;
@@ -36,7 +48,7 @@
     line-height: 1.75;
     // max-height: 3.4rem;
     overflow-y: auto;
-
+    // border: 1px solid;
     &.fold {
       // max-height: 122px;
       // overflow: hidden;
@@ -63,21 +75,55 @@
     width: 100%;
     display: flex;
     align-items: center;
+    justify-content: space-between;
      margin-top: 0.2rem;
+     font-size: 0.34rem;
+     
     .editor-toolbar {
       display: flex;
       align-items: center;
      
-      > div {
+      > button {
         border-radius: 4px;
-        width: .4rem;
-        height: .4rem;
-        margin-right: .2rem;
+        width: .6rem;
+        height: .6rem;
+        // margin-right: rem;
         transition: all 0.2s ease-in-out;
-        svg {
+        // border: 1px solid red;
+        border: none;
+        background: #fff;
+        padding: 0;
+        // margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        >span{
+          display: inline-block;
+          width: .4rem;
+          height: .4rem;
+          border: 1px solid;
+          color:#F98181;
+          background-color: #F98181;
+          border-radius: 4px;
+        }
+        &.color-red.is-active{
+          svg{
+            fill:#F98181;
+          }
+        }
+        svg,img {
+          // border: 1px solid;
           width: .4rem;
           height: .4rem;
           vertical-align: top;
+          fill: rgba(28, 31, 35, 0.84);
+        }
+        &.is-active{
+          // border: 1px solid;
+          svg{
+            fill:#ffac26;
+          }
+          color: #ffac26;
         }
       }
     }
@@ -86,15 +132,16 @@
       // margin-right: 6px;
       &.write {
         display: inline-block;
-        position: absolute;
-        right: 0;
+        // position: absolute;
+        // right: 0;
+        font-weight: 700;
         // bottom: 4px;
       }
     }
     span.cancel {
-        position: absolute;
-        right: 98px;
-        font-size: 12px;
+        // position: absolute;
+        // right: 110px;
+        font-size: .24rem;
         color: #606266;
         background: #fff;
         padding: 0;

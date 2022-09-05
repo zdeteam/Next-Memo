@@ -1,7 +1,7 @@
 import { locationService, userService } from "../../../../services";
 import useI18n from "../../../../hooks/useI18n";
 import { GoCalendar, GoSettings, GoTrashcan, GoFileMedia, GoX, GoHome } from "react-icons/go";
-import { Calendar, Only, HeatMap2 } from "@/components";
+import { Calendar, Only, HeatMap2, Dialog } from "@/components";
 import showDailyReviewDialog from "../DailyReviewDialog";
 import showSettingDialog from "../SettingDialog";
 import showResourcesDialog from "../ResourcesDialog";
@@ -84,12 +84,20 @@ const Index: React.FC<Props> = (props) => {
   return (
     <aside className="sidebar-wrapper">
       <div className="user-banner-container">
-        <div className="username-container">
-          <span className="username-text" onClick={() => navigate("/setting")}>
-            {username}
-          </span>
-          {/*<span className="version">内测中 V{profile?.version}</span>*/}
+        <div className="user">
+          <img onClick={() => navigate("/setting")} src="/images/logo.png" alt="" />
+          <span>{username}</span>
         </div>
+        <span
+          onClick={() => {
+            Dialog.alert({
+              title: "添加方法",
+              message: "使用【默认浏览器】打开有墨轻记，进入页面后打开菜单栏，选择【添加到主屏幕】",
+            });
+          }}
+        >
+          添加到桌面
+        </span>
       </div>
 
       <div className="heatMap">

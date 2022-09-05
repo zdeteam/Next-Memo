@@ -44,6 +44,7 @@ export const Mention = Node.create<MentionOptions>({
               text: " ",
             });
           }
+          console.log(content)
           editor.chain().focus().insertContentAt(range, content).run();
 
           window.getSelection()?.collapseToEnd();

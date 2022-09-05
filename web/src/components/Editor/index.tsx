@@ -1,10 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
 import { GoBold, GoListOrdered, GoListUnordered, GoUnfold, GoFold, GoTasklist } from "react-icons/go";
+import { MdOutlineFormatColorText } from "react-icons/md";
+import classNames from "classnames";
 import { MdOutlineUnfoldMore, MdOutlineUnfoldLess } from "react-icons/md";
 import { EditorContent, ReactRenderer, useEditor } from "@tiptap/react";
+// import classNames from "classnames";
 import Document from "@tiptap/extension-document";
 import TaskItem from "@tiptap/extension-task-item";
 import TaskList from "@tiptap/extension-task-list";
+import { Color } from "@tiptap/extension-color";
+import TextStyle from "@tiptap/extension-text-style";
 import BulletList from "@tiptap/extension-bullet-list";
 import ListItem from "@tiptap/extension-list-item";
 import Placeholder from "@tiptap/extension-placeholder";
@@ -18,6 +23,7 @@ import { editorStateService, locationService, memoService } from "../../services
 import { UNKNOWN_ID } from "../../helpers/consts";
 import { Toast, Button } from "@/components";
 import { useAppSelector } from "../../store";
+import StarterKit from "@tiptap/starter-kit";
 // import Button from "@/Button";
 import MentionList from "./MentionList";
 import "./index.less";
@@ -26,36 +32,58 @@ interface ProseMirrorEditorProps {
   content?: string;
   editable: boolean;
   foldable?: boolean;
-  cardMode?: boolean;
   onCancel?: () => void;
+  onDoubleClick?: () => void;
+  onSave?: () => void;
   clearWhenSave?: boolean;
+  toolbarPosition?: "top" | "bottom";
 }
 const MenuBar = ({ editor }: { editor: any }) => {
   if (!editor) {
     return null;
   }
-
+  
   return (
     <div className="editor-toolbar">
-      <div onClick={() => editor.chain().focus().toggleBold().run()}>
+      <button>
+        <img
+          // onClick={() => {editor.chain().focus();editor.commands.insertContent('#')}}
+          src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAMAAAANIilAAAABLFBMVEUAAAAAAAD///9/f39mZmZVVVVJSUlgYGBVVVVNTU1JSUlNTU1VVVVRUVFHR0dSUlJMTExMTExSUlJQUFBOTk5RUVFRUVFPT09NTU1RUVFOTk5OTk5MTExQUFBOTk5NTU1RUVFPT09PT09QUFBQUFBPT09OTk5OTk5NTU1OTk5OTk5OTk5NTU1NTU1OTk5PT09MTExOTk5OTk5OTk5OTk5NTU1OTk5NTU1OTk5OTk5NTU1NTU1NTU1OTk5OTk5OTk5NTU1NTU1OTk5OTk5OTk5NTU1OTk5NTU1NTU1NTU1NTU1NTU1NTU1NTU1NTU1NTU1NTU1NTU1NTU1NTU1NTU1OTk5NTU1NTU1OTk5OTk5NTU1NTU1OTk5NTU1NTU1NTU1NTU1NTU1NTU1NTU1p8h2wAAAAY3RSTlMAAQECBQYHCAkKDhQVFhkZGx4fIyQmKSorLC4xMjM0ODk6RElQUVtiY2hpcnd6fX6AgIOGjI6TlZmam56vsLG3ubzDxMXGyMnKzM3U1trb3OHk5ebo6err7PDz9fb3+Pv8/f4E+SdDAAABTklEQVRIx+3W104CURRGYREr9l6w9+4g9i723kFFEWa9/zt4hdFk/tmTEKMhrrvvYt+cnLNzSkr++/1Cw2ep6TJFo/YU3HYrGs0Cd72KRpvAVZ2if9XnwH5Y0KjtBlhRNBpKAROKRuNpoEfRv9KYC5kKQeu8NoAzRaOaPWBd0ajpEphSNOp8hdyAotEo8NCiaLQAnDQoehdNZLHKJqLewwmClPAeTgYaTnoPx19cc9R9iXsPR8bmHMdxnCPgednJ941zYxH/g9sGrmoV/au6AA5Dgn97E0QV/QvHcpCuEgyyCU4Vg2yCNcUgm2BS0ajjDdx+xR/YBPmL7ewAyaXPm/2V8mIX9KQKeswFrZGCFli+eeC+T9FoC7iuUwzwJzgICxblnyAUcyFTLlicf4KuNGQHFY1GgMdWRaMYcFyvaDQD74uVikbNu0+rjZLF0Qde6BFWTtcHjAAAAABJRU5ErkJggg=="
+          alt=""
+        />
+      </button>
+      <button className={editor.isActive("bold") ? "is-active" : ""} onClick={() => editor.chain().focus().toggleBold().run()}>
         <GoBold />
-      </div>
-      <div onClick={() => editor.chain().focus().toggleOrderedList().run()}>
+      </button>
+      <button
+        onClick={() => {
+          if (!editor.isActive("textStyle", { color: "#F98181" })) editor.chain().focus().setColor("#F98181").run();
+          else editor.chain().focus().unsetColor().run();
+        }}
+        className={classNames("color-red", { "is-active": editor.isActive("textStyle", { color: "#F98181" }) })}
+      >
+        <MdOutlineFormatColorText />
+      </button>
+      <button
+        className={editor.isActive("orderedList") ? "is-active" : ""}
+        onClick={() => editor.chain().focus().toggleOrderedList().run()}
+      >
         <GoListOrdered />
-      </div>
-      <div onClick={() => editor.chain().focus().toggleBulletList().run()}>
+      </button>
+      <button className={editor.isActive("bulletList") ? "is-active" : ""} onClick={() => editor.chain().focus().toggleBulletList().run()}>
         <GoListUnordered />
-      </div>
-      <div onClick={() => editor.chain().focus().toggleTaskList().run()}>
+      </button>
+      <button className={editor.isActive("taskList") ? "is-active" : ""} onClick={() => editor.chain().focus().toggleTaskList().run()}>
         <GoTasklist />
-      </div>
+      </button>
     </div>
   );
 };
 
-const Index = function (
+const Editor = function (
   props: ProseMirrorEditorProps = {
     editable: true,
+    toolbarPosition: "bottom",
   }
 ) {
   const MAX_MEMO_CONTAINER_HEIGHT = 160;
@@ -128,11 +156,13 @@ const Index = function (
         },
 
         onKeyDown(props: any) {
-          console.log(props);
+          // console.log(props);
           if (props.event.key === "Escape") {
             popup[0].hide();
             return true;
           }
+          console.log(123);
+          // alert(123)
           return component.ref?.onKeyDown(props, props.view.state.mention$.query);
         },
 
@@ -156,6 +186,8 @@ const Index = function (
       OrderedList,
       ListItem,
       Placeholder,
+      Color,
+      TextStyle,
       Mention.configure({
         HTMLAttributes: {
           class: "umo-tag",
@@ -209,6 +241,7 @@ const Index = function (
 
   const onOk = async () => {
     const content = editor?.getHTML();
+    console.log(11122);
     try {
       const { editMemoId } = editorStateService.getState();
       if (editMemoId && editMemoId !== UNKNOWN_ID) {
@@ -217,9 +250,12 @@ const Index = function (
           content,
         });
         editorStateService.clearEditMemo();
-        props.onCancel && props.onCancel();
+        // props.onCancel && props.onCancel();
+        console.log(111);
+        props.onSave && props.onSave();
         Toast.info("保存成功");
       } else {
+        console.log(111123);
         if (content) {
           await memoService.createMemo({ content });
           Toast.info("保存成功");
@@ -235,31 +271,26 @@ const Index = function (
     setIsFold(!isFold);
   };
   return (
-    <div className={`prosemirror-editor ${props.cardMode && "no-hover"}`}>
-      <div style={props.cardMode ? { padding: 0 } : {}} className={`editor ${isFold && showFoldBtn && "fold"}`} ref={editorRef}>
+    <div
+      onDoubleClick={props.onDoubleClick}
+      className={classNames("prosemirror-editor", {
+        "toolbar-on-top": props.toolbarPosition === "top",
+        editable: props.editable,
+      })}
+    >
+      <div className={classNames("editor", { fold: isFold && showFoldBtn })} ref={editorRef}>
         <EditorContent editor={editor} />
       </div>
-      {/* {showFoldBtn && props.foldable && (
-        <span className="fold-btn" onClick={handleExpandBtnClick}>
-          {!isFold ? <MdOutlineUnfoldLess /> : <MdOutlineUnfoldMore />}
-        </span>
-      )} */}
       {editor && props.editable ? (
         <>
           <div className="toolbar">
             <MenuBar editor={editor} />
-            {props.cardMode && props.editable && (
-              <span
-                className="cancel"
-                onClick={() => {
-                  editor.commands.setContent(prevContent);
-                  if (props.onCancel) props.onCancel();
-                }}
-              >
-                取消
+            {!editor?.isEmpty && (
+              <span className="cancel" onClick={() => editor?.commands.clearContent()}>
+                清空
               </span>
             )}
-            <Button type="primary" round disabled={editor?.isEmpty} className="write" size="small" onClick={onOk}>
+            <Button type="primary" round disabled={editor?.isEmpty} className="write" size="normal" onClick={onOk}>
               保存轻笔记
             </Button>
           </div>
@@ -269,4 +300,4 @@ const Index = function (
   );
 };
 
-export default Index;
+export default Editor;
