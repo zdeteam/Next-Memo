@@ -27,9 +27,9 @@ interface ProseMirrorEditorProps {
   content?: string;
   editable: boolean;
   foldable?: boolean;
-  cardMode?: boolean;
   onCancel?: () => void;
   onClick?: () => void;
+  onSave?: () => void;
   clearWhenSave?: boolean;
   toolbarPosition?: "top" | "bottom";
 }
@@ -56,7 +56,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
   );
 };
 
-const Index = function (
+const Editor = function (
   props: ProseMirrorEditorProps = {
     editable: true,
     toolbarPosition: "bottom",
@@ -213,6 +213,7 @@ const Index = function (
 
   const onOk = async () => {
     const content = editor?.getHTML();
+    console.log(11122); 
     try {
       const { editMemoId } = editorStateService.getState();
       if (editMemoId && editMemoId !== UNKNOWN_ID) {
@@ -221,9 +222,12 @@ const Index = function (
           content,
         });
         editorStateService.clearEditMemo();
-        props.onCancel && props.onCancel();
+        // props.onCancel && props.onCancel();
+        console.log(111);
+        props.onSave && props.onSave();
         Toast.info("保存成功");
       } else {
+        console.log(111123);
         if (content) {
           await memoService.createMemo({ content });
           Toast.info("保存成功");
@@ -241,26 +245,16 @@ const Index = function (
   return (
     <div
       onClick={props.onClick}
-      className={classNames("prosemirror-editor", { "no-hover": props.cardMode, "toolbar-on-top": props.toolbarPosition === "top" })}
+      className={classNames("prosemirror-editor", { "toolbar-on-top": props.toolbarPosition === "top" })}
     >
-      <div style={props.cardMode ? { padding: 0 } : {}} className={classNames("editor", { fold: isFold && showFoldBtn })} ref={editorRef}>
+      <div className={classNames("editor", { fold: isFold && showFoldBtn })} ref={editorRef}>
         <EditorContent editor={editor} />
       </div>
       {editor && props.editable ? (
         <>
           <div className="toolbar">
             <MenuBar editor={editor} />
-            {props.cardMode && props.editable && (
-              <span
-                className="cancel"
-                onClick={() => {
-                  editor.commands.setContent(prevContent);
-                  if (props.onCancel) props.onCancel();
-                }}
-              >
-                取消
-              </span>
-            )}
+           
             <Button type="primary" round disabled={editor?.isEmpty} className="write" size="small" onClick={onOk}>
               保存轻笔记
             </Button>
@@ -271,4 +265,4 @@ const Index = function (
   );
 };
 
-export default Index;
+export default Editor;

@@ -26,15 +26,7 @@ const DailyMemo: React.FC<Props> = (props: Props) => {
         <span className="normal-text">{memo.timeStr}</span>
       </div>
       <div className="memo-content-container">
-        <Editor editable={false} cardMode content={memo.content} />
-        {/*<div*/}
-        {/*  className="memo-content-text"*/}
-        {/*  dangerouslySetInnerHTML={{*/}
-        {/*    __html: formatMemoContent(memo.content, {*/}
-        {/*      inlineImage: true,*/}
-        {/*    }),*/}
-        {/*  }}*/}
-        {/*></div>*/}
+        <Editor editable={false} content={memo.content} />
       </div>
       <div className="split-line"></div>
     </div>

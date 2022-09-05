@@ -69,7 +69,7 @@ const Index: React.FC<Props> = (props: Props) => {
     // console.log(memo.id);
     // editorStateService.setEditMemoWithId(memo.id);
     // setMoreAction(false);
-    navigate("/edit");
+    navigate(`/edit/${memo.id}`);
   };
 
   const handleArchiveMemoClick = async () => {
@@ -213,7 +213,6 @@ const Index: React.FC<Props> = (props: Props) => {
       </div>
       <Editor
         foldable
-        cardMode
         content={memo.content}
         editable={editable}
         onClick={handleEditMemoClick}
@@ -247,7 +246,7 @@ const Index: React.FC<Props> = (props: Props) => {
                 }
                 if (action.action === "edit") {
                   // handleEditMemoClick();
-                  navigate("/edit");
+                  navigate(`/edit/${memo.id}`);
                 }
                 if (action.action === "share") {
                   setMoreAction(false);

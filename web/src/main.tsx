@@ -32,8 +32,8 @@ root.render(
             <Route path="/trash" element={<Trash />} />
             <Route path="/signin" element={<SignIn />} />
             <Route path="/search" element={<Search />} />
-            <Route path="/note/:noteId" element={<Note />} />
-            <Route path="/edit" element={<Edit />} />
+            <Route path="/note/:memoId" element={<Note />} />
+            <Route path="/edit/:memoId" element={<Edit />} />
           </Routes>
         </App>
       </HistoryRouter>
