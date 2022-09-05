@@ -1,6 +1,7 @@
 import { memo, useEffect, useRef, useState } from "react";
 import { indexOf } from "lodash-es";
 import dayjs from "dayjs";
+import copy from "copy-to-clipboard";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { GoKebabHorizontal, GoCloudDownload, GoBook, GoBroadcast, GoTrashcan, GoPin } from "react-icons/go";
 import { HiAnnotation } from "react-icons/hi";
@@ -69,7 +70,9 @@ const Index: React.FC<Props> = (props: Props) => {
     // console.log(memo.id);
     // editorStateService.setEditMemoWithId(memo.id);
     // setMoreAction(false);
-    navigate(`/edit/${memo.id}`);
+    if (props.actions && props.actions?.length > 0) {
+      navigate(`/edit/${memo.id}`);
+    }
   };
 
   const handleArchiveMemoClick = async () => {
@@ -208,8 +211,9 @@ const Index: React.FC<Props> = (props: Props) => {
   return (
     <div className={`memo-wrapper ${"memos-" + memo.id} ${memo.pinned && "pinned"} ${memo.editable && "editing"}`}>
       <div className="memo-top-wrapper">
+        {/* {props.actions?.length} */}
         <span className="time-text">{createdAtStr}</span>
-        {!userService.isVisitorMode() && !memo.editable && props.actions?.length !== 0 && <img src="/svg/menu.svg" onClick={moreActions} />}
+        {props.actions?.length && <img src="/svg/menu.svg" onClick={moreActions} />}
       </div>
       <Editor
         foldable
@@ -271,6 +275,10 @@ const Index: React.FC<Props> = (props: Props) => {
             title="立即分享给好友"
             onCancel={() => setShareVisible(false)}
             onSelect={(option, index) => {
+              if (index === 0) {
+                copy(`${location.protocol}//${location.host}/note/${memo.id}`);
+                Toast.info("复制成功");
+              }
               console.log("option", option);
               console.log("index", index);
               setShareVisible(false);
