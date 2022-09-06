@@ -274,16 +274,13 @@ const Editor = function (
           content,
         });
         editorStateService.clearEditMemo();
-        // props.onCancel && props.onCancel();
-        console.log(111);
-        props.onSave && props.onSave();
         Toast.info("保存成功");
       } else {
-        console.log(111123);
         if (content) {
           await memoService.createMemo({ content });
           Toast.info("保存成功");
         }
+        props.onSave && props.onSave();
         locationService.clearQuery();
       }
       if (props.clearWhenSave) editor?.commands.clearContent();
@@ -291,9 +288,7 @@ const Editor = function (
       Toast.info(error.message);
     }
   };
-  const handleExpandBtnClick = () => {
-    setIsFold(!isFold);
-  };
+  
   return (
     <div
       onDoubleClick={props.onDoubleClick}
