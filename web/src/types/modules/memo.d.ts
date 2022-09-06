@@ -35,3 +35,12 @@ interface MemoFind {
   limit?: number;
   offset?: number;
 }
+
+interface HeatMap {
+  [key: string]: number;
+}
+
+interface Stat {
+  notesNum: number;
+  heatMap: HeatMap;
+}

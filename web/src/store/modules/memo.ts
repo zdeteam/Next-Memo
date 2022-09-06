@@ -5,6 +5,7 @@ interface State {
   tags: string[];
   isFetching: boolean;
   total: number;
+  stat: Stat;
 }
 
 const memoSlice = createSlice({
@@ -15,17 +16,25 @@ const memoSlice = createSlice({
     // isFetching flag should starts with true.
     isFetching: true,
     total: 0,
+    stat: {
+      notesNum: 0,
+      heatMap: {},
+    },
   } as State,
   reducers: {
+    setStat: (state, action: PayloadAction<Stat>) => {
+      return {
+        ...state,
+        stat: action.payload,
+      };
+    },
     setMount: (state, action: PayloadAction<number>) => {
-      console.log('settmount',action.payload)
       return {
         ...state,
         total: action.payload,
       };
     },
     setMemos: (state, action: PayloadAction<{ total: number; list: Memo[] }>) => {
-      console.log('setMemos',action.payload)
       return {
         ...state,
         memos: action.payload.list.filter((m) => m.rowStatus === "NORMAL").sort((a, b) => b.createdTs - a.createdTs),
@@ -69,6 +78,6 @@ const memoSlice = createSlice({
   },
 });
 
-export const { setMemos, setMount, createMemo, patchMemo, setTags, setIsFetching } = memoSlice.actions;
+export const { setMemos, setStat, setMount, createMemo, patchMemo, setTags, setIsFetching } = memoSlice.actions;
 
 export default memoSlice.reducer;

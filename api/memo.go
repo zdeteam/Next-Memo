@@ -84,7 +84,12 @@ type MemoDelete struct {
 	ID int `json:"id"`
 }
 
-type MemoGet struct {
+type GetMemoResponse struct {
 	Total int     `json:"total"`
 	List  []*Memo `json:"list"`
+}
+
+type GetMemoStateResponse struct {
+	NotesNum int            `json:"notesNum"`
+	HeatMap  map[string]int `json:"heatMap"`
 }

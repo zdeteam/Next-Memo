@@ -1,5 +1,6 @@
-import React from 'react'
-import "./index.less"
+import React from "react";
+import moment from 'moment'
+import "./index.less";
 interface I18n {
   previousMonth: string;
   nextMonth: string;
@@ -70,14 +71,16 @@ interface DayProps {
   day: Date;
   date: Date;
   cursor: Date;
+  colorLevel: number;
   onChange: (date: Date) => void;
   onCursorChange: (date: Date) => void;
 }
-const Day = ({ day, date, cursor, onChange, onCursorChange }: DayProps) => {
+const Day = ({ day, colorLevel=0, date, cursor, onChange, onCursorChange }: DayProps) => {
   const isSelected = sameDates(day, date);
   const isCursor = sameDates(day, cursor);
   const isToday = sameDates(day, new Date());
-
+  console.log("colorLevel", colorLevel);
+  console.log("day", moment(day).format("YYYY-MM-DD"));
   const isPrevMonth = cursor.getMonth() === 0 ? day.getMonth() === 11 : day.getMonth() === cursor.getMonth() - 1;
   const isNextMonth = cursor.getMonth() === 11 ? day.getMonth() === 0 : day.getMonth() === cursor.getMonth() + 1;
   const isInThisMonth = !isPrevMonth && !isNextMonth;
@@ -95,6 +98,21 @@ const Day = ({ day, date, cursor, onChange, onCursorChange }: DayProps) => {
   if (isToday) {
     classNames.push("today");
   }
+  
+  const levelClassName =
+    colorLevel <= 0
+      ? ""
+      : colorLevel <= 1
+      ? "stat-day-L1"
+      : colorLevel <= 2
+      ? "stat-day-L2"
+      : colorLevel <= 4
+      ? "stat-day-L3"
+      : "stat-day-L4";
+
+  classNames.push(levelClassName);
+
+  console.log(colorLevel,levelClassName,day)
 
   const props = {
     ...(isInThisMonth && {
@@ -137,25 +155,27 @@ interface HeaderProps {
 const Header = ({ i18n, cursor, prevMonthClick, nextMonthClick }: HeaderProps) => {
   return (
     <tr>
-      <th colSpan={1}>
+      {/* <th colSpan={1}>
         <a className="chevron" onClick={prevMonthClick}>
-          ‹
+         ‹
         </a>
-      </th>
+      </th>  */}
       <th colSpan={5}>
         {i18n.months[cursor.getMonth()]} {cursor.getFullYear()}
       </th>
-      <th colSpan={1}>
+      {/* <th colSpan={1}>
         <a className="chevron" onClick={nextMonthClick}>
           ›
         </a>
-      </th>
+      </th> */}
     </tr>
   );
 };
 
 interface DemoProps {
   i18n: I18n;
+  data: HeatMap;
+  onClick: (params: any) => void;
 }
 interface DemoState {
   date: Date;
@@ -170,12 +190,16 @@ class DemoContainer extends React.Component<DemoProps, DemoState> {
   };
 
   private onChange = (date: Date) => {
-    this.setState({ date });
+    // this.setState({ date });
+    this.props.onClick(date);
+    console.log("onChange");
   };
 
   private onCursorChange = (cursor: Date) => {
-    this.setState({ cursor });
+    // this.setState({ cursor });
+    // console.log('onCursorChange')
   };
+  // console.log(pro)
 
   private onKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
     switch (e.key) {
@@ -213,6 +237,7 @@ class DemoContainer extends React.Component<DemoProps, DemoState> {
         onKeyDown={this.onKeyDown}
         renderDay={(day) => (
           <Day
+            colorLevel={this.props.data[moment(day).format("YYYY-MM-DD")]}
             key={day.toString()}
             day={day}
             date={this.state.date}

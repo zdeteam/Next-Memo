@@ -49,7 +49,8 @@ func (s *Server) registerTagRoutes(g *echo.Group) {
 
 		tagMapSet := make(map[string]bool)
 
-		r, err := regexp.Compile(">#(.+?)</span>")
+		//r, err := regexp.Compile(">#(.+?)</span>")
+		var tagRegexp = regexp.MustCompile(`>#(.+?)</span>`)
 		if err != nil {
 			return echo.NewHTTPError(http.StatusInternalServerError, "Failed to compile regexp").SetInternal(err)
 		}

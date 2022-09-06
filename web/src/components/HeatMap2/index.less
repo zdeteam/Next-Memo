@@ -18,7 +18,7 @@
         justify-content: space-between;
         margin-bottom: .1rem;
         &:first-of-type{
-            font-size: .2rem;
+            font-size: .3rem;
             color: #d5d5dc;
             letter-spacing: .0042rem;
             // text-align: justify;
@@ -26,7 +26,7 @@
            
             display: flex;
             align-items: center;
-            >th:nth-of-type(2){
+            >th:nth-of-type(1){
                  font-family: "Bebas Neue Bold";
             }
         }
@@ -59,6 +59,30 @@
             letter-spacing: 0;
             text-align: center;
             font-weight: 400;
+            // border: 1px solid;
+            &.stat-day-L1{
+                background-color: rgba(255,171,39,.6);
+                color: #fff;
+                font-weight: 800;
+            }
+            &.stat-day-L2{
+                background-color: rgba(255,171,39,1);
+                color: #fff;
+                font-weight: 800;
+                
+            }
+            &.stat-day-L3{
+                background-color: rgba(255,136,38,0.8);
+                //  background-color: #ff8826;
+                color: #fff;
+                font-weight: 800;
+            }
+            &.stat-day-L4{
+                // background-color: #ff8826;
+                background-color: rgba(255,136,38,1);
+                color: #fff;
+                font-weight: 800;
+            }
         }
     }
 }
@@ -80,8 +104,36 @@
 }
 
 .fus-datepicker td.selected {
-    color: white;
-    background: #e74c3c;
+    // color: white;
+    // background: #e74c3c;
+}
+
+.fus-datepicker td.today{
+    position: relative;
+    &:after {
+        content: '';
+        display: block;
+        width: 120%;
+        height: 120%;
+        border-radius: 50%;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        background-color: rgba(#e73a35, 0.6);
+        animation: today-circle-fill-animate 3s ease-in-out infinite;
+      };
+      @keyframes today-circle-fill-animate {
+        0%,
+        100% {
+          transform: translate(-50%, -50%) rotate(0) scale(0.6);
+          opacity: 0.2;
+        }
+        50% {
+          transform: translate(-50%, -50%) rotate(0) scale(1.2);
+          opacity: 0.2;
+        }
+      }
 }
 
 // .fus-datepicker td.today:not(.selected) {

@@ -175,3 +175,7 @@ export async function getRepoStarCount() {
   });
   return data.stargazers_count as number;
 }
+
+export function getMemoStat() {
+  return axios.get("/api/memo/stat");
+}

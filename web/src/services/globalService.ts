@@ -1,6 +1,7 @@
 import store from "../store";
 import * as api from "../helpers/api";
 import * as storage from "../helpers/storage";
+import {setStat} from "@/store/modules/memo";
 import { setGlobalState, setLocale } from "../store/modules/global";
 import { convertResponseModelUser } from "./userService";
 
@@ -9,19 +10,19 @@ const globalService = {
     return store.getState().global;
   },
 
-  initialState: async () => {
+  _initialState: async () => {
     const defaultGlobalState = {
       locale: "en" as Locale,
     };
 
     const { locale: storageLocale } = storage.get(["locale"]);
-    console.log('storageLocale',storageLocale)
     if (storageLocale) {
       defaultGlobalState.locale = storageLocale;
     }
     try {
       const { data } = (await api.getMyselfUser()).data;
-      console.log('data',data)
+      const stat = await api.getMemoStat();
+      store.dispatch(setStat(stat.data));
       if (data) {
         const user = convertResponseModelUser(data);
         if (user.setting.locale) {
@@ -33,6 +34,12 @@ const globalService = {
     }
 
     store.dispatch(setGlobalState(defaultGlobalState));
+  },
+  get initialState() {
+    return this._initialState;
+  },
+  set initialState(value) {
+    this._initialState = value;
   },
 
   setLocale: (locale: Locale) => {
