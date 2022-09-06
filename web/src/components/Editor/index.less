@@ -53,6 +53,14 @@
       // max-height: 122px;
       // overflow: hidden;
     }
+    .ProseMirror .is-empty::before {
+      content: attr(data-placeholder);
+      float: left;
+      color: #ced4da;
+      pointer-events: none;
+      height: 0;
+    }
+    
   }
   > .fold-btn {
     cursor: pointer;
@@ -78,6 +86,7 @@
     justify-content: space-between;
      margin-top: 0.2rem;
      font-size: 0.34rem;
+    //  border: 1px solid;
      
     .editor-toolbar {
       display: flex;
