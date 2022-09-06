@@ -164,8 +164,8 @@ interface DemoState {
 }
 class DemoContainer extends React.Component<DemoProps, DemoState> {
   public state = {
-    date: new Date(2018, 1, 15),
-    cursor: new Date(2018, 1, 10),
+    date: new Date(),
+    cursor: new Date(),
     weekStart: 1,
   };
 
