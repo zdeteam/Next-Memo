@@ -12,6 +12,8 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+var tagRegexp = regexp.MustCompile(`#([^\s#]+?) `)
+
 func (s *Server) registerTagRoutes(g *echo.Group) {
 	g.GET("/tag", func(c echo.Context) error {
 		ctx := c.Request().Context()
@@ -52,8 +54,8 @@ func (s *Server) registerTagRoutes(g *echo.Group) {
 			return echo.NewHTTPError(http.StatusInternalServerError, "Failed to compile regexp").SetInternal(err)
 		}
 		for _, memo := range memoList {
-			for _, rawTag := range r.FindAllString(memo.Content, -1) {
-				tag := r.ReplaceAllString(rawTag, "$1")
+			for _, rawTag := range tagRegexp.FindAllString(memo.Content, -1) {
+				tag := tagRegexp.ReplaceAllString(rawTag, "$1")
 				tagMapSet[tag] = true
 			}
 		}
