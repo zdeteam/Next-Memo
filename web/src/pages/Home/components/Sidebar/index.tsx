@@ -24,7 +24,10 @@ const Index: React.FC<Props> = (props) => {
   // const user = useAppSelector((state) => state.user.user as User);
   // console.log("user", user);
 
+ 
+
   console.log(t("sidebar.setting"));
+  // console.log('123stat',stat)
   const handleMyAccountBtnClick = () => {
     showSettingDialog();
   };
@@ -35,7 +38,9 @@ const Index: React.FC<Props> = (props) => {
 
   const navigate = useNavigate();
   const { user, owner } = useAppSelector((state) => state.user);
-  const { memos, tags } = useAppSelector((state) => state.memo);
+  const { memos, tags,stat } = useAppSelector((state) => state.memo);
+  // const stat = useAppSelector((state)=>state.memo.stat)
+  console.log('123stat',stat)
   const [shouldShowPopupBtns, setShouldShowPopupBtns] = useState(false);
   const [username, setUsername] = useState("Memos");
   const [tagsVisible, setTagsVisible] = useState(false);
@@ -102,6 +107,8 @@ const Index: React.FC<Props> = (props) => {
 
       <div className="heatMap">
         <HeatMap2
+          data={stat.heatMap}
+          onClick={props.closePopup}
           i18n={{
             previousMonth: "Previous month",
             nextMonth: "Next month",
@@ -113,7 +120,7 @@ const Index: React.FC<Props> = (props) => {
       </div>
       <div className="amount-text-container">
         <div>
-          <span>{memos.length}</span>
+          <span>{stat.notesNum}</span>
           <span>NOTES</span>
         </div>
         <div>
@@ -180,11 +187,6 @@ const Index: React.FC<Props> = (props) => {
           }
         </Only>
       </div>
-
-      {/*<Only when={!userService.isVisitorMode()}>*/}
-      {/*  <ShortcutList />*/}
-      {/*</Only>*/}
-      {/*<TagList />*/}
     </aside>
   );
 };

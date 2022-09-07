@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/usememos/memos/api"
 	"github.com/usememos/memos/common"
@@ -92,7 +93,7 @@ func (s *Server) registerMemoRoutes(g *echo.Group) {
 		ctx := c.Request().Context()
 		memoFind := &api.MemoFind{}
 
-		response := api.MemoGet{}
+		response := api.GetMemoResponse{}
 
 		if userID, err := strconv.Atoi(c.QueryParam("creatorId")); err == nil {
 			memoFind.CreatorID = &userID
@@ -161,6 +162,58 @@ func (s *Server) registerMemoRoutes(g *echo.Group) {
 		c.Response().Header().Set(echo.HeaderContentType, echo.MIMEApplicationJSONCharsetUTF8)
 		if err := json.NewEncoder(c.Response().Writer).Encode(composeResponse(response)); err != nil {
 			return echo.NewHTTPError(http.StatusInternalServerError, "Failed to encode memo list response").SetInternal(err)
+		}
+		return nil
+	})
+
+	g.GET("/memo/all", func(c echo.Context) error {
+		ctx := c.Request().Context()
+		memoFind := &api.MemoFind{}
+
+		_, ok := c.Get(getUserIDContextKey()).(int)
+		if !ok {
+			memoFind.VisibilityList = []api.Visibility{api.Public}
+		} else {
+			memoFind.VisibilityList = []api.Visibility{api.Public, api.Protected}
+		}
+
+		rowStatus := api.RowStatus(c.QueryParam("rowStatus"))
+		if rowStatus != "" {
+			memoFind.RowStatus = &rowStatus
+		}
+		pinnedStr := c.QueryParam("pinned")
+		if pinnedStr != "" {
+			pinned := pinnedStr == "true"
+			memoFind.Pinned = &pinned
+		}
+		tag := c.QueryParam("tag")
+		if tag != "" {
+			contentSearch := "#" + tag + " "
+			memoFind.ContentSearch = &contentSearch
+		}
+		visibilitListStr := c.QueryParam("visibility")
+		if visibilitListStr != "" {
+			visibilityList := []api.Visibility{}
+			for _, visibility := range strings.Split(visibilitListStr, ",") {
+				visibilityList = append(visibilityList, api.Visibility(visibility))
+			}
+			memoFind.VisibilityList = visibilityList
+		}
+		if limit, err := strconv.Atoi(c.QueryParam("limit")); err == nil {
+			memoFind.Limit = limit
+		}
+		if offset, err := strconv.Atoi(c.QueryParam("offset")); err == nil {
+			memoFind.Offset = offset
+		}
+
+		list, err := s.Store.FindMemoList(ctx, memoFind)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusInternalServerError, "Failed to fetch all memo list").SetInternal(err)
+		}
+
+		c.Response().Header().Set(echo.HeaderContentType, echo.MIMEApplicationJSONCharsetUTF8)
+		if err := json.NewEncoder(c.Response().Writer).Encode(composeResponse(list)); err != nil {
+			return echo.NewHTTPError(http.StatusInternalServerError, "Failed to encode all memo list response").SetInternal(err)
 		}
 		return nil
 	})
@@ -275,5 +328,31 @@ func (s *Server) registerMemoRoutes(g *echo.Group) {
 			return echo.NewHTTPError(http.StatusInternalServerError, "Failed to encode memo amount").SetInternal(err)
 		}
 		return nil
+	})
+
+	g.GET("/memo/stat", func(c echo.Context) error {
+		ctx := c.Request().Context()
+		userID, ok := c.Get(getUserIDContextKey()).(int)
+		response := api.GetMemoStateResponse{
+			NotesNum: 0,
+			HeatMap:  make(map[string]int),
+		}
+		if !ok {
+			return echo.NewHTTPError(http.StatusUnauthorized, "Missing user in session")
+		}
+		normalRowStatus := api.Normal
+		memoFind := &api.MemoFind{
+			CreatorID: &userID,
+			RowStatus: &normalRowStatus,
+		}
+		memoList, err := s.Store.FindMemoList(ctx, memoFind)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusInternalServerError, "Failed to find memo list").SetInternal(err)
+		}
+		response.NotesNum = len(memoList)
+		for _, memo := range memoList {
+			response.HeatMap[time.Unix(memo.CreatedTs, 0).Format("2006-01-02")]++
+		}
+		return c.JSON(http.StatusOK, response)
 	})
 }

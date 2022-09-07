@@ -42,7 +42,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
   if (!editor) {
     return null;
   }
-  
+
   return (
     <div className="editor-toolbar">
       <button>
@@ -52,7 +52,13 @@ const MenuBar = ({ editor }: { editor: any }) => {
           alt=""
         />
       </button>
-      <button className={editor.isActive("bold") ? "is-active" : ""} onClick={() => editor.chain().focus().toggleBold().run()}>
+      <button
+        className={editor.isActive("bold") ? "is-active" : ""}
+        onClick={(e) => {
+          e.preventDefault();
+          editor.chain().focus().toggleBold().run();
+        }}
+      >
         <GoBold />
       </button>
       <button
@@ -79,6 +85,10 @@ const MenuBar = ({ editor }: { editor: any }) => {
     </div>
   );
 };
+
+const CustomDocument = Document.extend({
+  content: "paragraph block*",
+});
 
 const Editor = function (
   props: ProseMirrorEditorProps = {
@@ -162,6 +172,7 @@ const Editor = function (
             return true;
           }
           console.log(123);
+
           // alert(123)
           return component.ref?.onKeyDown(props, props.view.state.mention$.query);
         },
@@ -176,8 +187,9 @@ const Editor = function (
 
   const editor = useEditor({
     extensions: [
+
       Bold,
-      Document,
+      CustomDocument,
       Paragraph,
       Text,
       TaskList,
@@ -185,7 +197,19 @@ const Editor = function (
       BulletList,
       OrderedList,
       ListItem,
-      Placeholder,
+      StarterKit.configure({
+        document: false,
+      }),
+      Placeholder.configure({
+        placeholder: ({ node }) => {
+          console.log(node.type.name,node)
+          if (editor?.isEmpty && node.type.name === "paragraph") {
+            return "What’s the title?";
+          }
+
+          return "Can you add some further context?";
+        },
+      }),
       Color,
       TextStyle,
       Mention.configure({
@@ -196,7 +220,7 @@ const Editor = function (
       }),
     ],
     content: props.content || "",
-    editable: props.editable,
+    // editable: props.editable,
   });
 
   editor?.on("create", () => {
@@ -250,16 +274,13 @@ const Editor = function (
           content,
         });
         editorStateService.clearEditMemo();
-        // props.onCancel && props.onCancel();
-        console.log(111);
-        props.onSave && props.onSave();
         Toast.info("保存成功");
       } else {
-        console.log(111123);
         if (content) {
           await memoService.createMemo({ content });
           Toast.info("保存成功");
         }
+        props.onSave && props.onSave();
         locationService.clearQuery();
       }
       if (props.clearWhenSave) editor?.commands.clearContent();
@@ -267,9 +288,7 @@ const Editor = function (
       Toast.info(error.message);
     }
   };
-  const handleExpandBtnClick = () => {
-    setIsFold(!isFold);
-  };
+  
   return (
     <div
       onDoubleClick={props.onDoubleClick}
