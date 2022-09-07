@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { PageLayout, Memo } from "@/components";
 import { memoService } from "@/services";
 import "./index.less";
 
 const NotePage = () => {
+  const { memoId } = useParams();
   const [memo, setMemo] = useState<any>(null);
   useEffect(() => {
-    memoService.getMemoById(1001).then((data) => {
+    memoService.getMemoById(Number(memoId)).then((data) => {
       setMemo(data);
     });
   }, []);
