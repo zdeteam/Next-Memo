@@ -8,30 +8,18 @@
   align-items: flex-start;
   justify-content: flex-start;
   box-sizing: border-box;
-  // border: 1px solid;
-
-  // border: 1px solid;
-
-  //border: 1px solid rgb(234, 234, 230);
   &.editable{
-    // border: 1px solid;
     >.editor{
-      // border: 1px solid;
       max-height: 3.4rem;
     }
   }
   &.toolbar-on-top{
-    // border: 1px solid red;
     flex-direction: column-reverse;
     >.toolbar{
       margin: 0;
     }
   }
 
-
-  // &.no-hover {
-  //   border: none;
-  // }
   p.is-editor-empty:first-child::before {
     content: "你在想什么...";
     float: left;
@@ -46,13 +34,8 @@
     font-size: .32rem;
     padding: 0.2rem;
     line-height: 1.75;
-    // max-height: 3.4rem;
     overflow-y: auto;
-    // border: 1px solid;
-    &.fold {
-      // max-height: 122px;
-      // overflow: hidden;
-    }
+
     .ProseMirror .is-empty::before {
       content: attr(data-placeholder);
       float: left;
@@ -86,7 +69,6 @@
     justify-content: space-between;
      margin-top: 0.2rem;
      font-size: 0.34rem;
-    //  border: 1px solid;
      
     .editor-toolbar {
       display: flex;
@@ -96,13 +78,10 @@
         border-radius: 4px;
         width: .6rem;
         height: .6rem;
-        // margin-right: rem;
         transition: all 0.2s ease-in-out;
-        // border: 1px solid red;
         border: none;
         background: #fff;
         padding: 0;
-        // margin: 0;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -121,14 +100,12 @@
           }
         }
         svg,img {
-          // border: 1px solid;
           width: .4rem;
           height: .4rem;
           vertical-align: top;
           fill: rgba(28, 31, 35, 0.84);
         }
         &.is-active{
-          // border: 1px solid;
           svg{
             fill:#ffac26;
           }

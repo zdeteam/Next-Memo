@@ -4,6 +4,7 @@ import * as storage from "../helpers/storage";
 import {setStat} from "@/store/modules/memo";
 import { setGlobalState, setLocale } from "../store/modules/global";
 import { convertResponseModelUser } from "./userService";
+import memoService from "./memoService";
 
 const globalService = {
   getState: () => {
@@ -23,6 +24,7 @@ const globalService = {
       const { data } = (await api.getMyselfUser()).data;
       const stat = await api.getMemoStat();
       store.dispatch(setStat(stat.data));
+      memoService.updateTagsState();
       if (data) {
         const user = convertResponseModelUser(data);
         if (user.setting.locale) {

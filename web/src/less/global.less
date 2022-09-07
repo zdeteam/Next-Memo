@@ -40,23 +40,22 @@ button:focus {
   outline-width: 0;
 }
 
-span.umo-tag {
-  display: inline-block;
-  text-align: center;
-  background-color: #fff6e9;
-  color: #ffab27;
-  border-radius: 99px;
-  padding: 0 0.2rem;
-  margin-right: 4px;
-  // font-size: .2rem;
-  
-  // vertical-align: text-bottom;
-}
+
 @keyframes scale-in{from{transform:scale(0)}to{transform:scale(1)}}
 
 
 .ProseMirror {
-  // min-height: 52px;
+  span.umo-tag {
+    display: inline-block;
+    text-align: center;
+    background-color: #fff6e9;
+    color: #ffab27;
+    border-radius: 99px;
+    padding: 0 0.2rem;
+    margin-right: 4px;
+    max-width: 8em;
+    .ellipsis();
+  }
   font-size: .32rem;
   color: #4b4b4d;
   font-family: "PingFang SC","Helvetica Neue",Helvetica,Arial,"Hiragino Sans GB","Heiti SC","Microsoft YaHei","WenQuanYi Micro Hei",sans-serif;
