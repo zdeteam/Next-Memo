@@ -270,15 +270,16 @@ const Index: React.FC<Props> = (props: Props) => {
           <ShareSheet
             visible={shareVisible}
             options={[
-              { name: "复制链接", icon: "link" },
+              { name: "分享图文链接", icon: "link" },
               { name: "分享卡片", icon: "poster" },
             ]}
             title="立即分享给好友"
             onCancel={() => setShareVisible(false)}
             onSelect={(option, index) => {
               if (index === 0) {
-                copy(`${location.protocol}//${location.host}/note/${memo.id}`);
-                Toast.info("复制成功");
+                navigate(`/note/${memo.id}`);
+                // copy(`${location.protocol}//${location.host}/note/${memo.id}`);
+                // Toast.info("复制成功");
               }
               console.log("option", option);
               console.log("index", index);
