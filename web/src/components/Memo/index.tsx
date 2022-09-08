@@ -75,7 +75,7 @@ const Index: React.FC<Props> = (props: Props) => {
     }
   };
 
-  const handleArchiveMemoClick = async () => {
+  const handleArchiveMemoClick = async (callback: () => void) => {
     setMoreAction(false);
     Dialog.confirm({
       title: "移至废纸篓",
@@ -87,6 +87,7 @@ const Index: React.FC<Props> = (props: Props) => {
             rowStatus: "ARCHIVED",
           });
           Toast.info("删除成功");
+          callback();
         } catch (error: any) {
           Toast.info(error.message);
         }
@@ -218,7 +219,7 @@ const Index: React.FC<Props> = (props: Props) => {
       <Editor
         foldable
         content={memo.content}
-        editable={editable}
+        editable={false}
         onDoubleClick={handleEditMemoClick}
         onCancel={() => editorStateService.setEditMemoWithId(UNKNOWN_ID)}
       />
@@ -246,7 +247,7 @@ const Index: React.FC<Props> = (props: Props) => {
               ...action,
               callback: () => {
                 if (action.action === "delete") {
-                  handleArchiveMemoClick();
+                  handleArchiveMemoClick(action.callback);
                 }
                 if (action.action === "edit") {
                   // handleEditMemoClick();

@@ -44,10 +44,7 @@ function Index() {
   }, []);
 
   const onRefresh = async function () {
-    listEl?.current?.sayHello();
-    const stat = await getMemoStat();
-    store.dispatch(setStat(stat.data));
-    services.memoService.updateTagsState();
+    listEl?.current?.reRefresh();
   };
 
   return (

@@ -92,7 +92,7 @@ const CustomDocument = Document.extend({
 
 const Editor = function (
   props: ProseMirrorEditorProps = {
-    editable: true,
+    editable: false,
     toolbarPosition: "bottom",
   }
 ) {
@@ -220,7 +220,7 @@ const Editor = function (
       }),
     ],
     content: props.content || "",
-    // editable: props.editable,
+    editable: props.editable,
   });
 
   editor?.on("create", () => {

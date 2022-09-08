@@ -17,12 +17,7 @@ const EditPage = () => {
       setMemo(data);
     });
   }, []);
-  //   useEffect(() => {
-  //     window.onresize = function () {
-  //       const newh = window.localStorage.getItem("curwinh");
-  //       document.getElementById("app").style.height = newh + "px";
-  //     };
-  //   }, []);
+  
   const goBack = () => {
     editorStateService.setEditMemoWithId(UNKNOWN_ID);
     navigate("/");

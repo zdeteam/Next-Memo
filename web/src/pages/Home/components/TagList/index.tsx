@@ -23,11 +23,11 @@ const Index: React.FC<Props> = (props) => {
   const query = useAppSelector((state) => state.location.query);
   const [tags, setTags] = useState<Tag[]>([]);
 
-  useEffect(() => {
-    if (memos.length > 0) {
-      memoService.updateTagsState();
-    }
-  }, [memos]);
+  // useEffect(() => {
+  //   if (memos.length > 0) {
+  //     memoService.updateTagsState();
+  //   }
+  // }, [memos]);
 
   useEffect(() => {
     const sortedTags = Array.from(tagsText).sort();

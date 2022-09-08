@@ -1,7 +1,10 @@
 import { useEffect, useRef, Ref, useState, useImperativeHandle, forwardRef } from "react";
 import { memoService, shortcutService, editorStateService } from "@/services";
-import { useAppSelector } from "@/store";
+import store, { useAppSelector } from "@/store";
+import { setStat } from "@/store/modules/memo";
 import useI18n from "@/hooks/useI18n";
+// import store from "@/store";
+import { getMemoStat } from "@/helpers/api";
 import { IMAGE_URL_REG, LINK_URL_REG, MEMO_LINK_REG, TAG_REG } from "@/helpers/consts";
 import * as utils from "@/helpers/utils";
 import { checkShouldShowMemoWithFilters } from "@/helpers/filter";
@@ -9,15 +12,13 @@ import { Toast, NoMore, Memo, Loading, Only, List } from "@/components";
 // import Memo from "@/components/Memo";
 import "./index.less";
 
-interface Props {}
-
 // eslint-disable-next-line react/display-name
-const MemoList = forwardRef((props, ref: Ref<{ sayHello: () => void }>) => {
+const MemoList = forwardRef((props, ref: Ref<{ reRefresh: () => void }>) => {
   const { t } = useI18n();
   const query = useAppSelector((state) => state.location.query);
   const { memos, total } = useAppSelector((state) => state.memo);
   const [noMore, setNoMore] = useState(false);
-  const [noData,setNoData] = useState(false); 
+  const [noData, setNoData] = useState(false);
   const wrapperElement = useRef<HTMLDivElement>(null);
   const [memoList, setMemoList] = useState<any>([]);
   const [finished, setFinished] = useState<boolean>(false);
@@ -25,12 +26,21 @@ const MemoList = forwardRef((props, ref: Ref<{ sayHello: () => void }>) => {
 
   const { tag: tagQuery, duration, type: memoType, text: textQuery, shortcutId } = query ?? {};
   const shortcut = shortcutId ? shortcutService.getShortcutById(shortcutId) : null;
+
+  const reRefresh = async () => {
+    setMemoList([]);
+    setFinished(false);
+    setOffset(0);
+
+    const stat = await getMemoStat();
+    store.dispatch(setStat(stat.data));
+    memoService.updateTagsState();
+  };
+
   useImperativeHandle(ref, () => {
     return {
-      sayHello: () => {
-        setMemoList([]);
-        setFinished(false);
-        setOffset(0);
+      reRefresh: async () => {
+        await reRefresh();
       },
     };
   });
@@ -58,9 +68,7 @@ const MemoList = forwardRef((props, ref: Ref<{ sayHello: () => void }>) => {
   const onLoad = async () => {
     const { total, list } = await getData();
     if (total === 0) return setNoData(true);
-    // setMemoList([...memoList, ...list]);
     setMemoList((v: any[]) => [...v, ...list]);
-    // console.log('totaltotaltotaltotal',total,memoList.length)
     if (memoList.length >= total) {
       setFinished(true);
       setNoMore(true);
@@ -75,11 +83,12 @@ const MemoList = forwardRef((props, ref: Ref<{ sayHello: () => void }>) => {
         {memoList.map((memo: any) => (
           <Memo
             key={`${memo.id}-${memo.updatedTs}`}
+
             memo={memo}
             actions={[
               { name: "分享", action: "share" },
               { name: "编辑", action: "edit" },
-              { name: "删除", action: "delete" },
+              { name: "删除", action: "delete", callback: reRefresh },
             ]}
           />
         ))}
