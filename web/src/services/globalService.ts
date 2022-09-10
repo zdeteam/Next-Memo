@@ -1,10 +1,9 @@
 import store from "../store";
-
+import * as api from "@/helpers/api";
 import * as storage from "../helpers/storage";
 
-import { setGlobalState, setLocale } from "../store/modules/global";
+import { setGlobalState, setLocale } from "@/store/modules/global";
 import { convertResponseModelUser } from "./userService";
-import memoService from "./memoService";
 
 const globalService = {
   getState: () => {
