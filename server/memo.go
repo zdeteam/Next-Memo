@@ -122,11 +122,11 @@ func (s *Server) registerMemoRoutes(g *echo.Group) {
 			pinned := pinnedStr == "true"
 			memoFind.Pinned = &pinned
 		}
-		//tag := c.QueryParam("tag")
-		//if tag != "" {
-		//	contentSearch := "#" + tag + " "
-		//	memoFind.ContentSearch = &contentSearch
-		//}
+		tag := c.QueryParam("tag")
+		if tag != "" {
+			tagSearch := ">#" + tag + "</span>"
+			memoFind.TagSearch = &tagSearch
+		}
 		content := c.QueryParam("content")
 		if content != "" {
 			memoFind.ContentSearch = &content
@@ -147,9 +147,18 @@ func (s *Server) registerMemoRoutes(g *echo.Group) {
 		}
 
 		list, err := s.Store.FindMemoList(ctx, memoFind)
+
 		response.List = list
 
-		response.Total = len(list)
+		normalRowStatus := api.Normal
+		memoMountFind := &api.MemoFind{
+			CreatorID: memoFind.CreatorID,
+			RowStatus: &normalRowStatus,
+		}
+
+		allMemos, err := s.Store.FindMemoList(ctx, memoMountFind)
+
+		response.Total = len(allMemos)
 
 		if err != nil {
 			return echo.NewHTTPError(http.StatusInternalServerError, "Failed to fetch memo list").SetInternal(err)

@@ -132,7 +132,7 @@ const Index: React.FC<Props> = (props) => {
         </div>
       </div>
       <div className="menu-list">
-        <div className="item" onClick={handleAllNotesClick}>
+        {/* <div className="item" onClick={handleAllNotesClick}>
           <div>
             <img
               src="data:image/png;base64,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"
@@ -146,7 +146,7 @@ const Index: React.FC<Props> = (props) => {
               alt=""
             />
           </div>
-        </div>
+        </div> */}
         <div className="item" onClick={() => navigate('/tag')}>
           <div>
             <img

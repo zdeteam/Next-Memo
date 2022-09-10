@@ -17,14 +17,14 @@ const EditPage = () => {
       setMemo(data);
     });
   }, []);
-  
+
   const goBack = () => {
     editorStateService.setEditMemoWithId(UNKNOWN_ID);
     navigate("/");
   };
 
   return (
-    <PageLayout title="编辑中" onClickLeft={goBack} className="edit-page">
+    <PageLayout onClickLeft={goBack} className="edit-page">
       {memo && <Editor editable onSave={goBack} toolbarPosition="top" content={memo.content} />}
     </PageLayout>
   );

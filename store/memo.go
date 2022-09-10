@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"regexp"
 	"strings"
 
 	"github.com/usememos/memos/api"
@@ -139,7 +140,15 @@ func (s *Store) FindMemoList(ctx context.Context, find *api.MemoFind) ([]*api.Me
 		if err != nil {
 			return nil, err
 		}
-
+		var tagRegexp = regexp.MustCompile(`</?.*?>`)
+		content := tagRegexp.ReplaceAllString(memo.Content, "$1")
+		if find.ContentSearch != nil {
+			contentRegexp, _ := regexp.Compile(*find.ContentSearch)
+			if contentRegexp.MatchString(content) == false {
+				//return nil,err
+				continue
+			}
+		}
 		list = append(list, memo)
 	}
 
@@ -291,6 +300,9 @@ func findMemoRawList(ctx context.Context, tx *sql.Tx, find *api.MemoFind) ([]*me
 	if v := find.ContentSearch; v != nil {
 		where, args = append(where, "content LIKE ?"), append(args, "%"+*v+"%")
 	}
+	if v := find.TagSearch; v != nil {
+		where, args = append(where, "content LIKE ?"), append(args, "%"+*v+"%")
+	}
 	if v := find.VisibilityList; len(v) != 0 {
 		list := []string{}
 		for _, visibility := range v {
@@ -322,6 +334,7 @@ func findMemoRawList(ctx context.Context, tx *sql.Tx, find *api.MemoFind) ([]*me
 		ORDER BY created_ts DESC
 	` + pagination
 	rows, err := tx.QueryContext(ctx, query, args...)
+	// fmt.Printf(query)
 	if err != nil {
 		return nil, FormatError(err)
 	}

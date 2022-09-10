@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import useQuery from "@/hooks/useQuery";
+import { IMAGE_URL_REG, UNKNOWN_ID } from "@/helpers/consts";
 import { memoService, shortcutService, editorStateService } from "@/services";
 import { PageLayout, Toast, NoMore, Memo, Loading, Only, List } from "@/components";
 import { locationService } from "@/services";
@@ -13,12 +14,13 @@ const SearchPage = () => {
   const [memoList, setMemoList] = useState<any>([]);
   const [finished, setFinished] = useState<boolean>(true);
   const [offset, setOffset] = useState<number>(0);
-  const [tagQuery, setTagQuery] = useState(query.get("tag"));
+  const [tagQuery, setTagQuery] = useState(query.get("tag") || "");
   const [noMore, setNoMore] = useState(false);
   const [noData, setNoData] = useState(false);
 
   const handleTextQueryInput = (event: React.FormEvent<HTMLInputElement>) => {
     const text = event.currentTarget.value;
+    editorStateService.setEditMemoWithId(UNKNOWN_ID);
     setKeyword(text);
   };
 
@@ -27,19 +29,18 @@ const SearchPage = () => {
     console.log("keyword", keyword);
   };
 
-  // useEffect(() => {
-  //   const tagQuery = query.get("tag");
-
-  //   console.log("span.umo-tag", tagQuery);
-  // }, []);
+  useEffect(() => {
+    const tagQuery = query.get("tag");
+    if (tagQuery) {
+      getData();
+    }
+    console.log("span.umo-tag", tagQuery);
+  }, []);
 
   useEffect(() => {
-    if (keyword) {
+    if (keyword || tagQuery) {
       // setFinished(false)
-      getData({ keyword }).then((data) => {
-        console.log(data);
-        setMemoList(data.list);
-      });
+      getData({ keyword });
     } else {
       setFinished(true);
       setMemoList([]);
@@ -50,9 +51,10 @@ const SearchPage = () => {
   async function getData({ keyword }: { keyword?: string } = {}) {
     return new Promise<any>((resolve, reject) => {
       memoService
-        .fetchAllMemos({ rowStatus: "NORMAL", limit: 10, offset, content: keyword })
+        .fetchAllMemos({ rowStatus: "NORMAL", limit: 10, offset, content: keyword, tag: tagQuery })
         .then((data) => {
-          resolve(data);
+          // resolve(data);
+          setMemoList(data.list);
         })
         .catch((error) => {
           console.log(error);
@@ -74,7 +76,7 @@ const SearchPage = () => {
   };
 
   return (
-    <PageLayout className="search-page">
+    <PageLayout className="search-page" hiddenBar>
       <div className="header">
         <div className="searchBox">
           <img
@@ -85,7 +87,13 @@ const SearchPage = () => {
             <input autoFocus type="text" placeholder="搜索" onChange={handleTextQueryInput} />
           </form>
         </div>
-        <span className="cancel" onClick={() => navigate(-1)}>
+        <span
+          className="cancel"
+          onClick={() => {
+            editorStateService.setEditMemoWithId(UNKNOWN_ID);
+            navigate(-1);
+          }}
+        >
           取消
         </span>
       </div>
@@ -112,6 +120,7 @@ const SearchPage = () => {
           actions={[
             { name: "分享", action: "share" },
             { name: "编辑", action: "edit" },
+            { name: "删除", action: "delete", callback: () => getData({ keyword }) },
           ]}
         />
       ))}

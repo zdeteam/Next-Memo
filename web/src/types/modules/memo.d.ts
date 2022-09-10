@@ -30,6 +30,7 @@ interface MemoPatch {
 
 interface MemoFind {
   content?: string;
+  tag?: string;
   creatorId?: UserId;
   rowStatus?: RowStatus;
   visibility?: Visibility;
