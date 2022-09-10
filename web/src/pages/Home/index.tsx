@@ -8,7 +8,7 @@ import { Popup, Toast, Editor, Only } from "@/components";
 import Sidebar from "./components/Sidebar";
 
 import MemosHeader from "./components/MemosHeader";
-// import MemoFilter from "./components/MemoFilter";
+import MemoFilter from "./components/MemoFilter";
 import MemoList from "./components/MemoList";
 import "./index.less";
 import store from "@/store";

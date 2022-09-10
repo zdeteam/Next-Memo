@@ -95,6 +95,9 @@ export function getMemoList(memoFind?: MemoFind) {
   if (memoFind?.offset !== undefined) {
     queryList.push(`offset=${memoFind.offset}`);
   }
+  if (memoFind?.content !== undefined) {
+    queryList.push(`content=${memoFind.content}`);
+  }
   return axios.get<ResponseObject<{ total: number; list: Memo[] }>>(`/api/memo?${queryList.join("&")}`);
 }
 

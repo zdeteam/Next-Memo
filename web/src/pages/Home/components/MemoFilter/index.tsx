@@ -3,7 +3,7 @@ import { GoTag, GoCalendar, GoSearch, GoLightBulb,GoTelescope } from "react-icon
 import { locationService, shortcutService } from "@/services";
 import * as utils from "@/helpers/utils";
 import { getTextWithMemoType } from "@/helpers/filter";
-import "../less/memo-filter.less";
+import "./index.less";
 
 interface FilterProps {}
 
@@ -16,7 +16,7 @@ const Index: React.FC<FilterProps> = () => {
 
   return (
     <div className={`filter-query-container ${showFilter ? "" : "!hidden"}`}>
-      <span className="tip-text">我想看的:</span>
+      {/* <span className="tip-text">:</span> */}
       {shortcut && (
         <div
           className="filter-item-container"
@@ -34,7 +34,7 @@ const Index: React.FC<FilterProps> = () => {
             locationService.setTagQuery(undefined);
           }}
         >
-          <GoTag /> {tagQuery}
+          {tagQuery}
         </div>
       )}
       {memoType && (
@@ -44,7 +44,7 @@ const Index: React.FC<FilterProps> = () => {
             locationService.setMemoTypeQuery(undefined);
           }}
         >
-          <GoLightBulb /> {getTextWithMemoType(memoType as MemoSpecType)}
+          {getTextWithMemoType(memoType as MemoSpecType)}
         </div>
       )}
 

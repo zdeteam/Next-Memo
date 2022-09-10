@@ -1,22 +1,76 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { PageLayout } from "@/components";
+import { useNavigate, useLocation } from "react-router-dom";
+import useQuery from "@/hooks/useQuery";
+import { memoService, shortcutService, editorStateService } from "@/services";
+import { PageLayout, Toast, NoMore, Memo, Loading, Only, List } from "@/components";
 import { locationService } from "@/services";
 import "./index.less";
 
 const SearchPage = () => {
-  const navigation = useNavigate();
+  const navigate = useNavigate();
+  const query = useQuery();
   const [keyword, setKeyword] = useState("");
+  const [memoList, setMemoList] = useState<any>([]);
+  const [finished, setFinished] = useState<boolean>(true);
+  const [offset, setOffset] = useState<number>(0);
+  const [tagQuery, setTagQuery] = useState(query.get("tag"));
+  const [noMore, setNoMore] = useState(false);
+  const [noData, setNoData] = useState(false);
 
   const handleTextQueryInput = (event: React.FormEvent<HTMLInputElement>) => {
     const text = event.currentTarget.value;
-
     setKeyword(text);
   };
 
   const handleSearch = (event: any) => {
     event.preventDefault();
     console.log("keyword", keyword);
+  };
+
+  // useEffect(() => {
+  //   const tagQuery = query.get("tag");
+
+  //   console.log("span.umo-tag", tagQuery);
+  // }, []);
+
+  useEffect(() => {
+    if (keyword) {
+      // setFinished(false)
+      getData({ keyword }).then((data) => {
+        console.log(data);
+        setMemoList(data.list);
+      });
+    } else {
+      setFinished(true);
+      setMemoList([]);
+      setOffset(0);
+    }
+  }, [keyword]);
+
+  async function getData({ keyword }: { keyword?: string } = {}) {
+    return new Promise<any>((resolve, reject) => {
+      memoService
+        .fetchAllMemos({ rowStatus: "NORMAL", limit: 10, offset, content: keyword })
+        .then((data) => {
+          resolve(data);
+        })
+        .catch((error) => {
+          console.log(error);
+          reject(new Error("error"));
+        });
+    });
+  }
+
+  const onLoad = async () => {
+    const { total, list } = await getData();
+    if (total === 0) return setNoData(true);
+    setMemoList((v: any[]) => [...v, ...list]);
+    if (memoList.length >= total) {
+      setFinished(true);
+      setNoMore(true);
+    } else {
+      setOffset(offset + 1);
+    }
   };
 
   return (
@@ -31,36 +85,36 @@ const SearchPage = () => {
             <input autoFocus type="text" placeholder="搜索" onChange={handleTextQueryInput} />
           </form>
         </div>
-        <span className="cancel" onClick={() => navigation("/")}>
+        <span className="cancel" onClick={() => navigate(-1)}>
           取消
         </span>
       </div>
-      <div className="body">
-        <div className="title">搜索指定内容</div>
-        <div className="link">
-          <div>
-            <img
-              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADYAAAA2CAYAAACMRWrdAAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAANqADAAQAAAABAAAANgAAAADzQy6kAAACsUlEQVRoBe1Yz2sTQRTOhgq24qkUixYcSkkCiQmYXgKlrkehx/4N/hEe/Se8+R/UiydPKhRP4slDEgpOoUSlepKIhJL0e3WnfQ47brIzKwu+gex88943s+9982OnrVSkiAKigCggCogCooAoIAqIAqKAKOBUoNvtrrRarVtOAnPU6/XbcRxfZ6YgsBpkFGuQ8Xj8aDKZfKnVaj8R+DPLbTdfjUYj4n3Gr24787YLSQzBqCSg5dlsdpYR3F34I/DWoyj6lsGd211IYtPpVJkIqtWqNtiuG43GKhK6SXYk9aPf73+3OXnbhSSGYBQLSDNsQ8UMxwx7w0ISg/qKRaYZtqEyBsycNjhEHfkMgr3+2tF/B4EuJb5DJJq6z8DZAGcr4Z2Ad8THGwwGD3l7EWxevkifSy4Ciy8bbkBJur1Xno0k0SuLBypkKXrEE6yr14zhxIvtSKD6Ln5PE/s7cJ7YHNPG6fkceJPa4D1GNSQconglhuP5rR0EjvBttvQ+pHFMH+zRNcZ9UerjvgzfMBKuiD2mzIyg1gzbUDHDMcNBYPDEyvANI2WCJ4Yx6e5nijYgpVbMphkOAoMmtsjdb969mDdLr1MRiTywXlwzbZx2pyl+464gsfumAe5KGvdvJ6rp66q9rlT4e2uuK4Xr5Vn24XCYO76gSzEr0H/p91qKOAHf8GCxpLbQpostlSP4T37DP5/g0Xt3yArOGapDwiFL7qlOCwJL8yXse+TDFWkfe+QgjYf91MUee08+JPYRt/h7aTwfW9CliCAVC0YzbENlDJg9bXDIOmhiCKwU3zASKFhiWF5z//+i6G9Y0MQQ7BoG/EqDouiLp+OBJXsNrl+J+5ODVi5zr9db7nQ6d7Kiwt6Kms3mervdvpHFFb8oIAqIAqKAKCAKiAKigCggCvzPCpwDqrfRM1ZitzcAAAAASUVORK5CYII="
-              alt=""
-            />
-            <span>笔记内容</span>
-          </div>
-          {/* <div>
-            <img
-              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADYAAAA2CAYAAACMRWrdAAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAANqADAAQAAAABAAAANgAAAADzQy6kAAAEGElEQVRoBe1YS08TURSmlEbAiqLUx067gEIBQYz4SipQHzWKccHSGI2JicREf4Er1rrBldF/YEzUIIZH0I0KKKltKCzKQgLIQ0GrieFRvw/nmhFpc6fMZIzcm9yec8+cOed859xXJytLNZUBlQGVAZUBlQGVAZUBlQGVgXWWAce/gDcUCm2Ix+N1DofDz3iSyWTU6/V2t7W1/cg0PtuB+Xy+AIA8QN+jBwGQI+iXYrFYj14uyztlFa3QKykpuQxAD2G7cBX7hXh2saio6MPMzMy7VZ6nFdlWMYBihcII3s0IUZ1x8I81/iz4XRqfAK0cGhoa4Vi2Zcsqmq2HwG+hC1C9eXl5ZcPDw1fZyQNoL31Sh7pG/dsGDIEGRbAAcWNgYGBWjMlTJsagDTpeirUNGAL3iAidTmdY8ILqZdDdLuSy1DZgmF5TIsjFxcVKwQuql0F3UshlqW3AEGCHCBKB36mqqtoixuQpE2PQTh0vxf63u6JtwJh27Ry7BzZVHEmsryvY6u9LlUmnZOsBzYPX4/H0IJ4A+h+HNACNZGdnnweoR7p4pdlUmZI2YIaiFXdFM+JKa6OmpsaVVsGih5btimVlZf7i4uJIIpEYB71gUfwpzVqyxnBjr8A51AWvu9Hz0c/hMjuayWUW72bUTAfm9/v3Li0t8dz5fbMAz7XciI1ibHp6+m1GkRp8yVRgmH7VqFQHDtciLY457G7D4HegOyA/g8p9ROX6DMZpWN20NVZaWrpPA7WNUQDQZ/QgbuoB0OWbOsUAdxdr7trKSFFpd1NTk2mJNgUYDtr9ANWJoLdqoD7hDAriDOrjTd3tdh+H/LUGhtOyFevwujbOAtDmhYWFiXA4HKctIV8LXfM5hkwfmJ+ff44gNjMQVGcmJycnGI1GB/SB1dbWFszOzj4D+ENCDt2b5CG7LWSgcy6X6wTef6OTGWbXBAzT7yAq1Q6vBfSMQKdBGlCpv/6G8DmqsQmkDUCOcJymfcHflpODg4Ov0uikfZTxVMRUOozdj5VaBgU6BWD1qUAxCjz7imqeAvuS4xWNIMRfmQLapo8VOtLDjIBhTRxF1tvRWQG2SQRchy9K738NU/9iiiVyc3NDSEKP0CIPWZA2aIty2qYP+hJ6RqjhqYgsBuDwKfpGOkJQE1gT9ZFIZNCIY1y18nEraeY72Fxa+/v7v5MvLy8vxZrtgv2dHMP+N2xEpzEtX3As2wwBwxphRp/AKW8TdMovS/X4ABOTdSijhyr5YJvgxJcqgj6Dqdwt8z51jE7FFh2oMTg/ZjYoBkWbtI0+xrHms4W8bDMEDA4a4YzraBTrIYA1xVuFJY226QPGR+mTvi1xJIxWV1d7KioqvGJsNaUv+rTaj7KvMqAyoDKgMqAyoDKgMqAysH4y8BM4SaTbN/jJ7gAAAABJRU5ErkJggg=="
-              alt=""
-            />
-            <span>包含图片</span>
-          </div> */}
-          <div>
-            <img
-              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADYAAAA2CAYAAACMRWrdAAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAANqADAAQAAAABAAAANgAAAADzQy6kAAAESUlEQVRoBe1YO0yTURTu2yAEfCQuhhibyMM2PNrIBKIRIR1g0LA5osbVOOgiZdLExNEEcMQ4NHGQgUg0asNoEZBKaRqMGgdJlGKKxJZSv1P/01yblra3f+vg/ZPLOffR/37fOfe/5xwMBvUoCygLKAsoCygLKAsoCygLKAv8ZxYw/iu+ra2tfclkchj7t6E1GI3Gdci5VCo1FQ6HQ+Xiqjoxp9PZGI/HHwF4Tx7wSZAct9vt12dmZn7lWVNwuKrEHA5HeyKRmAWqI4WQgdxrkBuQJWcqtIFe80RqZ2fnhUAqBX3SZDINWa3WThC5hL6f98OR7F1bW7vP/VJlVTzGpAD2MAEEiQ2Ii6urqy9FwJg34tvz7u7u3tbGk5BOmW+u4h7LJgWgURA7n02KiGA8tbKy4oXKnjNrnqTpkp6KEgOpk3T82FNAFsXR6wuFQoF8KIkc2oQw3y3oRasVI9bR0XEAF8V0KaQYtcViCbKO3xe8aHitKC1iR099e3v7Ft5np3fCAzG0PT0l7o341ij0NwW9aLUiHnO73VZY+iqjAKkbex0/XscSl8cg65BLgl60WhFiW1tbp4CgQUPxBReC+M2khz0ez75cKJubm89ifITnzGazj/VSZEWIweKZowRvzaNRzMo8LS0tXsSop8PDw+bMIBSMu+HpJ1A5DPlhlOfimmL1ihCDleMCgDpBNzQ1NY2C+CgI9C8tLV3mOcQvF8aJxAFtbN1ms1HQlnrKJkZxCmDncYSOMwKAjgi6C9/cfu7De4dYh7zJOkhtYO4H9SG/IRvpX15e/szzpcqyiHHwxaadaK+YHC6KdwD3UQPTEIvF7jCwuro6ui3TNx0McAyectIcAvYHiDNob3HdnwsGg4vQpR9pYpSlU0ILcOk0CbIewfeggOQu65j7znogEPgJ0vPchzzBOpFD+uQqlxS9T5qYVnpw8ExnFPjQM4Db2tomQWAWZMcAdozBazLGfcQsG+t6SiliVCQCRI8GhFKgC9lxyufzJVF2DGHcKwKG94xoLh4D8U+s6ymliGmVL+N4mCuhpclctRSudArcR7Ufb9bW1r7RdF2FFDEgaGcUsPg064UkxSmsucfr4OlxfHMJ7uspZXPFegaBmFXUlUyktDjFcW2tpqYmc1vy+/SSUh6DpekfL+kHZYmD9XxSIJUOvvg9xanBhYWFaL7flDsuRQybzvHGuAiu0IXA/WyZi5QWp95nr9WzL0UMRKYAgsp2ek5TOZ+LHCW0YppEntIj+P7Zdu+/eS29988MBoB+ADLXhHV+AJ+gIpHqKRCi0mMELb1HNUkRJmliVHYgQ38Gcr30ogLPV3xTA3pkFAX2yUz/VTZkRotQIpFIsqur63E0GqWUigJuvmPtR5buAalwEa/VbYm0x0QEyO5bcNSoxOiGBynNoix9kYpE2XpKfL/SlQWUBZQFlAWUBZQFlAWUBZQFlAWKsMBvUjip1UJPWEsAAAAASUVORK5CYII="
-              alt=""
-            />
-            <span>包含链接</span>
+      {tagQuery && (
+        <div className="search-body">
+          <div className="title">搜索指定内容</div>
+          <div className="link">
+            {tagQuery && (
+              <div>
+                <img
+                  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADYAAAA2CAYAAACMRWrdAAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAANqADAAQAAAABAAAANgAAAADzQy6kAAACsUlEQVRoBe1Yz2sTQRTOhgq24qkUixYcSkkCiQmYXgKlrkehx/4N/hEe/Se8+R/UiydPKhRP4slDEgpOoUSlepKIhJL0e3WnfQ47brIzKwu+gex88943s+9982OnrVSkiAKigCggCogCooAoIAqIAqKAKOBUoNvtrrRarVtOAnPU6/XbcRxfZ6YgsBpkFGuQ8Xj8aDKZfKnVaj8R+DPLbTdfjUYj4n3Gr24787YLSQzBqCSg5dlsdpYR3F34I/DWoyj6lsGd211IYtPpVJkIqtWqNtiuG43GKhK6SXYk9aPf73+3OXnbhSSGYBQLSDNsQ8UMxwx7w0ISg/qKRaYZtqEyBsycNjhEHfkMgr3+2tF/B4EuJb5DJJq6z8DZAGcr4Z2Ad8THGwwGD3l7EWxevkifSy4Ciy8bbkBJur1Xno0k0SuLBypkKXrEE6yr14zhxIvtSKD6Ln5PE/s7cJ7YHNPG6fkceJPa4D1GNSQconglhuP5rR0EjvBttvQ+pHFMH+zRNcZ9UerjvgzfMBKuiD2mzIyg1gzbUDHDMcNBYPDEyvANI2WCJ4Yx6e5nijYgpVbMphkOAoMmtsjdb969mDdLr1MRiTywXlwzbZx2pyl+464gsfumAe5KGvdvJ6rp66q9rlT4e2uuK4Xr5Vn24XCYO76gSzEr0H/p91qKOAHf8GCxpLbQpostlSP4T37DP5/g0Xt3yArOGapDwiFL7qlOCwJL8yXse+TDFWkfe+QgjYf91MUee08+JPYRt/h7aTwfW9CliCAVC0YzbENlDJg9bXDIOmhiCKwU3zASKFhiWF5z//+i6G9Y0MQQ7BoG/EqDouiLp+OBJXsNrl+J+5ODVi5zr9db7nQ6d7Kiwt6Kms3mervdvpHFFb8oIAqIAqKAKCAKiAKigCggCvzPCpwDqrfRM1ZitzcAAAAASUVORK5CYII="
+                  alt=""
+                />
+                <span>{tagQuery}</span>
+              </div>
+            )}
           </div>
         </div>
-      </div>
+      )}
+      {memoList.map((memo: any) => (
+        <Memo
+          key={`${memo.id}-${memo.updatedTs}`}
+          memo={memo}
+          actions={[
+            { name: "分享", action: "share" },
+            { name: "编辑", action: "edit" },
+          ]}
+        />
+      ))}
     </PageLayout>
   );
 };

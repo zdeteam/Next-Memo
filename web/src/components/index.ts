@@ -9,10 +9,12 @@ import Modal from "./Modal";
 import Memo from "./Memo";
 import PageLayout from "./PageLayout";
 import NoMore from "./NoMore";
+import NoData from "./NoData";
 // import { HeatMap } from "./HeatMap/Calendar";
-import HeatMap2 from './HeatMap2'
+import HeatMap2 from "./HeatMap2";
 
 export {
+  NoData,
   Sticky,
   HeatMap2,
   List,

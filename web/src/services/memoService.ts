@@ -24,6 +24,7 @@ const memoService = {
       limit: params.limit,
       offset: params.offset,
       rowStatus: params.rowStatus,
+      content: params.content,
     };
     if (userService.isVisitorMode()) {
       memoFind.creatorId = userService.getUserIdFromPath();
