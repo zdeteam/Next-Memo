@@ -25,7 +25,7 @@ const EditPage = () => {
 
   return (
     <PageLayout onClickLeft={goBack} className="edit-page">
-      {memo && <Editor editable onSave={goBack} toolbarPosition="top" content={memo.content} />}
+      {memo && <Editor editable onSave={goBack} position="editor" content={memo.content} />}
     </PageLayout>
   );
 };
