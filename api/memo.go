@@ -73,6 +73,7 @@ type MemoFind struct {
 	// Domain specific fields
 	Pinned         *bool
 	ContentSearch  *string
+	TagSearch      *string
 	VisibilityList []Visibility
 
 	// Pagination

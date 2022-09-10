@@ -7,38 +7,35 @@
   align-items: flex-start;
   width: 100%;
   flex-wrap: wrap;
-  margin-top: 12px;
-  font-size: 12px;
-  line-height: 24px;
+  // margin-top: 12px;
+  font-size: 0.28rem;
+  // line-height: 24px;
+  border: 1px solid;
+  margin-bottom: 0.24rem;
 
-  > .tip-text {
-
-    margin-right: 8px;
-    font-weight: bold;
-    opacity:0.4;
-    //@apply mr-2;
-  }
 
   > .filter-item-container {
+    border: 1px solid;
     display: flex;
+    justify-content: center; 
     align-items: center;
-    max-width: 256px;
-    margin-right: 0.5rem;
+    // justify-items: center;
+    max-width: 2rem;
+    // margin-right: 0.5rem;
     cursor: pointer;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+.ellipsis();
     border-radius: 1rem;
     padding-left: 1rem;
-    padding-right: 1rem;
+    // padding-right: 1rem;
     background:@primary-color-200;
 
     color:@primary-color-400;
+    // align-items: center;
     svg{
       margin-right:4px;
       display:inline-block;
-      width:16px;
-      height:16px;
+      // width:16px;
+      // height:16px;
     }
   }
 }

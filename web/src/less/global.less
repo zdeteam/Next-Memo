@@ -2,17 +2,31 @@
 
 @font-face {
   font-family: "Bebas Neue Bold";
-  src: url(https://db.onlinewebfonts.com/t/0159fb15532719ed3e692f0b13bf9c91.eot);
-  src: url(https://db.onlinewebfonts.com/t/0159fb15532719ed3e692f0b13bf9c91.eot#iefix) format("embedded-opentype"), url(https://db.onlinewebfonts.com/t/0159fb15532719ed3e692f0b13bf9c91.woff2) format("woff2"), url(https://db.onlinewebfonts.com/t/0159fb15532719ed3e692f0b13bf9c91.woff) format("woff"), url(https://db.onlinewebfonts.com/t/0159fb15532719ed3e692f0b13bf9c91.ttf) format("truetype"), url(https://db.onlinewebfonts.com/t/0159fb15532719ed3e692f0b13bf9c91.svg#Bebas%20Neue%20Bold) format("svg")
+  src: url("/public/fonts/0159fb15532719ed3e692f0b13bf9c91.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "ZCOOLQingKeHuangYou-Regular";
+  src: url("/public/fonts/ZCOOLQingKeHuangYou-Regular.ttf");
+}
+
+@font-face {
+  font-family: "ZCOOLXiaoWei-Regular";
+  src: url("/public/fonts/ZCOOLXiaoWei-Regular.ttf");
+}
+
+@font-face {
+  font-family: "ZhiMangXing-Regular";
+  src: url("/public/fonts/ZhiMangXing-Regular.ttf");
 }
 
 
-body{
+body {
   margin: 0;
-  font-family: "PingFangSC-Light","PingFang SC","Helvetica Neue",Helvetica,Arial,"Hiragino Sans GB","Heiti SC","Microsoft YaHei","WenQuanYi Micro Hei",sans-serif;
+  font-family: "PingFangSC-Light", "PingFang SC", "Helvetica Neue", Helvetica, Arial, "Hiragino Sans GB", "Heiti SC", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  -webkit-text-size-adjust: none!important;
+  -webkit-text-size-adjust: none !important;
   background-color: #fafafc;
 }
 
@@ -22,16 +36,18 @@ body{
   /*--box-shadow:0px 20px 40px 0px rgb(0 0 0 / 20%);*/
   /* --box-shadow:rgb(33 33 52 / 10%) 0px 1px 4px;*/
   -webkit-overflow-scrolling: touch;
-  --rv-primary-color : #ffac26;
+  --rv-primary-color: #ffac26;
   --rv-font-size-sm: .25rem;
-  --rv-button-small-height:.5rem;
+  --rv-button-small-height: .5rem;
   // --rv-button-primary-background-color: #ffac26;
   // --rv-button-primary-border-color: var(--rv-primary-color);
 }
-div{
+
+div {
   box-sizing: border-box;
 }
-p{
+
+p {
   margin: 0;
 }
 
@@ -41,7 +57,15 @@ button:focus {
 }
 
 
-@keyframes scale-in{from{transform:scale(0)}to{transform:scale(1)}}
+@keyframes scale-in {
+  from {
+    transform: scale(0)
+  }
+
+  to {
+    transform: scale(1)
+  }
+}
 
 
 .ProseMirror {
@@ -54,11 +78,19 @@ button:focus {
     padding: 0 0.2rem;
     margin-right: 4px;
     max-width: 8em;
-    .ellipsis();
   }
-  font-size: .32rem;
+
+  font-size: .28rem;
   color: #4b4b4d;
-  font-family: "PingFang SC","Helvetica Neue",Helvetica,Arial,"Hiragino Sans GB","Heiti SC","Microsoft YaHei","WenQuanYi Micro Hei",sans-serif;
+  font-family: "PingFang SC",
+  "Helvetica Neue",
+  Helvetica,
+  Arial,
+  "Hiragino Sans GB",
+  "Heiti SC",
+  "Microsoft YaHei",
+  "WenQuanYi Micro Hei",
+  sans-serif;
   // > * + * {
   //   margin-top: 0.75em;
   // }
@@ -76,7 +108,7 @@ button:focus {
     li {
       display: flex;
 
-      > label {
+      >label {
         flex: 0 0 auto;
         // margin-right: 0.5em;
         position: relative;
@@ -85,7 +117,7 @@ button:focus {
         // border:1px solid;
       }
 
-      > div {
+      >div {
         flex: 1 1 auto;
       }
     }
@@ -94,8 +126,9 @@ button:focus {
   ul,
   ol {
     padding: 0 20px;
-    li{
-      p{
+
+    li {
+      p {
         line-height: 1.4;
         min-height: 20px;
         margin: 0;
@@ -120,7 +153,8 @@ button:focus {
     line-height: 1;
     margin: 0;
   }
-  p{
+
+  p {
     // margin: em;
     line-height: 1.25;
   }
@@ -159,12 +193,14 @@ button:focus {
         line-height: 0.5rem;
         min-height: 20px;
         margin: 0;
+        word-break: break-word;
+        // white-space:;
       }
 
       input[type="checkbox"] {
         // border: 1px solid;
-        width: .5rem;
-        height: .5rem;
+        width: .34rem;
+        height: .34rem;
         border-radius: 50%;
         // --checkbox-width: 1.125rem;
         --checkbox-bg: white;
@@ -175,7 +211,7 @@ button:focus {
         --checkbox-disabled-bg: #eceef0;
         --checkbox-disabled-checked-bg: #85919f;
         position: relative;
-       
+
         border: none;
         transition: .3s;
         -webkit-appearance: none;
@@ -184,10 +220,13 @@ button:focus {
         margin: 0;
         cursor: pointer;
         // font-size: 0.7rem;
+        vertical-align: sub;
         font-size: 0;
-        &:checked{
+
+        &:checked {
           background: @primary-color-400;
         }
+
         &:after {
           position: absolute;
           top: 0;
@@ -198,14 +237,14 @@ button:focus {
           background: #fff;
           border-radius: inherit;
           border: none;
-          border: 1px solid rgba(75, 75, 77,0.5);
+          border: 1px solid rgba(75, 75, 77, 0.5);
           // box-shadow: inset 0 0 0 1px rgb(205, 210, 218);
           transition: .2s;
         }
 
         &:before {
           position: absolute;
-          content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1.5em' height='1.5em' fill='none' stroke-width='2px' stroke='white' stroke-linecap='round' viewBox='0 0 21 21'%3E%3Cpolyline points='5 10.75 8.5 14.25 16 6'%3E%3C/polyline%3E%3C/svg%3E");
+          content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1.2em' height='1.2em' fill='none' stroke-width='2px' stroke='white' stroke-linecap='round' viewBox='0 0 21 21'%3E%3Cpolyline points='5 10.75 8.5 14.25 16 6'%3E%3C/polyline%3E%3C/svg%3E");
           transform: scale(0);
           // top: 3px;
           // border: 1px solid;
@@ -232,28 +271,32 @@ button:focus {
 }
 
 
-.rv-nav-bar{
-  background-color:transparent;
+.rv-nav-bar {
+  background-color: transparent;
 }
-.rv-nav-bar__title{
+
+.rv-nav-bar__title {
   font-size: .38rem;
   font-weight: 500;
 }
-.rv-nav-bar__left{
+
+.rv-nav-bar__left {
+
   //padding: 0;
-  >span{
+  >span {
     font-size: .34rem;
     color: #333;
   }
-  >svg{
-    fill:#333;
+
+  >svg {
+    fill: #333;
   }
 }
 
-.rv-loading{
+.rv-loading {
   text-align: center;
 }
 
-[class*='rv-hairline']::after{
+[class*='rv-hairline']::after {
   border: none;
 }

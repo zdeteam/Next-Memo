@@ -31,12 +31,13 @@ import "./index.less";
 interface ProseMirrorEditorProps {
   content?: string;
   editable: boolean;
+
   foldable?: boolean;
   onCancel?: () => void;
   onDoubleClick?: () => void;
   onSave?: () => void;
+  position?: "editor" | "memo";
   clearWhenSave?: boolean;
-  toolbarPosition?: "top" | "bottom";
 }
 const MenuBar = ({ editor }: { editor: any }) => {
   if (!editor) {
@@ -92,8 +93,8 @@ const CustomDocument = Document.extend({
 
 const Editor = function (
   props: ProseMirrorEditorProps = {
-    editable: true,
-    toolbarPosition: "bottom",
+    editable: false,
+    position: "memo",
   }
 ) {
   const MAX_MEMO_CONTAINER_HEIGHT = 160;
@@ -187,7 +188,6 @@ const Editor = function (
 
   const editor = useEditor({
     extensions: [
-
       Bold,
       CustomDocument,
       Paragraph,
@@ -202,7 +202,7 @@ const Editor = function (
       }),
       Placeholder.configure({
         placeholder: ({ node }) => {
-          console.log(node.type.name,node)
+          console.log(node.type.name, node);
           if (editor?.isEmpty && node.type.name === "paragraph") {
             return "What’s the title?";
           }
@@ -220,7 +220,7 @@ const Editor = function (
       }),
     ],
     content: props.content || "",
-    // editable: props.editable,
+    editable: props.editable,
   });
 
   editor?.on("create", () => {
@@ -288,13 +288,13 @@ const Editor = function (
       Toast.info(error.message);
     }
   };
-  
+  console.log("props.position", props.position);
   return (
     <div
       onDoubleClick={props.onDoubleClick}
       className={classNames("prosemirror-editor", {
-        "toolbar-on-top": props.toolbarPosition === "top",
         editable: props.editable,
+        [`position-${props.position}`]: props.position === "memo",
       })}
     >
       <div className={classNames("editor", { fold: isFold && showFoldBtn })} ref={editorRef}>
@@ -304,14 +304,29 @@ const Editor = function (
         <>
           <div className="toolbar">
             <MenuBar editor={editor} />
-            {!editor?.isEmpty && (
-              <span className="cancel" onClick={() => editor?.commands.clearContent()}>
-                清空
-              </span>
-            )}
-            <Button type="primary" round disabled={editor?.isEmpty} className="write" size="normal" onClick={onOk}>
-              保存轻笔记
-            </Button>
+            <div className="buttons">
+              {props.position === "editor" && !editor?.isEmpty && (
+                <span
+                  onClick={() => {
+                    editor?.commands.clearContent();
+                  }}
+                >
+                  清空
+                </span>
+              )}
+              {props.position === "memo" && props.editable && (
+                <span
+                  onClick={() => {
+                    editorStateService.setEditMemoWithId(UNKNOWN_ID);
+                  }}
+                >
+                  取消编辑
+                </span>
+              )}
+              <Button type="primary" round disabled={editor?.isEmpty} className="write" size="normal" onClick={onOk}>
+                {props.position === "editor" ? "保存轻笔记" : "保存"}
+              </Button>
+            </div>
           </div>
         </>
       ) : null}

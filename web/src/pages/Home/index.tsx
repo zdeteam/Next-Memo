@@ -1,14 +1,14 @@
 import { useEffect, useState, useRef, ElementRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { getMemoStat } from "@/helpers/api";
+import * as api from "@/helpers/api";
 import useLoading from "@/hooks/useLoading";
-import * as services from "@/services";
 import { setStat } from "@/store/modules/memo";
+import * as services from "@/services";
+// import { setStat } from "@/store/modules/memo";
 import { Popup, Toast, Editor, Only } from "@/components";
 import Sidebar from "./components/Sidebar";
 
 import MemosHeader from "./components/MemosHeader";
-// import MemoFilter from "./components/MemoFilter";
 import MemoList from "./components/MemoList";
 import "./index.less";
 import store from "@/store";
@@ -20,6 +20,10 @@ function Index() {
   const listEl = useRef<ElementRef<typeof MemoList>>(null);
 
   useEffect(() => {
+    api.getMemoStat().then((stat) => {
+      store.dispatch(setStat(stat.data));
+    });
+
     services.userService
       .initialState()
       .catch()
@@ -44,10 +48,7 @@ function Index() {
   }, []);
 
   const onRefresh = async function () {
-    listEl?.current?.sayHello();
-    const stat = await getMemoStat();
-    store.dispatch(setStat(stat.data));
-    services.memoService.updateTagsState();
+    listEl?.current?.reRefresh();
   };
 
   return (
@@ -68,7 +69,7 @@ function Index() {
               <MemosHeader onClick={() => setVisible(!visible)} onRefresh={onRefresh} />
               <Only when={!services.userService.isVisitorMode()}>
                 <div className="editor">
-                  <Editor editable clearWhenSave onSave={onRefresh} />
+                  <Editor position="editor" editable clearWhenSave onSave={onRefresh} />
                 </div>
               </Only>
             </div>

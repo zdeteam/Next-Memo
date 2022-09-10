@@ -21,22 +21,29 @@ dayjs.extend(relativeTime);
 
 interface Props {
   memo: Memo;
+  timeFormat?: string;
   actions?: any[];
 }
 
-export const getFormatedMemoCreatedAtStr = (createdTs: number): string => {
-  if (Date.now() - createdTs < 1000 * 60 * 60 * 24) {
-    return dayjs(createdTs).fromNow();
+export const getFormatedMemoCreatedAtStr = (createdTs: number, timeFormat = ""): string => {
+  console.log('timeFormat',timeFormat)
+  if (timeFormat) {
+    return dayjs(createdTs).format(timeFormat);
   } else {
-    return dayjs(createdTs).format("YYYY/MM/DD HH:mm:ss");
+    if (Date.now() - createdTs < 1000 * 60 * 60 * 24) {
+      return dayjs(createdTs).fromNow();
+    } else {
+      return dayjs(createdTs).format("YYYY/MM/DD HH:mm:ss");
+    }
   }
 };
 
 const Index: React.FC<Props> = (props: Props) => {
+  console.log('timeFormat',props)
   const navigate = useNavigate();
   const [memo, setMemo] = useState({ editable: false, ...props.memo });
   const [moreAction, setMoreAction] = useState(false);
-  const [createdAtStr, setCreatedAtStr] = useState<string>(getFormatedMemoCreatedAtStr(memo.createdTs * 1000));
+  const [createdAtStr, setCreatedAtStr] = useState<string>(getFormatedMemoCreatedAtStr(memo.createdTs * 1000, props.timeFormat));
   const memoContainerRef = useRef<HTMLDivElement>(null);
   const memoContentContainerRef = useRef<HTMLDivElement>(null);
   const imageUrls = Array.from(memo.content.match(IMAGE_URL_REG) ?? []).map((s) => s.replace(IMAGE_URL_REG, "$1"));
@@ -75,7 +82,7 @@ const Index: React.FC<Props> = (props: Props) => {
     }
   };
 
-  const handleArchiveMemoClick = async () => {
+  const handleArchiveMemoClick = async (callback: () => void) => {
     setMoreAction(false);
     Dialog.confirm({
       title: "移至废纸篓",
@@ -87,6 +94,7 @@ const Index: React.FC<Props> = (props: Props) => {
             rowStatus: "ARCHIVED",
           });
           Toast.info("删除成功");
+          callback();
         } catch (error: any) {
           Toast.info(error.message);
         }
@@ -213,10 +221,11 @@ const Index: React.FC<Props> = (props: Props) => {
       <div className="memo-top-wrapper">
         {/* {props.actions?.length} */}
         <span className="time-text">{createdAtStr}</span>
-        {props.actions?.length && <img src="/svg/menu.svg" onClick={moreActions} />}
+        {!editable && props.actions?.length && <img src="/svg/menu.svg" onClick={moreActions} />}
       </div>
       <Editor
         foldable
+        position="memo"
         content={memo.content}
         editable={editable}
         onDoubleClick={handleEditMemoClick}
@@ -246,11 +255,13 @@ const Index: React.FC<Props> = (props: Props) => {
               ...action,
               callback: () => {
                 if (action.action === "delete") {
-                  handleArchiveMemoClick();
+                  handleArchiveMemoClick(action.callback);
                 }
                 if (action.action === "edit") {
                   // handleEditMemoClick();
-                  navigate(`/edit/${memo.id}`);
+                  editorStateService.setEditMemoWithId(memo.id);
+                  setMoreAction(false);
+                  // navigate(`/edit/${memo.id}`);
                 }
                 if (action.action === "share") {
                   setMoreAction(false);
@@ -269,15 +280,16 @@ const Index: React.FC<Props> = (props: Props) => {
           <ShareSheet
             visible={shareVisible}
             options={[
-              { name: "复制链接", icon: "link" },
-              { name: "分享卡片", icon: "poster" },
+              { name: "分享图文链接", icon: "link" },
+              // { name: "分享卡片", icon: "poster" },
             ]}
             title="立即分享给好友"
             onCancel={() => setShareVisible(false)}
             onSelect={(option, index) => {
               if (index === 0) {
-                copy(`${location.protocol}//${location.host}/note/${memo.id}`);
-                Toast.info("复制成功");
+                navigate(`/note/${memo.id}`);
+                // copy(`${location.protocol}//${location.host}/note/${memo.id}`);
+                // Toast.info("复制成功");
               }
               console.log("option", option);
               console.log("index", index);

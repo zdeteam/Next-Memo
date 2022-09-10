@@ -9,9 +9,37 @@
   justify-content: flex-start;
   box-sizing: border-box;
   &.editable{
+  
     >.editor{
       max-height: 3.4rem;
     }
+  }
+  &.position-memo{
+    // border: 1px solid;
+    >.toolbar{
+      button.write {
+        // border: 1px solid ;
+        border: none;
+        color:#606266;
+        padding: 0;
+        height: auto;
+        font-size: .24rem;
+        background-color: #fff;
+        padding: 0;
+        line-height: 0.24rem;
+
+        margin: 0;
+        // margin-right: 6px;
+        // &. {
+          // display: block;
+          // position: absolute;
+          // right: 0;
+          // font-weight: 700;
+          // bottom: 4px;
+        // }
+      }
+    }
+    
   }
   &.toolbar-on-top{
     flex-direction: column-reverse;
@@ -114,23 +142,30 @@
       }
     }
 
-    > button {
-      // margin-right: 6px;
-      &.write {
-        display: inline-block;
-        // position: absolute;
-        // right: 0;
-        font-weight: 700;
-        // bottom: 4px;
+    div.buttons{
+      display: flex;
+      align-items: center;
+      > button {
+        // margin-right: 6px;
+        &.write {
+          display: inline-block;
+          // position: absolute;
+          // right: 0;
+          font-weight: 700;
+          // bottom: 4px;
+        }
       }
+      >span {
+          // position: absolute;
+          // right: 110px;
+          font-size: .24rem;
+          // font-weight: 600;
+          color: #606266;
+          background: #fff;
+          padding: 0;
+          line-height: 0.24rem;
+          margin-right: 0.1rem;
+        }
     }
-    span.cancel {
-        // position: absolute;
-        // right: 110px;
-        font-size: .24rem;
-        color: #606266;
-        background: #fff;
-        padding: 0;
-      }
-  }
+    }
 }

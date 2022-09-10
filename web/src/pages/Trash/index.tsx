@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { NavBar, PageLayout, Memo, Toast } from "@/components";
+import { NoData, PageLayout, Memo, Toast } from "@/components";
 import useLoading from "@/hooks/useLoading";
 import { memoService } from "@/services";
 import { useAppSelector } from "@/store";
-import { generateDialog } from "@/components/Dialog";
 // import Memo from "@/components/Memo";
 import "./index.less";
 
@@ -19,7 +18,7 @@ const TrashPage = (props: any) => {
     memoService
       .fetchArchivedMemos()
       .then((result) => {
-        console.log('result',result)
+        console.log("result", result);
         setArchivedMemos(result);
       })
       .catch((error) => {
@@ -43,9 +42,7 @@ const TrashPage = (props: any) => {
           ]}
         />
       ))}
-      {archivedMemos.length===0&&<div className="no-result">
-        <span>暂无内容</span>
-        </div>}
+      {archivedMemos.length === 0 && <NoData />}
     </PageLayout>
   );
 };

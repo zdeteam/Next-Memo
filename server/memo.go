@@ -124,8 +124,12 @@ func (s *Server) registerMemoRoutes(g *echo.Group) {
 		}
 		tag := c.QueryParam("tag")
 		if tag != "" {
-			contentSearch := "#" + tag + " "
-			memoFind.ContentSearch = &contentSearch
+			tagSearch := ">#" + tag + "</span>"
+			memoFind.TagSearch = &tagSearch
+		}
+		content := c.QueryParam("content")
+		if content != "" {
+			memoFind.ContentSearch = &content
 		}
 		visibilitListStr := c.QueryParam("visibility")
 		if visibilitListStr != "" {
@@ -143,6 +147,7 @@ func (s *Server) registerMemoRoutes(g *echo.Group) {
 		}
 
 		list, err := s.Store.FindMemoList(ctx, memoFind)
+
 		response.List = list
 
 		normalRowStatus := api.Normal

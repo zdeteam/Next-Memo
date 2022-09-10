@@ -10,6 +10,7 @@ import SignIn from "./pages/Auth";
 import Search from "./pages/Search";
 import Note from "./pages/Note";
 import Edit from "./pages/Edit"
+import Tag from "./pages/Tag"
 import I18nProvider from "./labs/i18n/I18nProvider";
 import store from "./store";
 import "./helpers/polyfill";
@@ -34,6 +35,7 @@ root.render(
             <Route path="/search" element={<Search />} />
             <Route path="/note/:memoId" element={<Note />} />
             <Route path="/edit/:memoId" element={<Edit />} />
+            <Route path="/tag" element={<Tag />} />
           </Routes>
         </App>
       </HistoryRouter>
