@@ -1,20 +1,14 @@
 import { memo, useEffect, useRef, useState } from "react";
-import { indexOf } from "lodash-es";
 import dayjs from "dayjs";
-import copy from "copy-to-clipboard";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { GoKebabHorizontal, GoCloudDownload, GoBook, GoBroadcast, GoTrashcan, GoPin } from "react-icons/go";
-import { HiAnnotation } from "react-icons/hi";
 import { IMAGE_URL_REG, UNKNOWN_ID } from "@/helpers/consts";
-import { DONE_BLOCK_REG, TODO_BLOCK_REG } from "@/helpers/marked";
-import { editorStateService, locationService, memoService, userService } from "@/services";
+import { editorStateService, memoService, userService } from "@/services";
 import Only from "../OnlyWhen";
 import { Toast, ActionSheet, Dialog, ShareSheet } from "@/components";
 import { useAppSelector } from "../../store";
 import Image from "../Image";
 import Editor from "../Editor";
 import "./index.less";
-import { setEditMemoId } from "@/store/modules/editor";
 import { useNavigate } from "react-router-dom";
 
 dayjs.extend(relativeTime);
@@ -26,24 +20,24 @@ interface Props {
 }
 
 export const getFormatedMemoCreatedAtStr = (createdTs: number, timeFormat = ""): string => {
-  console.log('timeFormat',timeFormat)
+  console.log("createdTscreatedTs", createdTs);
   if (timeFormat) {
     return dayjs(createdTs).format(timeFormat);
   } else {
     if (Date.now() - createdTs < 1000 * 60 * 60 * 24) {
       return dayjs(createdTs).fromNow();
     } else {
-      return dayjs(createdTs).format("YYYY/MM/DD HH:mm:ss");
+      return dayjs(createdTs).format("YYYY/MM/DD");
     }
   }
 };
 
 const Index: React.FC<Props> = (props: Props) => {
-  console.log('timeFormat',props)
+  console.log("timeFormat", props);
   const navigate = useNavigate();
   const [memo, setMemo] = useState({ editable: false, ...props.memo });
   const [moreAction, setMoreAction] = useState(false);
-  const [createdAtStr, setCreatedAtStr] = useState<string>(getFormatedMemoCreatedAtStr(memo.createdTs * 1000, props.timeFormat));
+  const [createdAtStr, setCreatedAtStr] = useState<string>(getFormatedMemoCreatedAtStr(memo.createdTs, props.timeFormat));
   const memoContainerRef = useRef<HTMLDivElement>(null);
   const memoContentContainerRef = useRef<HTMLDivElement>(null);
   const imageUrls = Array.from(memo.content.match(IMAGE_URL_REG) ?? []).map((s) => s.replace(IMAGE_URL_REG, "$1"));
@@ -56,12 +50,12 @@ const Index: React.FC<Props> = (props: Props) => {
     if (!memoContentContainerRef) {
       return;
     }
-
-    if (Date.now() - memo.createdTs < 1000 * 60 * 60 * 24) {
-      setInterval(() => {
-        setCreatedAtStr(dayjs(memo.createdTs * 1000).fromNow());
-      }, 1000 * 1);
-    }
+    if (!props.timeFormat)
+      if (Date.now() - memo.createdTs < 1000 * 60 * 60 * 24) {
+        setInterval(() => {
+          setCreatedAtStr(dayjs(memo.createdTs).fromNow());
+        }, 1000 * 1);
+      }
   }, []);
 
   useEffect(() => {
@@ -77,9 +71,9 @@ const Index: React.FC<Props> = (props: Props) => {
     // console.log(memo.id);
     // editorStateService.setEditMemoWithId(memo.id);
     // setMoreAction(false);
-    if (props.actions && props.actions?.length > 0) {
-      navigate(`/edit/${memo.id}`);
-    }
+    // if (props.actions && props.actions?.length > 0) {
+    //   navigate(`/edit/${memo.id}`);
+    // }
   };
 
   const handleArchiveMemoClick = async (callback: () => void) => {
@@ -303,17 +297,3 @@ const Index: React.FC<Props> = (props: Props) => {
 };
 
 export default memo(Index);
-
-{
-  /* <div className="action-bar">
-<GoBook onClick={() => clickCardMoreAction(handleShowMemoStoryDialog)} />
-<HiAnnotation />
-<GoPin onClick={() => clickCardMoreAction(handleTogglePinMemoBtnClick)} />
-<GoPencil />
-<GoCloudDownload onClick={() => clickCardMoreAction(handleGenMemoImageBtnClick)} />
-<GoBroadcast
-  onClick={() => clickCardMoreAction(() => handleVisibilitySelectorChange(memo.visibility === "PUBLIC" ? "PRIVATE" : "PUBLIC"))}
-/>
-<GoTrashcan onClick={} />
-</div> */
-}

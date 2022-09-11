@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import useQuery from "@/hooks/useQuery";
-import { IMAGE_URL_REG, UNKNOWN_ID } from "@/helpers/consts";
-import { memoService, shortcutService, editorStateService } from "@/services";
-import { PageLayout, Toast, NoMore, Memo, Loading, Only, List } from "@/components";
-import { locationService } from "@/services";
+import { UNKNOWN_ID } from "@/helpers/consts";
+import { memoService, editorStateService } from "@/services";
+import { PageLayout, Memo } from "@/components";
 import "./index.less";
 
 const SearchPage = () => {
@@ -84,7 +83,7 @@ const SearchPage = () => {
             alt=""
           />
           <form onSubmit={handleSearch}>
-            <input autoFocus type="text" placeholder="搜索" onChange={handleTextQueryInput} />
+            <input type="text" placeholder="搜索" onChange={handleTextQueryInput} />
           </form>
         </div>
         <span
