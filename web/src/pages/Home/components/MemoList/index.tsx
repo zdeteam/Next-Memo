@@ -67,6 +67,7 @@ const MemoList = forwardRef((props, ref: Ref<{ reRefresh: () => void }>) => {
 
   const onLoad = async () => {
     const { total, list } = await getData();
+    console.log('listlist',list)
     if (total === 0) {
       setFinished(true);
       setNoMore(true);

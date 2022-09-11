@@ -31,13 +31,19 @@ const memoService = {
       memoFind.creatorId = userService.getUserIdFromPath();
     }
     const { data } = (await api.getMemoList(memoFind)).data;
-    const memos = data.list.filter((m) => m.rowStatus !== "ARCHIVED").map((m) => convertResponseModelMemo(m));
-    store.dispatch(setMemos({ total: data.total, list: memos }));
+    console.log(
+      "data-----",
+      data,
+      data.list.map((m) => convertResponseModelMemo(m))
+    );
+    const response = { total: data.total, list: data.list.map((m) => convertResponseModelMemo(m)) };
+    // const memos = data.list.filter((m) => m.rowStatus !== "ARCHIVED").map((m) => convertResponseModelMemo(m));
+    store.dispatch(setMemos(response));
     store.dispatch(setMount(data.total));
     clearTimeout(timeoutIndex);
     store.dispatch(setIsFetching(false));
 
-    return data;
+    return response;
   },
 
   fetchArchivedMemos: async () => {
@@ -56,7 +62,7 @@ const memoService = {
 
   getMemoById: async (memoId: MemoId) => {
     const { data } = await api.getMemoById(memoId);
-    return data.data;
+    return { ...data.data, createdTs: data.data.createdTs * 1000 };
   },
 
   updateTagsState: async () => {
