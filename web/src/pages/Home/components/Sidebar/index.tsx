@@ -1,8 +1,7 @@
-import { locationService, userService } from "../../../../services";
-import useI18n from "../../../../hooks/useI18n";
-import { GoCalendar, GoSettings, GoTrashcan, GoFileMedia, GoX, GoHome } from "react-icons/go";
-import { Calendar, Only, HeatMap2, Dialog } from "@/components";
-import showDailyReviewDialog from "../DailyReviewDialog";
+import { locationService, userService } from "@/services";
+import useI18n from "@/hooks/useI18n";
+import dayjs from 'dayjs'
+import { Only, HeatMap2, Dialog } from "@/components";
 import showSettingDialog from "../SettingDialog";
 import showResourcesDialog from "../ResourcesDialog";
 // import HeatMap from "../HeatMap";
@@ -107,7 +106,10 @@ const Index: React.FC<Props> = (props) => {
       <div className="heatMap">
         <HeatMap2
           data={stat.heatMap}
-          onClick={props.closePopup}
+          onClick={(timestamp) => {
+            navigate(`/search?timestamp=${timestamp}`);
+            props.closePopup();
+          }}
           i18n={{
             previousMonth: "Previous month",
             nextMonth: "Next month",

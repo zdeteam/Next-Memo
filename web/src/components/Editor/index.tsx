@@ -48,7 +48,10 @@ const MenuBar = ({ editor }: { editor: any }) => {
     <div className="editor-toolbar">
       <button>
         <img
-          // onClick={() => {editor.chain().focus();editor.commands.insertContent('#')}}
+          onClick={() => {
+            editor.chain().focus();
+            editor.commands.insertContent("#");
+          }}
           src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAMAAAANIilAAAABLFBMVEUAAAAAAAD///9/f39mZmZVVVVJSUlgYGBVVVVNTU1JSUlNTU1VVVVRUVFHR0dSUlJMTExMTExSUlJQUFBOTk5RUVFRUVFPT09NTU1RUVFOTk5OTk5MTExQUFBOTk5NTU1RUVFPT09PT09QUFBQUFBPT09OTk5OTk5NTU1OTk5OTk5OTk5NTU1NTU1OTk5PT09MTExOTk5OTk5OTk5OTk5NTU1OTk5NTU1OTk5OTk5NTU1NTU1NTU1OTk5OTk5OTk5NTU1NTU1OTk5OTk5OTk5NTU1OTk5NTU1NTU1NTU1NTU1NTU1NTU1NTU1NTU1NTU1NTU1NTU1NTU1NTU1NTU1OTk5NTU1NTU1OTk5OTk5NTU1NTU1OTk5NTU1NTU1NTU1NTU1NTU1NTU1NTU1p8h2wAAAAY3RSTlMAAQECBQYHCAkKDhQVFhkZGx4fIyQmKSorLC4xMjM0ODk6RElQUVtiY2hpcnd6fX6AgIOGjI6TlZmam56vsLG3ubzDxMXGyMnKzM3U1trb3OHk5ebo6err7PDz9fb3+Pv8/f4E+SdDAAABTklEQVRIx+3W104CURRGYREr9l6w9+4g9i723kFFEWa9/zt4hdFk/tmTEKMhrrvvYt+cnLNzSkr++/1Cw2ep6TJFo/YU3HYrGs0Cd72KRpvAVZ2if9XnwH5Y0KjtBlhRNBpKAROKRuNpoEfRv9KYC5kKQeu8NoAzRaOaPWBd0ajpEphSNOp8hdyAotEo8NCiaLQAnDQoehdNZLHKJqLewwmClPAeTgYaTnoPx19cc9R9iXsPR8bmHMdxnCPgednJ941zYxH/g9sGrmoV/au6AA5Dgn97E0QV/QvHcpCuEgyyCU4Vg2yCNcUgm2BS0ajjDdx+xR/YBPmL7ewAyaXPm/2V8mIX9KQKeswFrZGCFli+eeC+T9FoC7iuUwzwJzgICxblnyAUcyFTLlicf4KuNGQHFY1GgMdWRaMYcFyvaDQD74uVikbNu0+rjZLF0Qde6BFWTtcHjAAAAABJRU5ErkJggg=="
           alt=""
         />
@@ -150,7 +153,7 @@ const Editor = function (
             showOnCreate: true,
             interactive: true,
             trigger: "manual",
-            placement: "bottom-start",
+            // placement: "bottom-start",
           });
         },
 

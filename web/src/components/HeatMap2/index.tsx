@@ -1,5 +1,6 @@
 import React from "react";
-import moment from 'moment'
+import moment from "moment";
+import {Toast} from "@/components"
 import "./index.less";
 interface I18n {
   previousMonth: string;
@@ -72,33 +73,17 @@ interface DayProps {
   date: Date;
   cursor: Date;
   colorLevel: number;
-  onChange: (date: Date) => void;
+  onChange: (timestamp: number) => void;
   onCursorChange: (date: Date) => void;
 }
 const Day = ({ day, colorLevel=0, date, cursor, onChange, onCursorChange }: DayProps) => {
   const isSelected = sameDates(day, date);
   const isCursor = sameDates(day, cursor);
   const isToday = sameDates(day, new Date());
-  console.log("colorLevel", colorLevel);
-  console.log("day", moment(day).format("YYYY-MM-DD"));
   const isPrevMonth = cursor.getMonth() === 0 ? day.getMonth() === 11 : day.getMonth() === cursor.getMonth() - 1;
   const isNextMonth = cursor.getMonth() === 11 ? day.getMonth() === 0 : day.getMonth() === cursor.getMonth() + 1;
   const isInThisMonth = !isPrevMonth && !isNextMonth;
 
-  const classNames = ["day"];
-  if (!isInThisMonth) {
-    classNames.push("grayed");
-  }
-  if (isSelected) {
-    classNames.push("selected");
-  }
-  if (isCursor) {
-    classNames.push("cursor");
-  }
-  if (isToday) {
-    classNames.push("today");
-  }
-  
   const levelClassName =
     colorLevel <= 0
       ? ""
@@ -110,13 +95,29 @@ const Day = ({ day, colorLevel=0, date, cursor, onChange, onCursorChange }: DayP
       ? "stat-day-L3"
       : "stat-day-L4";
 
-  classNames.push(levelClassName);
+  const classNames = ["day"];
+  if (!isInThisMonth || levelClassName === "") {
+    classNames.push("grayed");
+  }
+  if (isSelected) {
+    classNames.push("selected");
+  }
+  if (isCursor) {
+    classNames.push("cursor");
+  }
+  if (isToday) {
+    classNames.push("today");
+  }
 
-  console.log(colorLevel,levelClassName,day)
+  classNames.push(levelClassName);
 
   const props = {
     ...(isInThisMonth && {
-      onClick: () => onChange(day),
+      onClick: () => {
+        console.log("click", moment(day).unix());
+        if (levelClassName === "") return Toast.info("没有笔记哦");
+        onChange(moment(day).unix());
+      },
       onMouseEnter: () => onCursorChange(day),
       onFocus: () => onCursorChange(day),
       tabIndex: 1,

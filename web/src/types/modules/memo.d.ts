@@ -36,6 +36,8 @@ interface MemoFind {
   visibility?: Visibility;
   limit?: number;
   offset?: number;
+  startTime?: number;
+  endTime?:number;
 }
 
 interface HeatMap {

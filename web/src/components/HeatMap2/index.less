@@ -1,48 +1,41 @@
 .fus-datepicker {
     border-spacing: 0;
-    // color: #787878;
-    // background: white;
     width: 100%;
     border-radius: 6px;
-    // font-family: "Lato", sans-serif;
     overflow: hidden;
     outline-color: #e74c3c;
-    // border: 1px solid;
     font-size: .26rem;
     display: flex;
     flex-direction: column;
-    // padding: 0 0.4rem 0.04rem;
-    >thead>tr{
+
+    >thead>tr {
         width: 100%;
         display: flex;
         justify-content: space-between;
         margin-bottom: .1rem;
-        &:first-of-type{
+
+        &:first-of-type {
             font-size: .3rem;
             color: #d5d5dc;
             letter-spacing: .0042rem;
-            // text-align: justify;
             font-weight: 600;
-           
+
             display: flex;
             align-items: center;
-            >th:nth-of-type(1){
-                 font-family: "Bebas Neue Bold";
+
+            >th:nth-of-type(1) {
+                font-family: "Bebas Neue Bold";
             }
         }
     }
-    > tbody >tr{
-        // border: 1px solid;
+
+    >tbody>tr {
         width: 100%;
         display: flex;
         justify-content: space-between;
         margin-bottom: .1rem;
-        >td{
-            // position: absolute;
-            // left: 50%;
-            // top: 50%;
-            // -webkit-transform: translateX(-50%) translateY(-50%);
-            // transform: translateX(-50%) translateY(-50%);
+
+        >td {
             width: 0.54rem;
             height: 0.54rem;
             border-radius: 50%;
@@ -55,31 +48,31 @@
             justify-content: center;
             font-family: PingFangSC-Regular;
             font-size: .26rem;
-            // color: #fff;
             letter-spacing: 0;
             text-align: center;
             font-weight: 400;
-            // border: 1px solid;
-            &.stat-day-L1{
-                background-color: rgba(255,171,39,.6);
+
+            &.stat-day-L1 {
+                background-color: rgba(255, 171, 39, .6);
                 color: #fff;
                 font-weight: 800;
             }
-            &.stat-day-L2{
-                background-color: rgba(255,171,39,1);
+
+            &.stat-day-L2 {
+                background-color: rgba(255, 171, 39, 1);
                 color: #fff;
                 font-weight: 800;
-                
+
             }
-            &.stat-day-L3{
-                background-color: rgba(255,136,38,0.8);
-                //  background-color: #ff8826;
+
+            &.stat-day-L3 {
+                background-color: rgba(255, 136, 38, 0.8);
                 color: #fff;
                 font-weight: 800;
             }
-            &.stat-day-L4{
-                // background-color: #ff8826;
-                background-color: rgba(255,136,38,1);
+
+            &.stat-day-L4 {
+                background-color: rgba(255, 136, 38, 1);
                 color: #fff;
                 font-weight: 800;
             }
@@ -87,34 +80,20 @@
     }
 }
 
-
-// .fus-datepicker td.day:not(.grayed):not(.selected) {
-//     cursor: pointer;
-//     border-radius: 50%;
-// }
-
-// .fus-datepicker td.day:not(.grayed):not(.selected).cursor {
-//     background: #eee;
-// }
-
 .fus-datepicker td.grayed {
     color: #ccc;
     border-radius: 50%;
     // margin: 0.02rem;
 }
 
-.fus-datepicker td.selected {
-    // color: white;
-    // background: #e74c3c;
-}
-
-.fus-datepicker td.today{
+.fus-datepicker td.today {
     position: relative;
+
     &:after {
         content: '';
         display: block;
-        width: 120%;
-        height: 120%;
+        width: 100%;
+        height: 100%;
         border-radius: 50%;
         position: absolute;
         left: 50%;
@@ -122,43 +101,19 @@
         transform: translate(-50%, -50%);
         background-color: rgba(#e73a35, 0.6);
         animation: today-circle-fill-animate 3s ease-in-out infinite;
-      };
-      @keyframes today-circle-fill-animate {
+    }
+
+    @keyframes today-circle-fill-animate {
+
         0%,
         100% {
-          transform: translate(-50%, -50%) rotate(0) scale(0.6);
-          opacity: 0.2;
+            transform: translate(-50%, -50%) rotate(0) scale(0.6);
+            opacity: 0.2;
         }
+
         50% {
-          transform: translate(-50%, -50%) rotate(0) scale(1.2);
-          opacity: 0.2;
+            transform: translate(-50%, -50%) rotate(0) scale(1);
+            opacity: 0.2;
         }
-      }
+    }
 }
-
-// .fus-datepicker td.today:not(.selected) {
-//     color: #e74c3c;
-// }
-
-// .fus-datepicker .weekdays {
-//     color: #e74c3c;
-//     >td{
-//         height: auto;
-//         font-size: .2rem;
-//         color: #404040;
-        
-//     }
-    
-// }
-
-// .fus-datepicker .chevron {
-//     cursor: pointer;
-//     user-select: none;
-//     font-size: 2.5em;
-//     margin-top: -0.1em;
-//     transition: color 0.2s ease-in-out;
-// }
-
-// .fus-datepicker .chevron:hover {
-//     color: #ccc;
-// }

@@ -5,6 +5,7 @@ import { UNKNOWN_ID } from "@/helpers/consts";
 import { memoService, editorStateService } from "@/services";
 import { PageLayout, Memo } from "@/components";
 import "./index.less";
+import dayjs from "dayjs";
 
 const SearchPage = () => {
   const navigate = useNavigate();
@@ -30,7 +31,7 @@ const SearchPage = () => {
 
   useEffect(() => {
     const tagQuery = query.get("tag");
-    if (tagQuery) {
+    if (tagQuery || query.get("timestamp")) {
       getData();
     }
     console.log("span.umo-tag", tagQuery);
@@ -50,7 +51,13 @@ const SearchPage = () => {
   async function getData({ keyword }: { keyword?: string } = {}) {
     return new Promise<any>((resolve, reject) => {
       memoService
-        .fetchAllMemos({ rowStatus: "NORMAL", limit: 10, offset, content: keyword, tag: tagQuery })
+        .fetchAllMemos({
+          rowStatus: "NORMAL",
+          limit: 10,
+          offset,
+          content: keyword,
+          tag: tagQuery,
+        })
         .then((data) => {
           // resolve(data);
           setMemoList(data.list);
@@ -96,7 +103,7 @@ const SearchPage = () => {
           取消
         </span>
       </div>
-      {tagQuery && (
+      {(tagQuery || query.get("timestamp")) && (
         <div className="search-body">
           <div className="title">搜索指定内容</div>
           <div className="link">
@@ -107,6 +114,15 @@ const SearchPage = () => {
                   alt=""
                 />
                 <span>{tagQuery}</span>
+              </div>
+            )}
+            {query.get("timestamp") && (
+              <div>
+                {/* <img
+                  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADYAAAA2CAYAAACMRWrdAAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAANqADAAQAAAABAAAANgAAAADzQy6kAAACsUlEQVRoBe1Yz2sTQRTOhgq24qkUixYcSkkCiQmYXgKlrkehx/4N/hEe/Se8+R/UiydPKhRP4slDEgpOoUSlepKIhJL0e3WnfQ47brIzKwu+gex88943s+9982OnrVSkiAKigCggCogCooAoIAqIAqKAKOBUoNvtrrRarVtOAnPU6/XbcRxfZ6YgsBpkFGuQ8Xj8aDKZfKnVaj8R+DPLbTdfjUYj4n3Gr24787YLSQzBqCSg5dlsdpYR3F34I/DWoyj6lsGd211IYtPpVJkIqtWqNtiuG43GKhK6SXYk9aPf73+3OXnbhSSGYBQLSDNsQ8UMxwx7w0ISg/qKRaYZtqEyBsycNjhEHfkMgr3+2tF/B4EuJb5DJJq6z8DZAGcr4Z2Ad8THGwwGD3l7EWxevkifSy4Ciy8bbkBJur1Xno0k0SuLBypkKXrEE6yr14zhxIvtSKD6Ln5PE/s7cJ7YHNPG6fkceJPa4D1GNSQconglhuP5rR0EjvBttvQ+pHFMH+zRNcZ9UerjvgzfMBKuiD2mzIyg1gzbUDHDMcNBYPDEyvANI2WCJ4Yx6e5nijYgpVbMphkOAoMmtsjdb969mDdLr1MRiTywXlwzbZx2pyl+464gsfumAe5KGvdvJ6rp66q9rlT4e2uuK4Xr5Vn24XCYO76gSzEr0H/p91qKOAHf8GCxpLbQpostlSP4T37DP5/g0Xt3yArOGapDwiFL7qlOCwJL8yXse+TDFWkfe+QgjYf91MUee08+JPYRt/h7aTwfW9CliCAVC0YzbENlDJg9bXDIOmhiCKwU3zASKFhiWF5z//+i6G9Y0MQQ7BoG/EqDouiLp+OBJXsNrl+J+5ODVi5zr9db7nQ6d7Kiwt6Kms3mervdvpHFFb8oIAqIAqKAKCAKiAKigCggCvzPCpwDqrfRM1ZitzcAAAAASUVORK5CYII="
+                  alt=""
+                /> */}
+                <span>{dayjs(Number(query.get("timestamp")) * 1000).format("YYYY-MM-DD")}</span>
               </div>
             )}
           </div>
